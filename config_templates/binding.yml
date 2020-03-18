@@ -1,0 +1,8 @@
+name: unique_name
+description: text description of the binding
+modes:
+- list of allowed modes
+triggers:
+- switch(onafterload, onafterrefresh, onafterfocus, key)
+action:
+- action

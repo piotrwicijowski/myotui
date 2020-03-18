@@ -1,0 +1,7 @@
+name: unique_name
+description: text description
+parameters:
+- parameter_template
+bindings:
+- binding_template
+layout: layout_template

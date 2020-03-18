@@ -1,0 +1,2 @@
+type: switch(buffer, cli)
+value: switch(buffer_name buffer_params, value_definition_template)

@@ -1,0 +1,7 @@
+app:
+  name: unique_name
+  modes:
+  - mode_template
+  buffers:
+  - buffer_tempalte
+

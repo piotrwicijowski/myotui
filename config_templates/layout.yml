@@ -1,0 +1,3 @@
+type: switch(vbox,hbox,table,hblade)
+windows:
+- window_template

@@ -1,0 +1,6 @@
+input: !command line with $params
+map: switch(json_array_to_table, json_object_to_dict)
+where:
+- parameters to include
+order:
+- order of columns for table
