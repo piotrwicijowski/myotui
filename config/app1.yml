@@ -1,0 +1,4 @@
+name: test1
+modes:
+- name: normal
+- name: normal_ro
