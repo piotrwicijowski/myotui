@@ -7,5 +7,6 @@ namespace myotui.Models
         public string Name {get; set;}
 
         public IEnumerable<IModeDefinition> Modes {get; set;}
+        public IEnumerable<IBuffer> Buffers {get; set;}
     }
 }

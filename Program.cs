@@ -18,7 +18,11 @@ namespace myotui
             var collection = new ServiceCollection();
             var builder = new ContainerBuilder();
             builder.RegisterType<App>().As<IApp>();
+            builder.RegisterType<Models.Buffer>().As<IBuffer>();
+            builder.RegisterType<Content>().As<IContent>();
+            builder.RegisterType<Layout>().As<ILayout>();
             builder.RegisterType<ModeDefinition>().As<IModeDefinition>();
+            builder.RegisterType<Window>().As<IWindow>();
             builder.Populate(collection);
             var appContainer = builder.Build();
             var serviceContainer = new AutofacServiceProvider(appContainer);

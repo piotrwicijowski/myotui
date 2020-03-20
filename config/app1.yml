@@ -2,3 +2,42 @@ name: test1
 modes:
 - name: normal
 - name: normal_ro
+buffers:
+
+- name: root
+  description: Root view
+  layout:
+    type: vbox
+    windows:
+    - name: head
+      content:
+        type: buffer
+        value: menu
+    - name: body
+      content:
+        type: buffer
+        value: body
+
+- name: body
+  description: Horizontal view with left sidebar and all the rest
+  layout:
+    type: hbox
+    windows:
+    - name: sidebar
+      content:
+        type: buffer
+        value: sidebar
+    - name: main
+      content:
+        type: buffer
+        value: body
+
+- name: main
+  description: Main container for content
+  layout:
+    type: hblade
+    windows:
+    - name: content
+      content:
+        type: buffer
+        value: resource_groups
