@@ -1,0 +1,5 @@
+[submodule "deps/consoleframework"]
+	path = deps/consoleframework
+	url = https://github.com/elw00d/consoleframework
+[submodule "consoleframework"]
+	branch = develop
