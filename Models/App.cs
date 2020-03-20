@@ -2,10 +2,10 @@ using System.Collections.Generic;
 
 namespace myotui.Models
 {
-    public class App
+    public class App : IApp
     {
         public string Name {get; set;}
 
-        public IEnumerable<ModeDefinition> Modes {get; set;}
+        public IEnumerable<IModeDefinition> Modes {get; set;}
     }
 }

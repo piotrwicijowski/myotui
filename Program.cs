@@ -5,6 +5,9 @@ using myotui.Models;
 using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+using Autofac;
 
 namespace myotui
 {
@@ -12,10 +15,19 @@ namespace myotui
     {
         static async Task Main(string[] args)
         {
+            var collection = new ServiceCollection();
+            var builder = new ContainerBuilder();
+            builder.RegisterType<App>().As<IApp>();
+            builder.RegisterType<ModeDefinition>().As<IModeDefinition>();
+            builder.Populate(collection);
+            var appContainer = builder.Build();
+            var serviceContainer = new AutofacServiceProvider(appContainer);
+
             var fileStream = new FileStream("config/app1.yml", FileMode.Open);
             using var reader = new StreamReader(fileStream);
             var fileContent = await reader.ReadToEndAsync();
             var deserializer = new DeserializerBuilder()
+                .WithNodeTypeResolver(new AutofacResolver(serviceContainer))
                 .WithNamingConvention(CamelCaseNamingConvention.Instance)
                 .Build();
 
