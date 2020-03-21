@@ -7,7 +7,7 @@ buffers:
 - name: root
   description: Root view
   layout:
-    type: vbox
+    !vbox
     windows:
     - name: head
       content:
@@ -21,7 +21,7 @@ buffers:
 - name: body
   description: Horizontal view with left sidebar and all the rest
   layout:
-    type: hbox
+    !hbox
     windows:
     - name: sidebar
       content:
@@ -35,7 +35,7 @@ buffers:
 - name: main
   description: Main container for content
   layout:
-    type: hblade
+    !hblade
     windows:
     - name: content
       content:

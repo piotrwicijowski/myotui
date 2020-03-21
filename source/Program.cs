@@ -24,7 +24,10 @@ namespace myotui
             builder.RegisterType<App>().As<IApp>();
             builder.RegisterType<Models.Buffer>().As<IBuffer>();
             builder.RegisterType<Content>().As<IContent>();
-            builder.RegisterType<Layout>().As<ILayout>();
+            builder.RegisterType<HBoxLayout>().As<ILayout>();
+            builder.RegisterType<VBoxLayout>().As<ILayout>();
+            builder.RegisterType<HBladeLayout>().As<ILayout>();
+            builder.RegisterType<VBladeLayout>().As<ILayout>();
             builder.RegisterType<ModeDefinition>().As<IModeDefinition>();
             builder.RegisterType<Models.Window>().As<IWindow>();
             builder.Populate(collection);
@@ -51,6 +54,22 @@ namespace myotui
             // windowsHost.Show( mainWindow );
 
             ConsoleApplication.Instance.Run( windowsHost );
+            
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }
