@@ -22,16 +22,14 @@ namespace myotui
             var collection = new ServiceCollection();
             var builder = new ContainerBuilder();
             builder.RegisterType<App>().As<IApp>();
-            builder.RegisterType<Models.Buffer>().As<IBuffer>();
             builder.RegisterType<BufferContent>().As<IContent>();
             builder.RegisterType<CliContent>().As<IContent>();
-            builder.RegisterType<TableLayout>().As<ILayout>();
-            builder.RegisterType<HBoxLayout>().As<ILayout>();
-            builder.RegisterType<VBoxLayout>().As<ILayout>();
-            builder.RegisterType<HBladeLayout>().As<ILayout>();
-            builder.RegisterType<VBladeLayout>().As<ILayout>();
+            builder.RegisterType<TableBuffer>().As<IBuffer>();
+            builder.RegisterType<HBoxBuffer>().As<IBuffer>();
+            builder.RegisterType<VBoxBuffer>().As<IBuffer>();
+            builder.RegisterType<HBladeBuffer>().As<IBuffer>();
+            builder.RegisterType<VBladeBuffer>().As<IBuffer>();
             builder.RegisterType<ModeDefinition>().As<IModeDefinition>();
-            builder.RegisterType<Models.Window>().As<IWindow>();
             builder.Populate(collection);
             var appContainer = builder.Build();
             var serviceContainer = new AutofacServiceProvider(appContainer);
@@ -50,12 +48,15 @@ namespace myotui
             var windowsHost = new WindowsHost(){
                 Name = app.Name
             };
+            var window = app.BuildWindow();
+            windowsHost.Show(window);
             // WindowsHost windowsHost = ( WindowsHost ) ConsoleApplication.LoadFromXaml( "host.xml", null );
             // ConsoleFramework.Controls.Window mainWindow = (ConsoleFramework.Controls.Window) ConsoleApplication.LoadFromXaml( 
             //     "app.xml", null );
             // windowsHost.Show( mainWindow );
 
             ConsoleApplication.Instance.Run( windowsHost );
+            ConsoleApplication.Instance.Maximize();
             
         }
 

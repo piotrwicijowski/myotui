@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using ConsoleFramework;
+using ConsoleFramework.Controls;
 
 namespace myotui.Models
 {
@@ -8,5 +10,6 @@ namespace myotui.Models
 
         public IEnumerable<IModeDefinition> Modes {get; set;}
         public IEnumerable<IBuffer> Buffers {get; set;}
+        public Window BuildWindow();
     }
 }

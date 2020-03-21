@@ -1,9 +1,14 @@
 using System.Collections.Generic;
+using ConsoleFramework;
+using ConsoleFramework.Controls;
 
 namespace myotui.Models
 {
     public interface ILayout
     {
-        public IEnumerable<IWindow> Windows {get; set;}
+        public Panel BuildLayout()
+        {
+            return new Panel();
+        }
     }
 }

@@ -4,10 +4,9 @@ modes:
 - name: normal_ro
 buffers:
 
-- name: root
+- !vbox
+  name: root
   description: Root view
-  layout:
-    !vbox
   content:
   - !buffer
     name: head
@@ -16,10 +15,9 @@ buffers:
     name: body
     value: body
 
-- name: body
+- !hbox
+  name: body
   description: Horizontal view with left sidebar and all the rest
-  layout:
-    !hbox
   content:
   - !buffer
     name: sidebar
@@ -28,20 +26,18 @@ buffers:
     name: main
     value: main
 
-- name: main
+- !hblade
+  name: main
   description: Main container for content
-  layout:
-    !hblade
   content:
   - !buffer
     name: content
     value: resource_groups
 
 
-- name: resource_groups
+- !table
+  name: resource_groups
   description: List of resource groups for selected subscription
-  layout:
-    !table
   content:
   - !cli
     name: resource_groups
