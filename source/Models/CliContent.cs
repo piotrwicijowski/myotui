@@ -1,12 +1,13 @@
+using Terminal.Gui;
 namespace myotui.Models
 {
     public class CliContent : IContent
     {
         public string Name {get; set;}
         public CliDefinition Cli {get; set;}
-        public string GetValue()
+        public View GetView()
         {
-            return Cli.Input;
+            return new View();
         }
     }
 }

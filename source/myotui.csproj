@@ -9,17 +9,8 @@
     <PackageReference Include="Autofac" Version="5.1.2" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.2" />
+    <PackageReference Include="Terminal.Gui" Version="0.70.0" />
     <PackageReference Include="YamlDotNet" Version="8.1.0" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="../deps/consoleframework/Binding/Binding.csproj" />
-    <ProjectReference Include="../deps/consoleframework/Xaml/Xaml.csproj" />
-    <ProjectReference Include="../deps/consoleframework/ConsoleFramework/ConsoleFramework.csproj" />
-  </ItemGroup>
-
-  <!-- <ItemGroup>
-    <EmbeddedResource Include="./xml/app.xml" LogicalName="app.xml" />
-    <EmbeddedResource Include="./xml/host.xml" LogicalName="host.xml" />
-  </ItemGroup> -->
 
 </Project>

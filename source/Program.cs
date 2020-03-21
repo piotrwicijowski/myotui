@@ -1,26 +1,27 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using myotui.Models;
+﻿using System.Threading.Tasks;
 using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
+using myotui.Models;
+using myotui.Services;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac;
-using ConsoleFramework;
-using ConsoleFramework.Controls;
-using ConsoleFramework.Core;
-using ConsoleFramework.Events;
+using Terminal.Gui;
 
 namespace myotui
 {
     class Program
     {
-        static async Task Main(string[] args)
+        private static IContainer CompositionRoot()
         {
             var collection = new ServiceCollection();
             var builder = new ContainerBuilder();
+            builder.RegisterType<Application>();
+            builder.RegisterType<AutofacResolver>().As<INodeTypeResolver>();
+            builder.RegisterType<ConfigurationService>().As<IConfigurationService>().SingleInstance();
+            builder.RegisterType<TuiService>().As<ITuiService>();
+
             builder.RegisterType<App>().As<IApp>();
             builder.RegisterType<BufferContent>().As<IContent>();
             builder.RegisterType<CliContent>().As<IContent>();
@@ -31,48 +32,12 @@ namespace myotui
             builder.RegisterType<VBladeBuffer>().As<IBuffer>();
             builder.RegisterType<ModeDefinition>().As<IModeDefinition>();
             builder.Populate(collection);
-            var appContainer = builder.Build();
-            var serviceContainer = new AutofacServiceProvider(appContainer);
-
-            var fileStream = new FileStream("config/app2.yml", FileMode.Open);
-            using var reader = new StreamReader(fileStream);
-            var fileContent = await reader.ReadToEndAsync();
-            var deserializer = new DeserializerBuilder()
-                .WithNodeTypeResolver(new AutofacResolver(serviceContainer))
-                .WithNamingConvention(CamelCaseNamingConvention.Instance)
-                .Build();
-
-            var app = deserializer.Deserialize<App>(fileContent);
-
-
-            var windowsHost = new WindowsHost(){
-                Name = app.Name
-            };
-            var window = app.BuildWindow();
-            windowsHost.Show(window);
-            // WindowsHost windowsHost = ( WindowsHost ) ConsoleApplication.LoadFromXaml( "host.xml", null );
-            // ConsoleFramework.Controls.Window mainWindow = (ConsoleFramework.Controls.Window) ConsoleApplication.LoadFromXaml( 
-            //     "app.xml", null );
-            // windowsHost.Show( mainWindow );
-
-            ConsoleApplication.Instance.Run( windowsHost );
-            ConsoleApplication.Instance.Maximize();
-            
+            var container = builder.Build();
+            return container;
         }
-
-        public override bool Equals(object obj)
+        static async Task Main(string[] args)
         {
-            return base.Equals(obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return base.ToString();
+            await CompositionRoot().Resolve<Application>().Run();
         }
     }
 }

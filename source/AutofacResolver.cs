@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using Autofac;
 using Autofac.Core;
 using Autofac.Core.Activators.Reflection;
 using Autofac.Extensions.DependencyInjection;
@@ -10,13 +11,13 @@ using YamlDotNet.Serialization;
 
 public class AutofacResolver : INodeTypeResolver
 {
-    private readonly AutofacServiceProvider _provider;
-    public AutofacResolver(AutofacServiceProvider provider){
-        _provider = provider;
+    private readonly IComponentContext _context;
+    public AutofacResolver(IComponentContext context){
+        _context = context;
     }
     public bool Resolve(NodeEvent nodeEvent, ref Type currentType)
     {
-        var registrations = _provider.GetAutofacRoot().ComponentRegistry
+        var registrations = _context.ComponentRegistry
             .RegistrationsFor(new TypedService(currentType));
 
         if (registrations.Any())
