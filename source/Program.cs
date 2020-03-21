@@ -23,7 +23,9 @@ namespace myotui
             var builder = new ContainerBuilder();
             builder.RegisterType<App>().As<IApp>();
             builder.RegisterType<Models.Buffer>().As<IBuffer>();
-            builder.RegisterType<Content>().As<IContent>();
+            builder.RegisterType<BufferContent>().As<IContent>();
+            builder.RegisterType<CliContent>().As<IContent>();
+            builder.RegisterType<TableLayout>().As<ILayout>();
             builder.RegisterType<HBoxLayout>().As<ILayout>();
             builder.RegisterType<VBoxLayout>().As<ILayout>();
             builder.RegisterType<HBladeLayout>().As<ILayout>();
@@ -34,7 +36,7 @@ namespace myotui
             var appContainer = builder.Build();
             var serviceContainer = new AutofacServiceProvider(appContainer);
 
-            var fileStream = new FileStream("config/app1.yml", FileMode.Open);
+            var fileStream = new FileStream("config/app2.yml", FileMode.Open);
             using var reader = new StreamReader(fileStream);
             var fileContent = await reader.ReadToEndAsync();
             var deserializer = new DeserializerBuilder()

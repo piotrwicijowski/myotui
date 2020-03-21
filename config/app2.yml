@@ -1,0 +1,56 @@
+name: test1
+modes:
+- name: normal
+- name: normal_ro
+buffers:
+
+- name: root
+  description: Root view
+  layout:
+    !vbox
+  content:
+  - !buffer
+    name: head
+    value: menu
+  - !buffer
+    name: body
+    value: body
+
+- name: body
+  description: Horizontal view with left sidebar and all the rest
+  layout:
+    !hbox
+  content:
+  - !buffer
+    name: sidebar
+    value: sidebar
+  - !buffer
+    name: main
+    value: main
+
+- name: main
+  description: Main container for content
+  layout:
+    !hblade
+  content:
+  - !buffer
+    name: content
+    value: resource_groups
+
+
+- name: resource_groups
+  description: List of resource groups for selected subscription
+  layout:
+    !table
+  content:
+  - !cli
+    name: resource_groups
+    cli:
+      input: az group list
+      map: json_array_to_table
+      select:
+      - name
+      - location
+      order:
+      - name
+      - location

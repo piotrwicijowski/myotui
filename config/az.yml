@@ -1,99 +1,98 @@
-app:
-  name: az
-  modes:
-  - name: normal
-    description: Normal mode for navigation and generic add/remove operation
-  - name: normal_ro
-    description: Read-only normal mode for navigating, listing and reading values
-  buffers:
+name: az
+modes:
+- name: normal
+  description: Normal mode for navigation and generic add/remove operation
+- name: normal_ro
+  description: Read-only normal mode for navigating, listing and reading values
+buffers:
 
-  - name: root
-    description: Root view
-    layout:
-      type: vbox
-      windows:
-      - name: head
-        content:
-          type: buffer
-          value: menu
-      - name: body
-        content:
-          type: buffer
-          value: body
+- name: root
+  description: Root view
+  layout:
+    type: vbox
+    windows:
+    - name: head
+      content:
+        type: buffer
+        value: menu
+    - name: body
+      content:
+        type: buffer
+        value: body
 
-  - name: body
-    description: Horizontal view with left sidebar and all the rest
-    layout:
-      type: hbox
-      windows:
-      - name: sidebar
-        content:
-          type: buffer
-          value: sidebar
-      - name: main
-        content:
-          type: buffer
-          value: body
+- name: body
+  description: Horizontal view with left sidebar and all the rest
+  layout:
+    type: hbox
+    windows:
+    - name: sidebar
+      content:
+        type: buffer
+        value: sidebar
+    - name: main
+      content:
+        type: buffer
+        value: body
 
-  - name: main
-    description: Main container for content
-    layout:
-      type: hblade
-      windows:
-      - name: content
-        content:
-          type: buffer
-          value: resource_groups
+- name: main
+  description: Main container for content
+  layout:
+    type: hblade
+    windows:
+    - name: content
+      content:
+        type: buffer
+        value: resource_groups
 
-  - name: resource_groups
-    description: List of resource groups for selected subscription
-    bindings:
-    - name: resources_in_group
-      description: List resources in group
-      triggers:
-      - key <Enter>
-      action:
-      - main.layout.open resources %name
-    layout:
-      type: table
-      windows:
-      - name: resource_groups
-        content:
-          type: cli
-          value:
-            input: !az group list
-            map: json_to_array_table
-            where:
-            - name
-            - location
-            order:
-            - name
-            - location
+- name: resource_groups
+  description: List of resource groups for selected subscription
+  bindings:
+  - name: resources_in_group
+    description: List resources in group
+    triggers:
+    - key <Enter>
+    action:
+    - main.layout.open resources %name
+  layout:
+    type: table
+    windows:
+    - name: resource_groups
+      content:
+        type: cli
+        value:
+          input: !az group list
+          map: json_to_array_table
+          where:
+          - name
+          - location
+          order:
+          - name
+          - location
 
-  - name: resources
-    description: List of resources in resource group
-    parameters:
-    - name: resourceGroupName
-      type: string
-    layout:
-      type: table
-      windows:
-      - name: resources
-        content:
-          type: cli
-          value:
-            input: !az resource list --resource-group $resourceGroupName
-            map: json_to_array_table
-            where:
-            - name
-            - resourceGroup
-            - kind
-            - location
-            - type
-            order:
-            - name
-            - resourceGroup
-            - kind
-            - location
-            - type
+- name: resources
+  description: List of resources in resource group
+  parameters:
+  - name: resourceGroupName
+    type: string
+  layout:
+    type: table
+    windows:
+    - name: resources
+      content:
+        type: cli
+        value:
+          input: !az resource list --resource-group $resourceGroupName
+          map: json_to_array_table
+          where:
+          - name
+          - resourceGroup
+          - kind
+          - location
+          - type
+          order:
+          - name
+          - resourceGroup
+          - kind
+          - location
+          - type
 
