@@ -16,7 +16,7 @@ namespace myotui
 
         public async Task Run()
         {
-            await _configuration.BuildAppConfiguration("config/app2.yml");
+            await _configuration.BuildAppConfiguration("config/app3.yml");
 
             _tuiService.Run();
         }

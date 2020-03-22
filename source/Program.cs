@@ -25,11 +25,11 @@ namespace myotui
 
             builder.RegisterType<VBoxBufferRenderer>().Named<IBufferRenderer>(nameof(VBoxBuffer));
             builder.RegisterType<HBoxBufferRenderer>().Named<IBufferRenderer>(nameof(HBoxBuffer));
-
+            builder.RegisterType<HBladeBufferRenderer>().Named<IBufferRenderer>(nameof(HBladeBuffer));
+            builder.RegisterType<TableBufferRenderer>().Named<IBufferRenderer>(nameof(TableBuffer));
 
             builder.RegisterType<App>().As<IApp>();
             builder.RegisterType<BufferContent>().As<IContent>();
-            builder.RegisterType<CliContent>().As<IContent>();
             builder.RegisterType<TableBuffer>().As<IBuffer>();
             builder.RegisterType<HBoxBuffer>().As<IBuffer>();
             builder.RegisterType<VBoxBuffer>().As<IBuffer>();

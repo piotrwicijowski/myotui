@@ -16,6 +16,7 @@ namespace myotui.Services
             _configuration = configuration;
             _context = context;
         }
+
         public View RenderBuffer(string name)
         {
             var buffer = _configuration.AppConfiguration.Buffers.FirstOrDefault(x => x.Name == name);

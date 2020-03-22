@@ -5,6 +5,6 @@ namespace myotui.Models
     {
         public string Name {get; set;}
         public string Description {get; set;}
-        public IEnumerable<IContent> Content {get; set;}
+        public CliDefinition Cli {get; set;}
     }
 }
