@@ -14,7 +14,7 @@ namespace myotui.Services
         public View Render(IBuffer buffer)
         {
             var tablebuffer = buffer as TableBuffer;
-            var view = new Label(tablebuffer.Cli.Input);
+            var view = new FrameView(tablebuffer.Cli.Input);
             // var view = new View();
             // var label = new Label(tablebuffer.Name)
             // {

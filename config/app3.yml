@@ -11,6 +11,9 @@ buffers:
   - !buffer
     name: head
     value: menu
+    height:
+      mode: fixed
+      fixed: 1
   - !buffer
     name: body
     value: body
@@ -34,6 +37,9 @@ buffers:
   - !buffer
     name: sidebar
     value: sidebar
+    width:
+      mode: fixed
+      fixed: 6
   - !buffer
     name: main
     value: main

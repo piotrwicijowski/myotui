@@ -30,7 +30,6 @@ namespace myotui.Services
 
         public View BuildWindow()
         {
-            var rootContent = GetRootContent();
             var window = new View()
             {
                 X = 0,
@@ -44,6 +43,12 @@ namespace myotui.Services
                 X = 0 + 1,
                 Y = 0,
             };
+            var rootContent = GetRootContent();
+            rootContent.X = 0;
+            rootContent.Y = 1;
+            rootContent.Width = Dim.Fill();
+            rootContent.Height = Dim.Fill();
+
             window.Add(label, rootContent);
             return window;
         }

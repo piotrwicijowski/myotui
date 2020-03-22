@@ -6,5 +6,7 @@ namespace myotui.Models
     {
         public string Name {get; set;}
         public string Value {get; set;}
+        public SizeHint Width {get; set;}
+        public SizeHint Height {get; set;}
     }
 }

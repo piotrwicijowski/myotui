@@ -27,8 +27,8 @@ namespace myotui.Services
                 var elementLayout = _bufferService.RenderBuffer(element.value.Value);
                 elementLayout.Y = 1;
                 elementLayout.X = Pos.Percent(100/count * element.i);
-                elementLayout.Height = Dim.Fill() - 1;
-                elementLayout.Width = Dim.Percent(100/count);
+                elementLayout.Height = Dim.Fill();
+                elementLayout.Width = Dim.Percent(100/(count - element.i));
 
                 view.Add(elementLayout);
             }
