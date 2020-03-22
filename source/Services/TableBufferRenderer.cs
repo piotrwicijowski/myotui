@@ -1,38 +1,35 @@
 using System.Linq;
-using myotui.Models;
 using Terminal.Gui;
+using myotui.Models;
+using myotui.Services;
+using Autofac.Features.Indexed;
 
 namespace myotui.Services
 {
     public class TableBufferRenderer : IBufferRenderer
     {
         protected readonly IBufferService _bufferService;
-        public TableBufferRenderer(IBufferService bufferService)
+        protected readonly IRawContentService _rawContentService;
+        protected readonly IIndex<CliMapType,IContentMapService> _maps;
+        public TableBufferRenderer(IBufferService bufferService, IRawContentService rawContentService, IIndex<CliMapType,IContentMapService> maps)
         {
             _bufferService = bufferService;
+            _rawContentService = rawContentService;
+            _maps = maps;
         }
         public View Render(IBuffer buffer)
         {
             var tablebuffer = buffer as TableBuffer;
             var view = new FrameView(tablebuffer.Cli.Input);
-            // var view = new View();
-            // var label = new Label(tablebuffer.Name)
-            // {
-            //     X = 0 + 1,
-            //     Y = 0,
-            // };
-            // view.Add(label);
-            // var count = tablebuffer.Content.Count(); 
-            // foreach (var element in tablebuffer.Content.Select((value, i) => ( value, i )))
-            // {
-            //     var elementLayout = _bufferService.RenderBuffer(element.value.Value);
-            //     elementLayout.Y = 1;
-            //     elementLayout.X = Pos.Percent(100/count * element.i);
-            //     elementLayout.Height = Dim.Fill() - 1;
-            //     elementLayout.Width = Dim.Percent(100/count);
-
-            //     view.Add(elementLayout);
-            // }
+            var rawContent = _rawContentService.GetRawOutput(tablebuffer.Cli.Input);
+            var map = _maps[tablebuffer.Cli.Map];
+            var content = map.MapRawData(rawContent);
+            var listView = new ListView(content.ToList());
+            listView.X = 0;
+            listView.Y = 0;
+            listView.Width = Dim.Fill();
+            listView.Height = Dim.Fill();
+            view.Add(listView);
             return view;
         }
     }

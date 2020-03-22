@@ -22,13 +22,13 @@ buffers:
   name: menu
   description: Application menu
   cli:
-    input: menu
+    input: echo menu
 
 - !table
   name: sidebar
   description: Sidebar
   cli:
-    input: sdb
+    input: echo sdb
 
 - !hbox
   name: body
@@ -39,7 +39,7 @@ buffers:
     value: sidebar
     width:
       mode: fixed
-      fixed: 6
+      fixed: 7
   - !buffer
     name: main
     value: main
