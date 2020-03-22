@@ -8,10 +8,5 @@ namespace myotui.Models
         public string Name {get; set;}
         public string Description {get; set;}
         public IEnumerable<IContent> Content {get; set;}
-        public View BuildLayout()
-        {
-            var view = new View();
-            return view;
-        }
     }
 }

@@ -21,30 +21,6 @@ namespace myotui.Models
         public IEnumerable<IModeDefinition> Modes {get; set;}
         public IEnumerable<IBuffer> Buffers {get; set;}
 
-        private View GetRootContent()
-        {
-            var rootBuffer = _configuration.AppConfiguration.Buffers.FirstOrDefault(x => x.Name == "root");
-            return rootBuffer.BuildLayout();
-        }
 
-        public View BuildWindow()
-        {
-            var rootContent = GetRootContent();
-            var window = new View()
-            {
-                X = 0,
-                Y = 0,
-                Width = Dim.Fill(),
-                Height = Dim.Fill(),
-
-            };
-            var label = new Label(_configuration.AppConfiguration.Name)
-            {
-                X = 0 + 1,
-                Y = 0,
-            };
-            window.Add(label, rootContent);
-            return window;
-        }
     }
 }

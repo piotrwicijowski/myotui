@@ -21,6 +21,11 @@ namespace myotui
             builder.RegisterType<AutofacResolver>().As<INodeTypeResolver>();
             builder.RegisterType<ConfigurationService>().As<IConfigurationService>().SingleInstance();
             builder.RegisterType<TuiService>().As<ITuiService>();
+            builder.RegisterType<BufferService>().As<IBufferService>();
+
+            builder.RegisterType<VBoxBufferRenderer>().Named<IBufferRenderer>(nameof(VBoxBuffer));
+            builder.RegisterType<HBoxBufferRenderer>().Named<IBufferRenderer>(nameof(HBoxBuffer));
+
 
             builder.RegisterType<App>().As<IApp>();
             builder.RegisterType<BufferContent>().As<IContent>();

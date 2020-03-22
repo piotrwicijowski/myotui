@@ -9,6 +9,5 @@ namespace myotui.Models
 
         public IEnumerable<IModeDefinition> Modes {get; set;}
         public IEnumerable<IBuffer> Buffers {get; set;}
-        public View BuildWindow();
     }
 }
