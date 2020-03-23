@@ -3,25 +3,27 @@ using Terminal.Gui;
 using myotui.Models;
 using myotui.Services;
 using Autofac.Features.Indexed;
+using System;
 
 namespace myotui.Services
 {
     public class TableBufferRenderer : IBufferRenderer
     {
         protected readonly IBufferService _bufferService;
-        protected readonly IRawContentService _rawContentService;
+        protected readonly IIndex<Type,IRawContentService> _rawContentServices;
         protected readonly IIndex<ValueMapType,IContentMapService> _maps;
-        public TableBufferRenderer(IBufferService bufferService, IRawContentService rawContentService, IIndex<ValueMapType,IContentMapService> maps)
+        public TableBufferRenderer(IBufferService bufferService, IIndex<Type,IRawContentService> rawContentServices, IIndex<ValueMapType,IContentMapService> maps)
         {
             _bufferService = bufferService;
-            _rawContentService = rawContentService;
+            _rawContentServices = rawContentServices;
             _maps = maps;
         }
         public View Render(IBuffer buffer)
         {
             var tablebuffer = buffer as TableBuffer;
-            var view = new FrameView(tablebuffer.Content.Input);
-            var rawContent = _rawContentService.GetRawOutput(tablebuffer.Content.Input);
+            var view = new FrameView("");
+            var rawContentService = _rawContentServices[tablebuffer.Content.GetType()];
+            var rawContent = rawContentService.GetRawOutput(tablebuffer.Content);
             var map = _maps[tablebuffer.Content.Map];
             var content = map.MapRawData(rawContent);
             var listView = new ListView(content.ToList());

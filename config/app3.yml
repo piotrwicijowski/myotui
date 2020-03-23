@@ -13,7 +13,7 @@ buffers:
     value: menu
     height:
       mode: fixed
-      fixed: 1
+      fixed: 4
   - !buffer
     name: body
     value: body
@@ -22,15 +22,17 @@ buffers:
   name: menu
   description: Application menu
   content:
-    !cli
-    input: echo menu
+    !list
+    value:
+    - menu
 
 - !table
   name: sidebar
   description: Sidebar
   content:
-    !cli
-    input: echo sdb
+    !list
+    value:
+    - sdb
 
 - !hbox
   name: body

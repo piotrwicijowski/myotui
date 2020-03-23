@@ -22,7 +22,8 @@ namespace myotui
             builder.RegisterType<ConfigurationService>().As<IConfigurationService>().SingleInstance();
             builder.RegisterType<TuiService>().As<ITuiService>();
             builder.RegisterType<BufferService>().As<IBufferService>();
-            builder.RegisterType<CliRawContentService>().As<IRawContentService>();
+            builder.RegisterType<CliRawContentService>().Keyed<IRawContentService>(typeof(CliValueContent));
+            builder.RegisterType<ListRawContentService>().Keyed<IRawContentService>(typeof(ListValueContent));
             builder.RegisterType<JsonArrayMapService>().Keyed<IContentMapService>(ValueMapType.json_array_to_table);
             builder.RegisterType<StringArrayMapService>().Keyed<IContentMapService>(ValueMapType.string_to_string_array);
 
@@ -34,6 +35,7 @@ namespace myotui
             builder.RegisterType<App>().As<IApp>();
             builder.RegisterType<BufferLayoutContent>().As<ILayoutContent>();
             builder.RegisterType<CliValueContent>().As<IValueContent>();
+            builder.RegisterType<ListValueContent>().As<IValueContent>();
             builder.RegisterType<TableBuffer>().As<IBuffer>();
             builder.RegisterType<HBoxBuffer>().As<IBuffer>();
             builder.RegisterType<VBoxBuffer>().As<IBuffer>();

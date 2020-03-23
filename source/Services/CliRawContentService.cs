@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using myotui;
+using myotui.Models;
 
 namespace myotui.Services
 {
     public class CliRawContentService : IRawContentService
     {
-        public string GetRawOutput(string command)
+        public string GetRawOutput(IValueContent content)
         {
-            var commandSplit = StringExtensions.SplitCommandLine(command);
+            var cliContent = content as CliValueContent;
+            var commandSplit = StringExtensions.SplitCommandLine(cliContent.Input);
             using var pProcess = new Process();
             pProcess.StartInfo.FileName = commandSplit.Take(1).FirstOrDefault();
             pProcess.StartInfo.Arguments = string.Join(' ', commandSplit.Skip(1));
