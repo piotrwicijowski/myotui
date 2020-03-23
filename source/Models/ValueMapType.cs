@@ -1,6 +1,6 @@
-namespace myotui.Models
+﻿namespace myotui.Models
 {
-    public enum CliMapType
+    public enum ValueMapType
     {
         string_to_string_array = 0,
         json_array_to_table = 1,

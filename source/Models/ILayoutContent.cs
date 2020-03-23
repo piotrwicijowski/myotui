@@ -1,8 +1,8 @@
-using Terminal.Gui;
+﻿using Terminal.Gui;
 
 namespace myotui.Models
 {
-    public interface IContent
+    public interface ILayoutContent
     {
         public string Name {get; set;}
         public string Value {get; set;}

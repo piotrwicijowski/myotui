@@ -21,13 +21,15 @@ buffers:
 - !table
   name: menu
   description: Application menu
-  cli:
+  content:
+    !cli
     input: echo menu
 
 - !table
   name: sidebar
   description: Sidebar
-  cli:
+  content:
+    !cli
     input: echo sdb
 
 - !hbox
@@ -56,7 +58,8 @@ buffers:
 - !table
   name: resource_groups
   description: List of resource groups for selected subscription
-  cli:
+  content:
+    !cli
     input: az group list
     map: json_array_to_table
     select:

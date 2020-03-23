@@ -23,8 +23,8 @@ namespace myotui
             builder.RegisterType<TuiService>().As<ITuiService>();
             builder.RegisterType<BufferService>().As<IBufferService>();
             builder.RegisterType<CliRawContentService>().As<IRawContentService>();
-            builder.RegisterType<JsonArrayMapService>().Keyed<IContentMapService>(CliMapType.json_array_to_table);
-            builder.RegisterType<StringArrayMapService>().Keyed<IContentMapService>(CliMapType.string_to_string_array);
+            builder.RegisterType<JsonArrayMapService>().Keyed<IContentMapService>(ValueMapType.json_array_to_table);
+            builder.RegisterType<StringArrayMapService>().Keyed<IContentMapService>(ValueMapType.string_to_string_array);
 
             builder.RegisterType<VBoxBufferRenderer>().Named<IBufferRenderer>(nameof(VBoxBuffer));
             builder.RegisterType<HBoxBufferRenderer>().Named<IBufferRenderer>(nameof(HBoxBuffer));
@@ -32,7 +32,8 @@ namespace myotui
             builder.RegisterType<TableBufferRenderer>().Named<IBufferRenderer>(nameof(TableBuffer));
 
             builder.RegisterType<App>().As<IApp>();
-            builder.RegisterType<BufferContent>().As<IContent>();
+            builder.RegisterType<BufferLayoutContent>().As<ILayoutContent>();
+            builder.RegisterType<CliValueContent>().As<IValueContent>();
             builder.RegisterType<TableBuffer>().As<IBuffer>();
             builder.RegisterType<HBoxBuffer>().As<IBuffer>();
             builder.RegisterType<VBoxBuffer>().As<IBuffer>();
