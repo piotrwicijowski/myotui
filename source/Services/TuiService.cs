@@ -1,6 +1,7 @@
 using System.Linq;
 using Terminal.Gui;
 using myotui.Models;
+using myotui.Views;
 
 namespace myotui.Services
 {
@@ -8,11 +9,13 @@ namespace myotui.Services
     {
         protected readonly IConfigurationService _configuration;
         protected readonly IBufferService _bufferSerivce;
+        protected readonly IKeyService _keyService;
 
-        public TuiService(IConfigurationService configuration, IBufferService bufferService)
+        public TuiService(IConfigurationService configuration, IBufferService bufferService, IKeyService keyService)
         {
             _configuration = configuration;
             _bufferSerivce = bufferService;
+            _keyService = keyService;
         }
 
         public void Run()
@@ -30,7 +33,7 @@ namespace myotui.Services
 
         public View BuildWindow()
         {
-            var window = new View()
+            var window = new KeyedView()
             {
                 X = 0,
                 Y = 0,
@@ -38,6 +41,7 @@ namespace myotui.Services
                 Height = Dim.Fill(),
 
             };
+            window.KeyPressed += _keyService.ProcessKeyEvent;
             var label = new Label(_configuration.AppConfiguration.Name)
             {
                 X = 0 + 1,

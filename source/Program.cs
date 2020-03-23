@@ -21,7 +21,8 @@ namespace myotui
             builder.RegisterType<AutofacResolver>().As<INodeTypeResolver>();
             builder.RegisterType<ConfigurationService>().As<IConfigurationService>().SingleInstance();
             builder.RegisterType<TuiService>().As<ITuiService>();
-            builder.RegisterType<ActionService>().As<IActionService>();
+            builder.RegisterType<ActionService>().As<IActionService>().SingleInstance();
+            builder.RegisterType<KeyService>().As<IKeyService>();
             builder.RegisterType<BufferService>().As<IBufferService>();
             builder.RegisterType<CliRawContentService>().Keyed<IRawContentService>(typeof(CliValueContent));
             builder.RegisterType<ListRawContentService>().Keyed<IRawContentService>(typeof(ListValueContent));
