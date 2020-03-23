@@ -8,7 +8,12 @@ namespace myotui.Services
 {
     public class BufferRenderer : IBufferRenderer
     {
-        public virtual View Render(IBuffer buffer)
+        protected readonly IActionService _actionService;
+        protected BufferRenderer(IActionService actionService)
+        {
+            _actionService = actionService;
+        }
+        public virtual View Render(IBuffer buffer, string scope)
         {
             throw new System.NotImplementedException();
         }
@@ -30,6 +35,11 @@ namespace myotui.Services
 
             });
             return dims;
+        }
+
+        protected void RegisterFocusAction(View parentView, View childView, string scope)
+        {
+            _actionService.RegisterAction($"{scope}.focus",scope,() => parentView.SetFocus(childView));
         }
 
 

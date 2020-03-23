@@ -18,11 +18,11 @@ namespace myotui.Services
             _bufferRenderers = bufferRenderers;
         }
 
-        public View RenderBuffer(string name)
+        public View RenderBuffer(string name, string scope)
         {
             var buffer = _configuration.AppConfiguration.Buffers.FirstOrDefault(x => x.Name == name);
             var bufferRenderer = _bufferRenderers[buffer.GetType()];
-            return bufferRenderer.Render(buffer);
+            return bufferRenderer.Render(buffer, scope);
         }
          
     }

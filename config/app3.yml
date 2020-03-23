@@ -7,7 +7,14 @@ buffers:
 - !vbox
   name: root
   description: Root view
-  content:
+  bindings:
+  - name: command_mode
+    description: Open command mode
+    triggers:
+    - "key :"
+    actions:
+    - "windows.cmd focus"
+  windows:
   - !buffer
     name: head
     value: menu
@@ -37,7 +44,7 @@ buffers:
 - !hbox
   name: body
   description: Horizontal view with left sidebar and all the rest
-  content:
+  windows:
   - !buffer
     name: sidebar
     value: sidebar
@@ -51,7 +58,7 @@ buffers:
 - !hblade
   name: main
   description: Main container for content
-  content:
+  windows:
   - !buffer
     name: content
     value: resource_groups

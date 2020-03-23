@@ -21,6 +21,7 @@ namespace myotui
             builder.RegisterType<AutofacResolver>().As<INodeTypeResolver>();
             builder.RegisterType<ConfigurationService>().As<IConfigurationService>().SingleInstance();
             builder.RegisterType<TuiService>().As<ITuiService>();
+            builder.RegisterType<ActionService>().As<IActionService>();
             builder.RegisterType<BufferService>().As<IBufferService>();
             builder.RegisterType<CliRawContentService>().Keyed<IRawContentService>(typeof(CliValueContent));
             builder.RegisterType<ListRawContentService>().Keyed<IRawContentService>(typeof(ListValueContent));
@@ -42,6 +43,7 @@ namespace myotui
             builder.RegisterType<HBladeBuffer>().As<IBuffer>();
             builder.RegisterType<VBladeBuffer>().As<IBuffer>();
             builder.RegisterType<ModeDefinition>().As<IModeDefinition>();
+            builder.RegisterType<Binding>().As<IBinding>();
             builder.Populate(collection);
             var container = builder.Build();
             return container;

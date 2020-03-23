@@ -11,7 +11,7 @@ namespace myotui.Services
         {
             _bufferService = bufferService;
         }
-        public View Render(IBuffer buffer)
+        public View Render(IBuffer buffer, string scope)
         {
             var hboxbuffer = buffer as HBladeBuffer;
             var view = new View();
@@ -21,10 +21,10 @@ namespace myotui.Services
                 Y = 0,
             };
             view.Add(label);
-            var count = hboxbuffer.Content.Count(); 
-            foreach (var element in hboxbuffer.Content.Select((value, i) => ( value, i )))
+            var count = hboxbuffer.Windows.Count(); 
+            foreach (var element in hboxbuffer.Windows.Select((value, i) => ( value, i )))
             {
-                var elementLayout = _bufferService.RenderBuffer(element.value.Value);
+                var elementLayout = _bufferService.RenderBuffer(element.value.Value, $"{scope}.{element.value.Name}");
                 elementLayout.Y = 1;
                 elementLayout.X = Pos.Percent(100/count * element.i);
                 elementLayout.Height = Dim.Fill();

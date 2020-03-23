@@ -3,7 +3,7 @@ namespace myotui.Services
 {
     public interface IBufferService
     {
-        public View RenderBuffer(string name);
+        public View RenderBuffer(string name, string scope);
          
     }
 }

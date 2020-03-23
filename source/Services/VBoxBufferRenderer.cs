@@ -8,11 +8,11 @@ namespace myotui.Services
     public class VBoxBufferRenderer : BufferRenderer
     {
         protected readonly IBufferService _bufferService;
-        public VBoxBufferRenderer(IBufferService bufferService)
+        public VBoxBufferRenderer(IBufferService bufferService, IActionService actionService) : base(actionService)
         {
             _bufferService = bufferService;
         }
-        public override View Render(IBuffer buffer)
+        public override View Render(IBuffer buffer, string scope)
         {
             var vboxbuffer = buffer as VBoxBuffer;
             var view = new View();
@@ -22,10 +22,14 @@ namespace myotui.Services
                 Y = 0,
             };
             view.Add(label);
-            var count = vboxbuffer.Content.Count(); 
-            var dims = GetDims(vboxbuffer.Content.Select(content => content.Height));
-            var elements = vboxbuffer.Content
-                .Select((content,i) => _bufferService.RenderBuffer(content.Value))
+            var count = vboxbuffer.Windows.Count(); 
+            var dims = GetDims(vboxbuffer.Windows.Select(content => content.Height));
+            var elements = vboxbuffer.Windows
+                .Select((content,i) => {
+                    var element = _bufferService.RenderBuffer(content.Value,$"{scope}/{content.Name}");
+                    RegisterFocusAction(view,element,$"{scope}/{content.Name}");
+                    return element;
+                })
                 .Zip(dims, (element, dim) => 
                 {
                     element.X = 0;

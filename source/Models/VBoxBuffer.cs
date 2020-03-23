@@ -4,10 +4,11 @@ using System.Linq;
 
 namespace myotui.Models
 {
-    public class VBoxBuffer : IBuffer
+    public class VBoxBuffer : ILayoutBuffer
     {
         public string Name {get; set;}
         public string Description {get; set;}
-        public IEnumerable<ILayoutContent> Content {get; set;}
+        public IEnumerable<IBinding> Bindings {get; set;}
+        public IEnumerable<ILayoutContent> Windows {get; set;}
     }
 }

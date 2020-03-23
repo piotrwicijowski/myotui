@@ -7,5 +7,6 @@ namespace myotui.Models
     {
         public string Name {get; set;}
         public string Description {get; set;}
+        public IEnumerable<IBinding> Bindings {get; set;}
     }
 }

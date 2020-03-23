@@ -18,7 +18,7 @@ namespace myotui.Services
             _rawContentServices = rawContentServices;
             _maps = maps;
         }
-        public View Render(IBuffer buffer)
+        public View Render(IBuffer buffer, string scope)
         {
             var tablebuffer = buffer as TableBuffer;
             var view = new FrameView("");

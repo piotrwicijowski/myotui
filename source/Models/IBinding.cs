@@ -1,11 +1,13 @@
 using System.Collections.Generic;
+
 namespace myotui.Models
 {
-    public class TableBuffer : IBuffer
+    public interface IBinding
     {
         public string Name {get; set;}
         public string Description {get; set;}
-        public IEnumerable<IBinding> Bindings {get; set;}
-        public IValueContent Content {get; set;}
+        public IEnumerable<string> Triggers {get; set;}
+        public IEnumerable<string> Actions {get; set;}
+
     }
 }
