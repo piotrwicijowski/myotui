@@ -27,10 +27,10 @@ namespace myotui
             builder.RegisterType<JsonArrayMapService>().Keyed<IContentMapService>(ValueMapType.json_array_to_table);
             builder.RegisterType<StringArrayMapService>().Keyed<IContentMapService>(ValueMapType.string_to_string_array);
 
-            builder.RegisterType<VBoxBufferRenderer>().Named<IBufferRenderer>(nameof(VBoxBuffer));
-            builder.RegisterType<HBoxBufferRenderer>().Named<IBufferRenderer>(nameof(HBoxBuffer));
-            builder.RegisterType<HBladeBufferRenderer>().Named<IBufferRenderer>(nameof(HBladeBuffer));
-            builder.RegisterType<TableBufferRenderer>().Named<IBufferRenderer>(nameof(TableBuffer));
+            builder.RegisterType<VBoxBufferRenderer>().Keyed<IBufferRenderer>(typeof(VBoxBuffer));
+            builder.RegisterType<HBoxBufferRenderer>().Keyed<IBufferRenderer>(typeof(HBoxBuffer));
+            builder.RegisterType<HBladeBufferRenderer>().Keyed<IBufferRenderer>(typeof(HBladeBuffer));
+            builder.RegisterType<TableBufferRenderer>().Keyed<IBufferRenderer>(typeof(TableBuffer));
 
             builder.RegisterType<App>().As<IApp>();
             builder.RegisterType<BufferLayoutContent>().As<ILayoutContent>();
