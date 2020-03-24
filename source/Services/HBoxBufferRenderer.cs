@@ -8,7 +8,7 @@ namespace myotui.Services
     {
         protected readonly IBufferService _bufferService;
 
-        public HBoxBufferRenderer(IBufferService bufferService, IActionService actionService) : base(actionService)
+        public HBoxBufferRenderer(IBufferService bufferService, IActionService actionService, IKeyService keyService) : base(actionService, keyService)
         {
             _bufferService = bufferService;
         }
@@ -46,6 +46,7 @@ namespace myotui.Services
                     return element;
                 }
                 );
+            RegisterBindings(hboxbuffer.Bindings, scope);
             return view;
         }
     }

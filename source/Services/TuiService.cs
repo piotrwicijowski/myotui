@@ -28,7 +28,7 @@ namespace myotui.Services
         }
         private View GetRootContent()
         {
-            return _bufferSerivce.RenderBuffer("root","");
+            return _bufferSerivce.RenderBuffer("root","/root");
         }
 
         public View BuildWindow()

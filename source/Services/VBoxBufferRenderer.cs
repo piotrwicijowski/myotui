@@ -8,7 +8,7 @@ namespace myotui.Services
     public class VBoxBufferRenderer : BufferRenderer
     {
         protected readonly IBufferService _bufferService;
-        public VBoxBufferRenderer(IBufferService bufferService, IActionService actionService) : base(actionService)
+        public VBoxBufferRenderer(IBufferService bufferService, IActionService actionService, IKeyService keyService) : base(actionService, keyService)
         {
             _bufferService = bufferService;
         }
@@ -44,6 +44,7 @@ namespace myotui.Services
                     return element;
                 }
                 );
+            RegisterBindings(vboxbuffer.Bindings, scope);
             return view;
         }
     }

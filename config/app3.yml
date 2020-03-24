@@ -12,8 +12,30 @@ buffers:
     description: Open command mode
     triggers:
     - "key :"
+    - "key o"
     actions:
-    - "windows.cmd focus"
+    - "/root/cmd.focus"
+  - name: left
+    description: Focus left sidebar
+    triggers:
+    - "key l"
+    - "key i"
+    - "key j"
+    actions:
+    - "/root/body/sidebar.focus"
+  - name: right
+    description: Focus right content
+    triggers:
+    - "key r"
+    actions:
+    - "/root/body/main.focus"
+  - name: menu
+    description: Focus menu
+    triggers:
+    - "key <DeleteChar>"
+    - "key <ControlM>"
+    actions:
+    - "/root/head.focus"
   windows:
   - !buffer
     name: head

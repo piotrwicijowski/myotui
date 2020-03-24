@@ -22,7 +22,7 @@ namespace myotui
             builder.RegisterType<ConfigurationService>().As<IConfigurationService>().SingleInstance();
             builder.RegisterType<TuiService>().As<ITuiService>();
             builder.RegisterType<ActionService>().As<IActionService>().SingleInstance();
-            builder.RegisterType<KeyService>().As<IKeyService>();
+            builder.RegisterType<KeyService>().As<IKeyService>().SingleInstance();
             builder.RegisterType<BufferService>().As<IBufferService>();
             builder.RegisterType<CliRawContentService>().Keyed<IRawContentService>(typeof(CliValueContent));
             builder.RegisterType<ListRawContentService>().Keyed<IRawContentService>(typeof(ListValueContent));

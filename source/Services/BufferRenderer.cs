@@ -9,9 +9,11 @@ namespace myotui.Services
     public class BufferRenderer : IBufferRenderer
     {
         protected readonly IActionService _actionService;
-        protected BufferRenderer(IActionService actionService)
+        protected readonly IKeyService _keyService;
+        protected BufferRenderer(IActionService actionService, IKeyService keyService)
         {
             _actionService = actionService;
+            _keyService = keyService;
         }
         public virtual View Render(IBuffer buffer, string scope)
         {
@@ -40,6 +42,39 @@ namespace myotui.Services
         protected void RegisterFocusAction(View parentView, View childView, string scope)
         {
             _actionService.RegisterAction($"{scope}.focus",scope,() => parentView.SetFocus(childView));
+        }
+
+        protected void RegisterBindings(IEnumerable<IBinding> bindings, string scope)
+        {
+            bindings?
+            .ToList()
+            .ForEach(
+                binding => binding
+                    .Triggers
+                    .Where(trigger => trigger.StartsWith("key "))
+                    // .SelectMany<string, string, object>(
+                    //     trigger => binding.Actions,
+                    //     (trigger, action) => {
+                    //         _keyService.RegisterKeyActionTrigger(trigger, action, scope);
+                    //         return null;
+                    //     }
+                    // )
+                    .SelectMany(
+                        trigger => binding.Actions,
+                        (trigger, action) => (trigger, action)
+                    )
+                    .ToList()
+                    .ForEach(
+                        pair => {
+                            var (trigger, action) = pair;
+                            _keyService.RegisterKeyActionTrigger(trigger, action, scope);
+                        } 
+                    )
+                );
+            // var keyBindings = bindings.Where(binding => binding.Triggers);
+            // _keyService.reg
+
+            // _actionService.RegisterAction($"{scope}.focus",scope,() => parentView.SetFocus(childView));
         }
 
 
