@@ -4,7 +4,7 @@ using Terminal.Gui;
 using Autofac;
 using myotui.Services;
 
-namespace myotui.Models
+namespace myotui.Models.Config
 {
     public class App : IApp
     {

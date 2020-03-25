@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using myotui;
-using myotui.Models;
+using myotui.Models.Config;
 
 namespace myotui.Services
 {

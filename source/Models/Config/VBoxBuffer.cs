@@ -1,7 +1,10 @@
 using System.Collections.Generic;
-namespace myotui.Models
+using Terminal.Gui;
+using System.Linq;
+
+namespace myotui.Models.Config
 {
-    public class HBladeBuffer : ILayoutBuffer
+    public class VBoxBuffer : ILayoutBuffer
     {
         public string Name {get; set;}
         public string Description {get; set;}

@@ -1,4 +1,4 @@
-﻿namespace myotui.Models
+﻿namespace myotui.Models.Config
 {
     public enum ValueMapType
     {

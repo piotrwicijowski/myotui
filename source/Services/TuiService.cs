@@ -1,7 +1,8 @@
 using System.Linq;
 using Terminal.Gui;
-using myotui.Models;
+using myotui.Models.Config;
 using myotui.Views;
+using myotui.Models;
 
 namespace myotui.Services
 {
@@ -10,28 +11,28 @@ namespace myotui.Services
         protected readonly IConfigurationService _configuration;
         protected readonly IBufferService _bufferSerivce;
         protected readonly IKeyService _keyService;
+        protected readonly INodeService _nodeService;
 
-        public TuiService(IConfigurationService configuration, IBufferService bufferService, IKeyService keyService)
+        public TuiService(IConfigurationService configuration, IBufferService bufferService, IKeyService keyService, INodeService nodeService)
         {
             _configuration = configuration;
             _bufferSerivce = bufferService;
             _keyService = keyService;
+            _nodeService = nodeService;
         }
 
         public void Run()
         {
-            var window = BuildWindow();
+            var rootBuffer = _bufferSerivce.GetBufferByName("root");
+            var nodeTree = _nodeService.BuildNodeTree(rootBuffer,"/root");
+            var window = BuildWindow(nodeTree);
             Terminal.Gui.Application.Init();
             var top = Terminal.Gui.Application.Top;
             top.Add(window);
             Terminal.Gui.Application.Run();
         }
-        private View GetRootContent()
-        {
-            return _bufferSerivce.RenderBuffer("root","/root");
-        }
 
-        public View BuildWindow()
+        public View BuildWindow(ViewNode node)
         {
             var window = new KeyedView()
             {
@@ -47,13 +48,13 @@ namespace myotui.Services
                 X = 0 + 1,
                 Y = 0,
             };
-            var rootContent = GetRootContent();
-            rootContent.X = 0;
-            rootContent.Y = 1;
-            rootContent.Width = Dim.Fill();
-            rootContent.Height = Dim.Fill();
+            var rootView = _bufferSerivce.RenderNode(node);
+            rootView.X = 0;
+            rootView.Y = 1;
+            rootView.Width = Dim.Fill();
+            rootView.Height = Dim.Fill();
 
-            window.Add(label, rootContent);
+            window.Add(label, rootView);
             return window;
         }
          

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-namespace myotui.Models
+namespace myotui.Models.Config
 {
     public interface ILayoutBuffer : IBuffer
     {

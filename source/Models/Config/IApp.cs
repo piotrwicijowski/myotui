@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Terminal.Gui;
 
-namespace myotui.Models
+namespace myotui.Models.Config
 {
     public interface IApp
     {

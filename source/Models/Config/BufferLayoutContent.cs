@@ -1,6 +1,6 @@
 ﻿using Terminal.Gui;
 
-namespace myotui.Models
+namespace myotui.Models.Config
 {
     public class BufferLayoutContent : ILayoutContent
     {

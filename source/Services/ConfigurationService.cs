@@ -4,7 +4,7 @@ using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 using Autofac;
-using myotui.Models;
+using myotui.Models.Config;
 
 namespace myotui.Services
 {

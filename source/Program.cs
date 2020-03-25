@@ -2,7 +2,7 @@
 using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
-using myotui.Models;
+using myotui.Models.Config;
 using myotui.Services;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +23,7 @@ namespace myotui
             builder.RegisterType<TuiService>().As<ITuiService>();
             builder.RegisterType<ActionService>().As<IActionService>().SingleInstance();
             builder.RegisterType<KeyService>().As<IKeyService>().SingleInstance();
+            builder.RegisterType<NodeService>().As<INodeService>().SingleInstance();
             builder.RegisterType<BufferService>().As<IBufferService>();
             builder.RegisterType<CliRawContentService>().Keyed<IRawContentService>(typeof(CliValueContent));
             builder.RegisterType<ListRawContentService>().Keyed<IRawContentService>(typeof(ListValueContent));

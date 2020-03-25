@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace myotui.Models
+namespace myotui.Models.Config
 {
     public class SizeHint
     {

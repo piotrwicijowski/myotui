@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using myotui.Models;
+using myotui.Models.Config;
 
 namespace myotui.Services
 {

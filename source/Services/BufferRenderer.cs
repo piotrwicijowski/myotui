@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using myotui.Models;
+using myotui.Models.Config;
 using Terminal.Gui;
 
 namespace myotui.Services
@@ -15,9 +16,27 @@ namespace myotui.Services
             _actionService = actionService;
             _keyService = keyService;
         }
-        public virtual View Render(IBuffer buffer, string scope)
+        public virtual View Render(ViewNode node)
         {
-            throw new System.NotImplementedException();
+            var view = new View();
+            var label = new Label(node.Buffer.Name)
+            {
+                X = 0 + 1,
+                Y = 0,
+            };
+            view.Add(label);
+            node.View = view;
+            return view;
+        }
+
+        public void RegisterEvents(ViewNode node)
+        {
+            RegisterFocusAction(node);
+        }
+
+        public virtual View Layout(ViewNode node)
+        {
+            throw new NotImplementedException();
         }
 
         public IEnumerable<Dim> GetDims(IEnumerable<SizeHint> sizeHints)
@@ -39,13 +58,20 @@ namespace myotui.Services
             return dims;
         }
 
-        protected void RegisterFocusAction(View parentView, View childView, string scope)
+        protected void RegisterFocusAction(ViewNode node)
         {
-            _actionService.RegisterAction($"{scope}.focus",scope,() => parentView.SetFocus(childView));
+
+            _actionService.RegisterAction($"{node.Scope}.focus",node.Scope,() => node.Parent?.View.SetFocus(node.View));
+            _actionService.RegisterAction($"{node.Scope}.focusNext",node.Scope,() => node.FocusNextChild());
+            _actionService.RegisterAction($"{node.Scope}.focusPrev",node.Scope,() => node.FocusPreviousChild());
         }
 
-        protected void RegisterBindings(IEnumerable<IBinding> bindings, string scope)
+
+        // public void RegisterBindings(IEnumerable<IBinding> bindings, string scope)
+        public void RegisterBindings(ViewNode node)
         {
+            var bindings = node.Buffer.Bindings;
+
             bindings?
             .ToList()
             .ForEach(
@@ -67,7 +93,8 @@ namespace myotui.Services
                     .ForEach(
                         pair => {
                             var (trigger, action) = pair;
-                            _keyService.RegisterKeyActionTrigger(trigger, action, scope);
+
+                            _keyService.RegisterKeyActionTrigger(trigger, action, binding.Scope ?? node.Scope);
                         } 
                     )
                 );

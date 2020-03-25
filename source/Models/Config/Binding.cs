@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace myotui.Models
+namespace myotui.Models.Config
 {
     public class Binding : IBinding
     {
@@ -8,5 +8,6 @@ namespace myotui.Models
         public string Description {get; set;}
         public IEnumerable<string> Triggers {get; set;}
         public IEnumerable<string> Actions {get; set;}
+        public string Scope {get; set;}
     }
 }

@@ -24,7 +24,8 @@ namespace myotui.Services
                 .Where(reg => IsInScope(actionExpression,reg.pattern))
                 .OrderBy(reg => ScopeDepth(reg.scope))
                 .Reverse()
-                .FirstOrDefault()?.action?.Invoke();
+                .ToList()
+                .ForEach(reg => reg?.action?.Invoke());
         }
 
         private static bool IsPatternMatching(string actionExpression, string pattern)

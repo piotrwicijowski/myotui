@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using myotui.Models;
+using myotui.Models.Config;
 
 namespace myotui.Services
 {

@@ -1,9 +1,10 @@
 using System.Linq;
 using Autofac;
 using Terminal.Gui;
-using myotui.Models;
+using myotui.Models.Config;
 using Autofac.Features.Indexed;
 using System;
+using myotui.Models;
 
 namespace myotui.Services
 {
@@ -18,11 +19,19 @@ namespace myotui.Services
             _bufferRenderers = bufferRenderers;
         }
 
-        public View RenderBuffer(string name, string scope)
+        public View RenderNode(ViewNode node)
         {
-            var buffer = _configuration.AppConfiguration.Buffers.FirstOrDefault(x => x.Name == name);
-            var bufferRenderer = _bufferRenderers[buffer.GetType()];
-            return bufferRenderer.Render(buffer, scope);
+            var parentRenderer = _bufferRenderers[node.Buffer.GetType()];
+            parentRenderer.Render(node);
+            node.Children?.ToList().ForEach(childNode => RenderNode(childNode));
+            parentRenderer.RegisterEvents(node);
+            parentRenderer.RegisterBindings(node);
+            return parentRenderer.Layout(node);
+        }
+
+        public IBuffer GetBufferByName(string name)
+        {
+            return _configuration.AppConfiguration.Buffers.FirstOrDefault(x => x.Name == name);
         }
          
     }

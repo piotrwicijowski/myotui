@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using myotui.Services;
-using myotui.Models;
+using myotui.Models.Config;
 namespace myotui
 {
     public class Application

@@ -15,6 +15,20 @@ buffers:
     - "key o"
     actions:
     - "/root/cmd.focus"
+  - name: focus_next
+    description: Focus Next View
+    scope: "/*"
+    triggers:
+    - "key <ControlL>"
+    actions:
+    - "/root.focusNext"
+  - name: focus_prev
+    description: Focus Previous View
+    scope: "/*"
+    triggers:
+    - "key <ControlH>"
+    actions:
+    - "/root.focusPrev"
   - name: left
     description: Focus left sidebar
     triggers:
@@ -77,13 +91,16 @@ buffers:
     name: main
     value: main
 
-- !hblade
+- !hbox
   name: main
   description: Main container for content
   windows:
   - !buffer
     name: content
     value: resource_groups
+  - !buffer
+    name: content1
+    value: resources
 
 
 - !table
@@ -98,5 +115,22 @@ buffers:
     - location
     order:
     - name
+    - location
+
+
+- !table
+  name: resources
+  description: List of all resources
+  content:
+    !cli
+    input: az resource list
+    map: json_array_to_table
+    select:
+    - name
+    - kind
+    - location
+    order:
+    - name
+    - kind
     - location
 
