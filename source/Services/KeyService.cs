@@ -15,7 +15,7 @@ namespace myotui.Services {
         {
             _actionService = actionService;
         }
-        public void ProcessKeyEvent (KeyEvent keyEvent)
+        public bool ProcessKeyEvent (KeyEvent keyEvent)
         {
 
             var isRegistered = _triggerActionDictionary.TryGetValue(keyEvent.Key, out var item);
@@ -23,16 +23,9 @@ namespace myotui.Services {
             {
                 var (action, scope) = item;
                 _actionService.DispatchAction(action,scope);
+                return true;
             }
-            // switch(keyEvent.Key)
-            // {
-            //     case (Key)('h'):
-            //         break;
-            //     case (Key)('l'):
-            //         _actionService.DispatchAction("/body/main.focus","/");
-            //         break;
-            // }
-
+            return false;
         }
 
         public void RegisterKeyActionTrigger(string trigger, string action, string scope)

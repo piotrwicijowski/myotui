@@ -5,13 +5,15 @@ namespace myotui.Views
 {
     public class KeyedView : View
     {
-        public Action<KeyEvent> KeyPressed;
+        public Func<KeyEvent,bool> KeyPressed;
 
         public override bool ProcessKey (KeyEvent keyEvent)
         {
-            KeyPressed.Invoke(keyEvent);
+            var wasHandled = KeyPressed.Invoke(keyEvent);
+            if(!wasHandled){
+                return base.ProcessKey (keyEvent);
+            }
             return true;
-            // return base.ProcessKey (keyEvent);
         }
     }
 }
