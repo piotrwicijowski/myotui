@@ -14,23 +14,53 @@ namespace myotui.Models
         public IList<ViewNode> Children {get; set;}
         public View View {get; set;}
         
-        public void FocusNextChild()
+        public bool FocusNextChild()
         {
-            // if(!View.HasFocus) {return;}
-            if(!Children.Any()) {return;} 
+            if(!View.HasFocus) {return false;}
+            if(Children == null || !Children.Any()) { return false; } 
             var focusedChildIndex = Children.Select(child => child.View).ToList().IndexOf(this.View.Focused);
-            if(focusedChildIndex < Children.Count - 1) {View.SetFocus(Children.ToList()[focusedChildIndex + 1].View);}
-            if(focusedChildIndex == Children.Count - 1) {Parent?.FocusNextChild();}
+            var childChangedFocusInternally = Children[focusedChildIndex].FocusNextChild();
+
+            if(childChangedFocusInternally)
+            {
+                return true;
+            }
+            if(focusedChildIndex < Children.Count - 1) 
+            {
+                View.SetFocus(Children.ToList()[focusedChildIndex + 1].View);
+                return true;
+            }
+            return false;
+            // if(focusedChildIndex == Children.Count - 1) {Parent?.FocusNextChild();}
         }
 
-        public void FocusPreviousChild()
+        public bool FocusPreviousChild()
         {
-            // if(!View.HasFocus) {return;}
-            if(!Children.Any()) {return;} 
+            if(!View.HasFocus) {return false;}
+            if(Children == null || !Children.Any()) { return false; } 
             var focusedChildIndex = Children.Select(child => child.View).ToList().IndexOf(this.View.Focused);
-            if(focusedChildIndex > 0) {View.SetFocus(Children.ToList()[focusedChildIndex - 1].View);}
-            if(focusedChildIndex == 0) {Parent?.FocusPreviousChild();}
+            var childChangedFocusInternally = Children[focusedChildIndex].FocusPreviousChild();
+
+            if(childChangedFocusInternally)
+            {
+                return true;
+            }
+            if(focusedChildIndex > 0) 
+            {
+                View.SetFocus(Children.ToList()[focusedChildIndex - 1].View);
+                return true;
+            }
+            return false;
+            // if(focusedChildIndex == Children.Count - 1) {Parent?.FocusNextChild();}
         }
+        // public void FocusPreviousChild()
+        // {
+        //     // if(!View.HasFocus) {return;}
+        //     if(!Children.Any()) {return;} 
+        //     var focusedChildIndex = Children.Select(child => child.View).ToList().IndexOf(this.View.Focused);
+        //     if(focusedChildIndex > 0) {View.SetFocus(Children.ToList()[focusedChildIndex - 1].View);}
+        //     if(focusedChildIndex == 0) {Parent?.FocusPreviousChild();}
+        // }
         // public SizeHint Width {get; set;}
 
     }

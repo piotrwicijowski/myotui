@@ -26,7 +26,7 @@ buffers:
     description: Focus Previous View
     scope: "/*"
     triggers:
-    - "key <ControlH>"
+    - "key <Backspace>"
     actions:
     - "/root.focusPrev"
   - name: left
