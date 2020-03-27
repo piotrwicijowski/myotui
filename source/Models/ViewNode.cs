@@ -19,19 +19,12 @@ namespace myotui.Models
             if(!View.HasFocus) {return false;}
             if(Children == null || !Children.Any()) { return false; } 
             var focusedChildIndex = Children.Select(child => child.View).ToList().IndexOf(this.View.Focused);
-            var childChangedFocusInternally = Children[focusedChildIndex].FocusNextChild();
-
-            if(childChangedFocusInternally)
-            {
-                return true;
-            }
             if(focusedChildIndex < Children.Count - 1) 
             {
                 View.SetFocus(Children.ToList()[focusedChildIndex + 1].View);
                 return true;
             }
             return false;
-            // if(focusedChildIndex == Children.Count - 1) {Parent?.FocusNextChild();}
         }
 
         public bool FocusPreviousChild()
@@ -39,29 +32,12 @@ namespace myotui.Models
             if(!View.HasFocus) {return false;}
             if(Children == null || !Children.Any()) { return false; } 
             var focusedChildIndex = Children.Select(child => child.View).ToList().IndexOf(this.View.Focused);
-            var childChangedFocusInternally = Children[focusedChildIndex].FocusPreviousChild();
-
-            if(childChangedFocusInternally)
-            {
-                return true;
-            }
             if(focusedChildIndex > 0) 
             {
                 View.SetFocus(Children.ToList()[focusedChildIndex - 1].View);
                 return true;
             }
             return false;
-            // if(focusedChildIndex == Children.Count - 1) {Parent?.FocusNextChild();}
         }
-        // public void FocusPreviousChild()
-        // {
-        //     // if(!View.HasFocus) {return;}
-        //     if(!Children.Any()) {return;} 
-        //     var focusedChildIndex = Children.Select(child => child.View).ToList().IndexOf(this.View.Focused);
-        //     if(focusedChildIndex > 0) {View.SetFocus(Children.ToList()[focusedChildIndex - 1].View);}
-        //     if(focusedChildIndex == 0) {Parent?.FocusPreviousChild();}
-        // }
-        // public SizeHint Width {get; set;}
-
     }
 }

@@ -58,16 +58,13 @@ namespace myotui.Services
             return dims;
         }
 
-        protected void RegisterFocusAction(ViewNode node)
+        protected virtual void RegisterFocusAction(ViewNode node)
         {
-
-            _actionService.RegisterAction($"{node.Scope}.focus",node.Scope,() => node.Parent?.View.SetFocus(node.View));
+            _actionService.RegisterAction($"{node.Scope}.focus",node.Scope,() => {node.Parent?.View.SetFocus(node.View);return true;});
             _actionService.RegisterAction($"{node.Scope}.focusNext",node.Scope,() => node.FocusNextChild());
             _actionService.RegisterAction($"{node.Scope}.focusPrev",node.Scope,() => node.FocusPreviousChild());
         }
 
-
-        // public void RegisterBindings(IEnumerable<IBinding> bindings, string scope)
         public void RegisterBindings(ViewNode node)
         {
             var bindings = node.Buffer.Bindings;
@@ -78,13 +75,6 @@ namespace myotui.Services
                 binding => binding
                     .Triggers
                     .Where(trigger => trigger.StartsWith("key "))
-                    // .SelectMany<string, string, object>(
-                    //     trigger => binding.Actions,
-                    //     (trigger, action) => {
-                    //         _keyService.RegisterKeyActionTrigger(trigger, action, scope);
-                    //         return null;
-                    //     }
-                    // )
                     .SelectMany(
                         trigger => binding.Actions,
                         (trigger, action) => (trigger, action)
@@ -98,10 +88,6 @@ namespace myotui.Services
                         } 
                     )
                 );
-            // var keyBindings = bindings.Where(binding => binding.Triggers);
-            // _keyService.reg
-
-            // _actionService.RegisterAction($"{scope}.focus",scope,() => parentView.SetFocus(childView));
         }
 
 

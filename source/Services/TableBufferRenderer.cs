@@ -34,7 +34,7 @@ namespace myotui.Services
         {
             if(node.Parent != null)
             {
-                RegisterFocusAction(node.Parent.View,node.View,node.Scope);
+                RegisterFocusAction(node);
             }
         }
 
@@ -57,9 +57,9 @@ namespace myotui.Services
             node.View = view;
             return view;
         }
-        protected void RegisterFocusAction(View parentView, View childView, string scope)
+        protected void RegisterFocusAction(ViewNode node)
         {
-            _actionService.RegisterAction($"{scope}.focus",scope,() => parentView.SetFocus(childView));
+            _actionService.RegisterAction($"{node.Scope}.focus",node.Scope,() => {node.Parent?.View.SetFocus(node.View);return true;});
         }
         
     }

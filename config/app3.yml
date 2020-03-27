@@ -15,20 +15,34 @@ buffers:
     - "key o"
     actions:
     - "/root/cmd.focus"
-  - name: focus_next
-    description: Focus Next View
+  - name: focus_right
+    description: Focus Right View
     scope: "/*"
     triggers:
     - "key <ControlL>"
     actions:
-    - "/root.focusNext"
-  - name: focus_prev
-    description: Focus Previous View
+    - "focusRight"
+  - name: focus_left
+    description: Focus Right View
     scope: "/*"
     triggers:
     - "key <Backspace>"
     actions:
-    - "/root.focusPrev"
+    - "focusLeft"
+  - name: focus_up
+    description: Focus Up View
+    scope: "/*"
+    triggers:
+    - "key <ControlK>"
+    actions:
+    - "focusUp"
+  - name: focus_down
+    description: Focus Down View
+    scope: "/*"
+    triggers:
+    - "key <ControlJ>"
+    actions:
+    - "focusDown"
   - name: left
     description: Focus left sidebar
     triggers:

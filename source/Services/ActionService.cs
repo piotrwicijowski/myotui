@@ -8,7 +8,7 @@ namespace myotui.Services
     public class ActionService : IActionService
     {
         protected readonly List<ActionRegistration> _registeredActions = new List<ActionRegistration>();
-        public void RegisterAction(string pattern, string scope, Action action)
+        public void RegisterAction(string pattern, string scope, Func<bool> action)
         {
             _registeredActions.Add(new ActionRegistration
             {
@@ -24,8 +24,14 @@ namespace myotui.Services
                 .Where(reg => IsInScope(actionExpression,reg.pattern))
                 .OrderBy(reg => ScopeDepth(reg.scope))
                 .Reverse()
-                .ToList()
-                .ForEach(reg => reg?.action?.Invoke());
+                // .ToList()
+                // .FirstOrDefault()?.action?.Invoke();
+                .TakeWhile(reg =>
+                {
+                    var testreg = reg;
+                 return !testreg.action.Invoke();
+                }
+                ).ToList();
         }
 
         private static bool IsPatternMatching(string actionExpression, string pattern)
@@ -47,7 +53,7 @@ namespace myotui.Services
 
         protected class ActionRegistration
         {
-            public Action action {get; set;}
+            public Func<bool> action {get; set;}
             public string pattern {get; set;}
             public string scope {get; set;}
         }
