@@ -21,7 +21,7 @@ namespace myotui.Services
         {
             _registeredActions
                 .Where(reg => IsPatternMatching(actionExpression,reg.pattern))
-                .Where(reg => IsInScope(actionExpression,reg.pattern))
+                .Where(reg => IsInScope(currentScope,reg.scope))
                 .OrderBy(reg => ScopeDepth(reg.scope))
                 .Reverse()
                 // .ToList()
@@ -41,14 +41,71 @@ namespace myotui.Services
         }
         private static bool IsInScope(string currentScope, string actionScope)
         {
-            //TODO create actual scope resolution
-            return true;
+            var currentScopeDecoded = DecodeScopeString(currentScope);
+            var actionScopeDecoded = DecodeScopeString(actionScope);
+            var currentScopeEnumerator = currentScopeDecoded.GetEnumerator();
+            var actionScopeEnumerator = actionScopeDecoded.GetEnumerator();
+            currentScopeEnumerator.MoveNext();
+            actionScopeEnumerator.MoveNext();
+            var hasMore = true;
+            var isWildcard = false;
+            while(hasMore)
+            {
+                var currentValue = currentScopeEnumerator.Current;
+                var actionValue = actionScopeEnumerator.Current;
+                if(actionValue == "**")
+                {
+                    isWildcard = true;
+                    var actionHasMore = actionScopeEnumerator.MoveNext();
+                    if(!actionHasMore)
+                    {
+                        return true;
+                    }
+                    continue;
+                }
+                else if(isWildcard)
+                {
+                    if(currentValue == actionValue)
+                    {
+                        isWildcard = false;
+                        continue;
+                    }
+                    var currentHasMore = currentScopeEnumerator.MoveNext();
+                    if(!currentHasMore)
+                    {
+                        return false;
+                    }
+                    continue;
+                }
+                if(currentValue == actionValue || actionValue == "*")
+                {
+                    var currentHasMore = currentScopeEnumerator.MoveNext();
+                    var actionHasMore = actionScopeEnumerator.MoveNext();
+                    if(!currentHasMore && !actionHasMore)
+                    {
+                        return true;
+                    }
+                    // if(currentHasMore && actionHasMore)
+                    // {
+                        continue;
+                    // }
+                    // return false;
+                }
+                hasMore = false;
+                isWildcard = false;
+            } 
+            return false;
         }
 
         private static int ScopeDepth(string scope)
         {
             //TODO create actual scope depth calculation
             return scope.Length;
+        }
+
+        private static IList<string> DecodeScopeString(string scope)
+        {
+            return scope.Split('/').Skip(1).ToList();
         }
 
         protected class ActionRegistration

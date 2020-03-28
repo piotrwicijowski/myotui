@@ -13,8 +13,11 @@ namespace myotui.Models
         public bool Focusable {get; set;} = true;
 
         public IList<ViewNode> Children {get; set;}
+
         public View View {get; set;}
         
+        public readonly Dictionary<Key, (string action, string scope)> TriggerActionDictionary = new Dictionary<Key, (string action, string scope)>();
+
         public bool FocusNextChild()
         {
             if(!View.HasFocus) {return false;}

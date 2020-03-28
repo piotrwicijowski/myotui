@@ -8,13 +8,13 @@ buffers:
   name: root
   description: Root view
   bindings:
-  - name: command_mode
-    description: Open command mode
-    triggers:
-    - "key :"
-    - "key o"
-    actions:
-    - "/root/cmd.focus"
+  # - name: command_mode
+  #   description: Open command mode
+  #   triggers:
+  #   - "key :"
+  #   - "key o"
+  #   actions:
+  #   - "/root/cmd.focus"
   - name: focus_right
     description: Focus Right View
     scope: "/*"
@@ -43,27 +43,27 @@ buffers:
     - "key <ControlJ>"
     actions:
     - "focusDown"
-  - name: left
-    description: Focus left sidebar
-    triggers:
-    - "key l"
-    - "key i"
-    - "key j"
-    actions:
-    - "/root/body/sidebar.focus"
-  - name: right
-    description: Focus right content
-    triggers:
-    - "key r"
-    actions:
-    - "/root/body/main.focus"
-  - name: menu
-    description: Focus menu
-    triggers:
-    - "key <DeleteChar>"
-    - "key <ControlM>"
-    actions:
-    - "/root/head.focus"
+  # - name: left
+  #   description: Focus left sidebar
+  #   triggers:
+  #   - "key l"
+  #   - "key i"
+  #   - "key j"
+  #   actions:
+  #   - "/root/body/sidebar.focus"
+  # - name: right
+  #   description: Focus right content
+  #   triggers:
+  #   - "key r"
+  #   actions:
+  #   - "/root/body/main.focus"
+  # - name: menu
+  #   description: Focus menu
+  #   triggers:
+  #   - "key <DeleteChar>"
+  #   - "key <ControlM>"
+  #   actions:
+  #   - "/root/head.focus"
   windows:
   - !buffer
     name: head
@@ -120,6 +120,21 @@ buffers:
 - !hbox
   name: main
   description: Main container for content
+  bindings:
+  - name: focus_right
+    description: Focus Right View
+    scope: "/*"
+    triggers:
+    - "key <ControlY>"
+    actions:
+    - "focusRight"
+  - name: focus_left
+    description: Focus Right View
+    scope: "/*"
+    triggers:
+    - "key <ControlT>"
+    actions:
+    - "focusLeft"
   windows:
   - !buffer
     name: content

@@ -40,8 +40,8 @@ namespace myotui.Services
             _actionService.RegisterAction($"{node.Scope}.focus",node.Scope,() => {node.Parent?.View.SetFocus(node.View);return true;});
             _actionService.RegisterAction($"{node.Scope}.focusRight",node.Scope,() => node.FocusNextChild());
             _actionService.RegisterAction($"{node.Scope}.focusLeft",node.Scope,() => node.FocusPreviousChild());
-            _actionService.RegisterAction($"focusRight",node.Scope,() => node.FocusNextChild());
-            _actionService.RegisterAction($"focusLeft",node.Scope,() => node.FocusPreviousChild());
+            _actionService.RegisterAction($"focusRight",$"{node.Scope}/**",() => node.FocusNextChild());
+            _actionService.RegisterAction($"focusLeft",$"{node.Scope}/**",() => node.FocusPreviousChild());
         }
     }
 }
