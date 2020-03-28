@@ -1,15 +1,25 @@
+using System;
 using Terminal.Gui;
+using Unix.Terminal;
+
 namespace myotui.Views
 {
     public class Splitter : View
     {
         public override void Redraw(Rect rect)
         {
+            var plusRune = Driver.GetType() switch
+            {
+                {Name : "CursesDriver"} => new Rune(Curses.ACS_PLUS),
+                {Name : "WindowsDriver"} => new Rune('\u253c'),
+                {Name : "NetDriver"} => new Rune('\u253c'),
+                _ => new Rune('+')
+            };
 			Move (0, 0);
             switch(rect)
             {
                 case Rect r when r.Width == 1 && r.Height == 1:
-                    Driver.AddRune(Driver.Plus);
+                    Driver.AddRune(plusRune);
                     break;
                 case Rect r when r.Width == 1:
                     for(int i = 0; i < r.Height; ++i)

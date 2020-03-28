@@ -10,11 +10,11 @@
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <!-- <PackageReference Include="Terminal.Gui" Version="0.70.0" /> -->
+    <PackageReference Include="Terminal.Gui" Version="0.70.0" />
     <PackageReference Include="YamlDotNet" Version="8.1.0" />
   </ItemGroup>
-  <ItemGroup>
+  <!-- <ItemGroup>
     <ProjectReference Include="../../gui.cs/Terminal.Gui/Terminal.Gui.csproj" />
-  </ItemGroup>
+  </ItemGroup> -->
 
 </Project>
