@@ -6,6 +6,6 @@ namespace myotui.Services
     public interface IKeyService
     {
         public bool ProcessKeyEvent(KeyEvent keyEvent, ViewNode node);
-        public void RegisterKeyActionTrigger(string trigger, string action, ViewNode node);
+        public void RegisterKeyActionTrigger(string trigger, string action, string bindingScope, ViewNode node);
     }
 }

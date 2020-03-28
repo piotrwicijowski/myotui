@@ -17,28 +17,27 @@ buffers:
   #   - "/root/cmd.focus"
   - name: focus_right
     description: Focus Right View
-    scope: "/*"
+    scope: "/**"
     triggers:
     - "key <ControlL>"
     actions:
     - "focusRight"
   - name: focus_left
     description: Focus Right View
-    scope: "/*"
     triggers:
     - "key <Backspace>"
     actions:
     - "focusLeft"
   - name: focus_up
     description: Focus Up View
-    scope: "/*"
+    scope: "/**/sidebar/**"
     triggers:
     - "key <ControlK>"
     actions:
     - "focusUp"
   - name: focus_down
     description: Focus Down View
-    scope: "/*"
+    scope: "/**"
     triggers:
     - "key <ControlJ>"
     actions:
@@ -123,14 +122,14 @@ buffers:
   bindings:
   - name: focus_right
     description: Focus Right View
-    scope: "/*"
+    # scope: "/*"
     triggers:
     - "key <ControlY>"
     actions:
     - "focusRight"
   - name: focus_left
     description: Focus Right View
-    scope: "/*"
+    scope: "./**"
     triggers:
     - "key <ControlT>"
     actions:

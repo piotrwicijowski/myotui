@@ -10,12 +10,14 @@ namespace myotui.Services {
     public class KeyService : IKeyService {
         //TODO this is only for demonstration purposes
         protected readonly IActionService _actionService;
+        protected readonly IScopeService _scopeService;
         protected readonly INodeService _nodeService;
         public const string triggerPattern = "key ";
-        public KeyService (IActionService actionService, INodeService nodeService)
+        public KeyService (IActionService actionService, INodeService nodeService, IScopeService scopeService)
         {
             _actionService = actionService;
             _nodeService = nodeService;
+            _scopeService = scopeService;
         }
         public bool ProcessKeyEvent (KeyEvent keyEvent, ViewNode node)
         {
@@ -24,27 +26,31 @@ namespace myotui.Services {
             while(checkedNode != null)
             {
                 var isRegistered = checkedNode.TriggerActionDictionary.TryGetValue(keyEvent.Key, out var item);
+                checkedNode = checkedNode.Parent;
                 if(isRegistered)
                 {
-                    var (action, scope) = item;
+                    var (action, bindingScope) = item;
+                    if(!_scopeService.IsInScope(focusedNode.Scope,bindingScope))
+                    {
+                        continue;
+                    }
                     _actionService.DispatchAction(action,focusedNode.Scope);
                     return true;
                 }
-                checkedNode = checkedNode.Parent;
             }
             return false;
         }
 
-        public void RegisterKeyActionTrigger(string trigger, string action, ViewNode node)
+        public void RegisterKeyActionTrigger(string trigger, string action, string bindingScope, ViewNode node)
         {
             var keys = DecodeKeySequence(trigger);
             if(keys.Any()){
                 node.TriggerActionDictionary.Add(
-                    keys.FirstOrDefault(), (action, node.Scope)
+                    keys.FirstOrDefault(), (action, _scopeService.ResolveRelativeScope(node.Scope,bindingScope))
                 );
             }
-
         }
+
 
         private List<Key> DecodeKeySequence(string trigger)
         {
