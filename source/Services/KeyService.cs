@@ -46,7 +46,7 @@ namespace myotui.Services {
             var keys = DecodeKeySequence(trigger);
             if(keys.Any()){
                 node.TriggerActionDictionary.Add(
-                    keys.FirstOrDefault(), (action, _scopeService.ResolveRelativeScope(node.Scope,bindingScope))
+                    keys.FirstOrDefault(), (_scopeService.ResolveRelativeAction(node.Scope, action), _scopeService.ResolveRelativeScope(node.Scope,bindingScope))
                 );
             }
         }

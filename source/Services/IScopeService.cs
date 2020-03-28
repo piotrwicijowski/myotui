@@ -8,5 +8,7 @@ namespace myotui.Services
         public int ScopeDepth(string scope);
 
         public string ResolveRelativeScope(string baseScope, string relativeScope);
+
+        public string ResolveRelativeAction(string baseScope, string relativeAction);
     }
 }

@@ -21,27 +21,27 @@ buffers:
     triggers:
     - "key <ControlL>"
     actions:
-    - "focusRight"
+    - "/focusRight"
   - name: focus_left
     description: Focus Right View
     triggers:
     - "key <Backspace>"
     actions:
-    - "focusLeft"
+    - "/focusLeft"
   - name: focus_up
     description: Focus Up View
     scope: "/**/sidebar/**"
     triggers:
     - "key <ControlK>"
     actions:
-    - "focusUp"
+    - "/focusUp"
   - name: focus_down
     description: Focus Down View
     scope: "/**"
     triggers:
     - "key <ControlJ>"
     actions:
-    - "focusDown"
+    - "/focusDown"
   # - name: left
   #   description: Focus left sidebar
   #   triggers:
@@ -126,14 +126,14 @@ buffers:
     triggers:
     - "key <ControlY>"
     actions:
-    - "focusRight"
+    - "./focusRight"
   - name: focus_left
     description: Focus Right View
     scope: "./**"
     triggers:
     - "key <ControlT>"
     actions:
-    - "focusLeft"
+    - "./focusLeft"
   windows:
   - !buffer
     name: content

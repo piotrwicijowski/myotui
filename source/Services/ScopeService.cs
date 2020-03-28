@@ -66,6 +66,20 @@ namespace myotui.Services
             //TODO create actual scope depth calculation
             return scope.Length;
         }
+        public string ResolveRelativeAction(string baseScope, string relativeAction)
+        {
+            var isActionRelative = relativeAction.StartsWith(".");
+            var resultAction = relativeAction;
+            if(isActionRelative)
+            {
+                var relativeActionDecoded = DecodeScopeString(relativeAction);
+                var relativeActionScope = relativeActionDecoded.SkipLast(1).ToList();
+                var actionName = relativeActionDecoded.Last();
+                string abosluteActionScope = ResolveRelativeScope(baseScope, $"{string.Join('/',relativeActionScope)}/");
+                resultAction = $"{abosluteActionScope}.{actionName}";
+            }
+            return resultAction;
+        }
 
         public string ResolveRelativeScope(string baseScope, string relativeScope)
         {
@@ -99,7 +113,7 @@ namespace myotui.Services
 
         private static IList<string> DecodeScopeString(string scope)
         {
-            return scope.Split('/').SkipWhile(val => val == "").ToList();
+            return scope.Split('/').SkipWhile(val => val == "").Reverse().SkipWhile(val => val == "").Reverse().ToList();
         }
     }
 }
