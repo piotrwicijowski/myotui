@@ -10,6 +10,7 @@ namespace myotui.Models
         public string Scope {get; set;}
         public IBuffer Buffer {get;set;}
         public ViewNode Parent {get; set;}
+        public bool Focusable {get; set;} = true;
 
         public IList<ViewNode> Children {get; set;}
         public View View {get; set;}
@@ -19,11 +20,16 @@ namespace myotui.Models
             if(!View.HasFocus) {return false;}
             if(Children == null || !Children.Any()) { return false; } 
             var focusedChildIndex = Children.Select(child => child.View).ToList().IndexOf(this.View.Focused);
-            if(focusedChildIndex < Children.Count - 1) 
+            for(int i = focusedChildIndex + 1; i <= Children.Count - 1; ++i)
             {
-                View.SetFocus(Children.ToList()[focusedChildIndex + 1].View);
-                return true;
+                var child = Children.ToList()[i];
+                if(child.Focusable)
+                {
+                    View.SetFocus(child.View);
+                    return true;
+                }
             }
+
             return false;
         }
 
@@ -32,10 +38,14 @@ namespace myotui.Models
             if(!View.HasFocus) {return false;}
             if(Children == null || !Children.Any()) { return false; } 
             var focusedChildIndex = Children.Select(child => child.View).ToList().IndexOf(this.View.Focused);
-            if(focusedChildIndex > 0) 
+            for(int i = focusedChildIndex - 1; i >= 0; --i)
             {
-                View.SetFocus(Children.ToList()[focusedChildIndex - 1].View);
-                return true;
+                var child = Children.ToList()[i];
+                if(child.Focusable)
+                {
+                    View.SetFocus(child.View);
+                    return true;
+                }
             }
             return false;
         }

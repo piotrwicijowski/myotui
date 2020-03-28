@@ -72,6 +72,12 @@ buffers:
       mode: fixed
       fixed: 4
   - !buffer
+    name: menusplitter
+    value: splitter
+    height:
+      mode: fixed
+      fixed: 1
+  - !buffer
     name: body
     value: body
 
@@ -102,6 +108,12 @@ buffers:
       mode: fixed
       fixed: 7
   - !buffer
+    name: bodysplitter
+    value: splitter
+    width:
+      mode: fixed
+      fixed: 1
+  - !buffer
     name: main
     value: main
 
@@ -113,9 +125,17 @@ buffers:
     name: content
     value: resource_groups
   - !buffer
+    name: mainsplitter
+    value: splitter
+    width:
+      mode: fixed
+      fixed: 1
+  - !buffer
     name: content1
     value: resources
 
+- !splitter
+  name: splitter
 
 - !table
   name: resource_groups

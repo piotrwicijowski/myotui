@@ -43,7 +43,7 @@ namespace myotui.Services
             var buffer = node.Buffer;
             var scope = node.Scope;
             var tablebuffer = buffer as TableBuffer;
-            var view = new FrameView("");
+            var view = new View();
             var rawContentService = _rawContentServices[tablebuffer.Content.GetType()];
             var rawContent = rawContentService.GetRawOutput(tablebuffer.Content);
             var map = _maps[tablebuffer.Content.Map];

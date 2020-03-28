@@ -25,8 +25,8 @@ namespace myotui.Services
         {
             var rootBuffer = _bufferSerivce.GetBufferByName("root");
             var nodeTree = _nodeService.BuildNodeTree(rootBuffer,"/root");
-            var window = BuildWindow(nodeTree);
             Terminal.Gui.Application.Init();
+            var window = BuildWindow(nodeTree);
             var top = Terminal.Gui.Application.Top;
             top.Add(window);
             Terminal.Gui.Application.Run();
@@ -40,6 +40,13 @@ namespace myotui.Services
                 Y = 0,
                 Width = Dim.Fill(),
                 Height = Dim.Fill(),
+                ColorScheme = new ColorScheme()
+                {
+                    Focus = Attribute.Make(Color.Black, Color.White),
+                    Normal = Attribute.Make(Color.White, Color.Black),
+                    HotFocus = Attribute.Make(Color.BrightBlue, Color.Brown),
+                    HotNormal = Attribute.Make(Color.Red, Color.BrightRed),
+                },
 
             };
             window.KeyPressed += _keyService.ProcessKeyEvent;
