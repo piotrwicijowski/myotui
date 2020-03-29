@@ -9,10 +9,16 @@ namespace myotui.Services
 {
     public class CliRawContentService : IRawContentService
     {
-        public string GetRawOutput(IValueContent content)
+        protected readonly IParameterService _parameterService;
+        public CliRawContentService(IParameterService parameterService)
+        {
+            _parameterService = parameterService;
+        }
+        public string GetRawOutput(IValueContent content, IDictionary<string, string> parameters)
         {
             var cliContent = content as CliValueContent;
-            var commandSplit = StringExtensions.SplitCommandLine(cliContent.Input);
+            var cliSubstituted = _parameterService.SubstituteParameters(string.Join(Environment.NewLine,cliContent.Input),parameters);
+            var commandSplit = StringExtensions.SplitCommandLine(cliSubstituted);
             using var pProcess = new Process();
             pProcess.StartInfo.FileName = commandSplit.Take(1).FirstOrDefault();
             pProcess.StartInfo.Arguments = string.Join(' ', commandSplit.Skip(1));

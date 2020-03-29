@@ -63,17 +63,21 @@ namespace myotui.Services
 
         protected virtual void RegisterFocusAction(ViewNode node)
         {
-            _actionService.RegisterAction($"{node.Scope}.focus","/**",() => {node.Parent?.View.SetFocus(node.View);return true;});
-            _actionService.RegisterAction($"{node.Scope}.focusNext",node.Scope,() => node.FocusNextChild());
-            _actionService.RegisterAction($"{node.Scope}.focusPrev",node.Scope,() => node.FocusPreviousChild());
-            _actionService.RegisterAction($"/focusNext",$"{node.Scope}/**",() => node.FocusNextChild());
-            _actionService.RegisterAction($"/focusPrev",$"{node.Scope}/**",() => node.FocusPreviousChild());
+            _actionService.RegisterAction($"{node.Scope}.focus","/**",(_) => {node.Parent?.View.SetFocus(node.View);return true;});
+            _actionService.RegisterAction($"{node.Scope}.focusNext",node.Scope,(_) => node.FocusNextChild());
+            _actionService.RegisterAction($"{node.Scope}.focusPrev",node.Scope,(_) => node.FocusPreviousChild());
+            _actionService.RegisterAction($"/focusNext",$"{node.Scope}/**",(_) => node.FocusNextChild());
+            _actionService.RegisterAction($"/focusPrev",$"{node.Scope}/**",(_) => node.FocusPreviousChild());
         }
 
         protected virtual void RegisterOpenAction(ViewNode node)
         {
-            _actionService.RegisterAction($"{node.Scope}.open","/**",() => {
-                _bufferService.OpenNewBuffer(node, "resource_groups");
+            _actionService.RegisterAction($"{node.Scope}.open","/**",(parameters) => {
+
+                var parametersSplit = parameters.Split(" ");
+                var bufferName = parametersSplit.FirstOrDefault();
+                var bufferParameters = parametersSplit.Length <= 1 ? "" : string.Join(' ',parametersSplit.Skip(1));
+                _bufferService.OpenNewBuffer(node, bufferName, bufferParameters);
                 return true;
             });
         }

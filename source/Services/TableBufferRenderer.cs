@@ -46,7 +46,7 @@ namespace myotui.Services
             var tablebuffer = buffer as TableBuffer;
             var view = new View();
             var rawContentService = _rawContentServices[tablebuffer.Content.GetType()];
-            var rawContent = rawContentService.GetRawOutput(tablebuffer.Content);
+            var rawContent = rawContentService.GetRawOutput(tablebuffer.Content, node.Parameters);
             var map = _maps[tablebuffer.Content.Map];
             var content = map.MapRawData(rawContent)?.ToList();
             content = content ?? new List<object>();
@@ -59,9 +59,10 @@ namespace myotui.Services
             node.View = view;
             return view;
         }
+        
         protected void RegisterFocusAction(ViewNode node)
         {
-            _actionService.RegisterAction($"{node.Scope}.focus","/**",() => {node.Parent?.View.SetFocus(node.View);return true;});
+            _actionService.RegisterAction($"{node.Scope}.focus","/**",(_) => {node.Parent?.View.SetFocus(node.View);return true;});
         }
         
     }

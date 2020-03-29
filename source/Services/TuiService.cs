@@ -72,7 +72,7 @@ namespace myotui.Services
          
         public void RegisterApplicationEvents()
         {
-            _actionService.RegisterAction($"quit","/**",() => { Terminal.Gui.Application.RequestStop();return true;});
+            _actionService.RegisterAction($"quit","/**",(_) => { Terminal.Gui.Application.RequestStop();return true;});
         }
     }
 }

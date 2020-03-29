@@ -38,11 +38,11 @@ namespace myotui.Services
 
         protected override void RegisterFocusAction(ViewNode node)
         {
-            _actionService.RegisterAction($"{node.Scope}.focus","/**",() => {node.Parent?.View.SetFocus(node.View);return true;});
-            _actionService.RegisterAction($"{node.Scope}.focusDown","/**",() => node.FocusNextChild());
-            _actionService.RegisterAction($"{node.Scope}.focusUp","/**",() => node.FocusPreviousChild());
-            _actionService.RegisterAction($"/focusDown",$"{node.Scope}/**",() => node.FocusNextChild());
-            _actionService.RegisterAction($"/focusUp",$"{node.Scope}/**",() => node.FocusPreviousChild());
+            _actionService.RegisterAction($"{node.Scope}.focus","/**",(_) => {node.Parent?.View.SetFocus(node.View);return true;});
+            _actionService.RegisterAction($"{node.Scope}.focusDown","/**",(_) => node.FocusNextChild());
+            _actionService.RegisterAction($"{node.Scope}.focusUp","/**",(_) => node.FocusPreviousChild());
+            _actionService.RegisterAction($"/focusDown",$"{node.Scope}/**",(_) => node.FocusNextChild());
+            _actionService.RegisterAction($"/focusUp",$"{node.Scope}/**",(_) => node.FocusPreviousChild());
         }
     }
 }

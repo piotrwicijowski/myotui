@@ -8,12 +8,24 @@ buffers:
   name: root
   description: Root view
   bindings:
-  - name: open_resource_groups
-    description: Open Resource Groups
+  # - name: open_resource_groups
+  #   description: Open Resource Groups
+  #   triggers:
+  #   - "key <ControlR>"
+  #   actions:
+  #   - "/root/body/main.open"
+  - name: open_logic_apps
+    description: Open Resources for Logic Apps
     triggers:
     - "key <ControlR>"
     actions:
-    - "/root/body/main.open"
+    - "/root/body/main.open resources logic-apps"
+  - name: open_tech_interview
+    description: Open Resources for Tech Interview
+    triggers:
+    - "key <ControlF>"
+    actions:
+    - "/root/body/main.open resources TechInterview"
   - name: command_mode
     description: Open command mode
     triggers:
@@ -163,12 +175,12 @@ buffers:
   name: resource_groups
   description: List of resource groups for selected subscription
   parameters:
-  - name: subscription
+  - name: subscription  
     type: string
-    defaultValue: "\"\""
+    defaultValue: ""
   content:
     !cli
-    input: az group list
+    input: az group list ?(subscription:--subscription) %(subscription)
     map: json_array_to_table
     select:
     - name
@@ -180,9 +192,13 @@ buffers:
 - !table
   name: resources
   description: List of all resources
+  parameters:
+  - name: group  
+    type: string
+    defaultValue: ""
   content:
     !cli
-    input: az resource list
+    input: az resource list ?(group:--resource-group) %(group)
     map: json_array_to_table
     select:
     - name

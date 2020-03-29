@@ -26,6 +26,7 @@ namespace myotui
             builder.RegisterType<NodeService>().As<INodeService>().SingleInstance();
             builder.RegisterType<BufferService>().As<IBufferService>();
             builder.RegisterType<ScopeService>().As<IScopeService>();
+            builder.RegisterType<ParameterService>().As<IParameterService>();
             builder.RegisterType<CliRawContentService>().Keyed<IRawContentService>(typeof(CliValueContent));
             builder.RegisterType<ListRawContentService>().Keyed<IRawContentService>(typeof(ListValueContent));
             builder.RegisterType<JsonArrayMapService>().Keyed<IContentMapService>(ValueMapType.json_array_to_table);

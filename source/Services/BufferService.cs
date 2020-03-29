@@ -32,10 +32,10 @@ namespace myotui.Services
             return parentRenderer.Layout(node);
         }
 
-        public void OpenNewBuffer(ViewNode parentNode, string bufferName)
+        public void OpenNewBuffer(ViewNode parentNode, string bufferName, string bufferParams)
         {
             var buffer = _configuration.GetBufferByName(bufferName);
-            var newNode = _nodeService.BuildNodeTree(buffer, $"{parentNode.Scope}/{buffer.Name}", parentNode);
+            var newNode = _nodeService.BuildNodeTree(buffer, $"{parentNode.Scope}/{buffer.Name}", parentNode, bufferParams: bufferParams);
             newNode.View = RenderNode(newNode);
             if(parentNode.Children == null)
             {
