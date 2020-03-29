@@ -8,18 +8,20 @@ namespace myotui.Services
 {
     public class NodeService : INodeService
     {
-        protected readonly IBufferService _bufferSerivce;
-        public NodeService(IBufferService bufferService)
+        protected readonly IConfigurationService _configuration;
+        public NodeService(IConfigurationService configuration)
         {
-            _bufferSerivce = bufferService;
+            _configuration = configuration;
         }
-        public ViewNode BuildNodeTree(IBuffer buffer, string scope, ViewNode parent = null)
+        public ViewNode BuildNodeTree(IBuffer buffer, string scope, ViewNode parent = null, SizeHint width = null, SizeHint height = null)
         {
             var currentNode = new ViewNode()
             {
                 Scope = scope,
                 Buffer = buffer,
                 Parent = parent,
+                Width = width ?? new SizeHint(),
+                Height = height ?? new SizeHint(),
             };
             if(buffer is ILayoutBuffer)
             {
@@ -27,7 +29,13 @@ namespace myotui.Services
                 currentNode.Children = layoutBuffer
                     .Windows
                     .Select(window => 
-                        BuildNodeTree(_bufferSerivce.GetBufferByName(window.Value), $"{scope}/{window.Name}", currentNode)
+                        BuildNodeTree(
+                            _configuration.GetBufferByName(window.Value),
+                            $"{scope}/{window.Name}",
+                            currentNode,
+                            window.Width,
+                            window.Height
+                            )
                     )
                     .ToList();
             }

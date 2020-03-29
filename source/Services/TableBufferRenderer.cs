@@ -5,6 +5,7 @@ using myotui.Services;
 using Autofac.Features.Indexed;
 using System;
 using myotui.Models;
+using System.Collections.Generic;
 
 namespace myotui.Services
 {
@@ -47,8 +48,9 @@ namespace myotui.Services
             var rawContentService = _rawContentServices[tablebuffer.Content.GetType()];
             var rawContent = rawContentService.GetRawOutput(tablebuffer.Content);
             var map = _maps[tablebuffer.Content.Map];
-            var content = map.MapRawData(rawContent);
-            var listView = new ListView(content.ToList());
+            var content = map.MapRawData(rawContent)?.ToList();
+            content = content ?? new List<object>();
+            var listView = new ListView(content);
             listView.X = 0;
             listView.Y = 0;
             listView.Width = Dim.Fill();

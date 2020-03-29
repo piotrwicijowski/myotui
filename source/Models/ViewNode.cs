@@ -11,11 +11,11 @@ namespace myotui.Models
         public IBuffer Buffer {get;set;}
         public ViewNode Parent {get; set;}
         public bool Focusable {get; set;} = true;
-
         public IList<ViewNode> Children {get; set;}
-
+        public IDictionary<string, string> Parameters {get; set;}
         public View View {get; set;}
-        
+        public SizeHint Width {get; set;} = new SizeHint();
+        public SizeHint Height {get; set;} = new SizeHint();
         public readonly Dictionary<Key, (string action, string scope)> TriggerActionDictionary = new Dictionary<Key, (string action, string scope)>();
 
         public bool FocusNextChild()

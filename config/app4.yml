@@ -8,6 +8,12 @@ buffers:
   name: root
   description: Root view
   bindings:
+  - name: open_resource_groups
+    description: Open Resource Groups
+    triggers:
+    - "key <ControlR>"
+    actions:
+    - "/root/body/main.open"
   - name: command_mode
     description: Open command mode
     triggers:
@@ -42,27 +48,6 @@ buffers:
     - "key <ControlJ>"
     actions:
     - "/focusDown"
-  # - name: left
-  #   description: Focus left sidebar
-  #   triggers:
-  #   - "key l"
-  #   - "key i"
-  #   - "key j"
-  #   actions:
-  #   - "/root/body/sidebar.focus"
-  # - name: right
-  #   description: Focus right content
-  #   triggers:
-  #   - "key r"
-  #   actions:
-  #   - "/root/body/main.focus"
-  # - name: menu
-  #   description: Focus menu
-  #   triggers:
-  #   - "key <DeleteChar>"
-  #   - "key <ControlM>"
-  #   actions:
-  #   - "/root/head.focus"
   windows:
   - !buffer
     name: head
@@ -137,6 +122,15 @@ buffers:
   windows:
   - !buffer
     name: content
+    value: subscriptions
+  - !buffer
+    name: mainsplitter
+    value: splitter
+    width:
+      mode: fixed
+      fixed: 1
+  - !buffer
+    name: content
     value: resource_groups
   - !buffer
     name: mainsplitter
@@ -152,8 +146,26 @@ buffers:
   name: splitter
 
 - !table
+  name: subscriptions
+  description: List of subscriptions
+  content:
+    !cli
+    input: az account list
+    map: json_array_to_table
+    select:
+    - name
+    - cloudName
+    order:
+    - name
+    - cloudName
+
+- !table
   name: resource_groups
   description: List of resource groups for selected subscription
+  parameters:
+  - name: subscription
+    type: string
+    defaultValue: "\"\""
   content:
     !cli
     input: az group list
@@ -164,7 +176,6 @@ buffers:
     order:
     - name
     - location
-
 
 - !table
   name: resources

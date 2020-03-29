@@ -7,15 +7,15 @@ namespace myotui.Services
 {
     public class HBladeBufferRenderer : BufferRenderer
     {
-        public HBladeBufferRenderer(IActionService actionService, IKeyService keyService) : base(actionService, keyService)
+        public HBladeBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService) : base(actionService, keyService, bufferService)
         {
         }
         public override View Layout(ViewNode node)
         {
             var view = node.View;
             var count = node.Children.Count();
-            var layoutBuffer = node.Buffer as HBladeBuffer;
-            var dims = GetDims(layoutBuffer.Windows.Select(content => content.Width));
+            // var layoutBuffer = node.Buffer as HBladeBuffer;
+            var dims = GetDims(node.Children.Select(child => child.Width));
             var elements = node.Children
                 .Select(child => child.View)
                 .Zip(dims, (element, dim) => 

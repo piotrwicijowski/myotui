@@ -48,6 +48,7 @@ namespace myotui
             builder.RegisterType<HBladeBuffer>().As<IBuffer>();
             builder.RegisterType<VBladeBuffer>().As<IBuffer>();
             builder.RegisterType<ModeDefinition>().As<IModeDefinition>();
+            builder.RegisterType<Parameter>().As<IParameter>();
             builder.RegisterType<Binding>().As<IBinding>();
             builder.Populate(collection);
             var container = builder.Build();

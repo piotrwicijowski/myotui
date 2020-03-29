@@ -26,7 +26,7 @@ namespace myotui.Services
 
         public void Run()
         {
-            var rootBuffer = _bufferSerivce.GetBufferByName("root");
+            var rootBuffer = _configuration.GetBufferByName("root");
             _rootNode = _nodeService.BuildNodeTree(rootBuffer,"/root");
             Terminal.Gui.Application.Init();
             var window = BuildWindow(_rootNode);

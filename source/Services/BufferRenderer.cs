@@ -10,11 +10,13 @@ namespace myotui.Services
     public class BufferRenderer : IBufferRenderer
     {
         protected readonly IActionService _actionService;
+        protected readonly IBufferService _bufferService;
         protected readonly IKeyService _keyService;
-        protected BufferRenderer(IActionService actionService, IKeyService keyService)
+        protected BufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService)
         {
             _actionService = actionService;
             _keyService = keyService;
+            _bufferService = bufferService;
         }
         public virtual View Render(ViewNode node)
         {
@@ -32,6 +34,7 @@ namespace myotui.Services
         public void RegisterEvents(ViewNode node)
         {
             RegisterFocusAction(node);
+            RegisterOpenAction(node);
         }
 
         public virtual View Layout(ViewNode node)
@@ -60,9 +63,19 @@ namespace myotui.Services
 
         protected virtual void RegisterFocusAction(ViewNode node)
         {
-            _actionService.RegisterAction($"{node.Scope}.focus",node.Scope,() => {node.Parent?.View.SetFocus(node.View);return true;});
+            _actionService.RegisterAction($"{node.Scope}.focus","/**",() => {node.Parent?.View.SetFocus(node.View);return true;});
             _actionService.RegisterAction($"{node.Scope}.focusNext",node.Scope,() => node.FocusNextChild());
             _actionService.RegisterAction($"{node.Scope}.focusPrev",node.Scope,() => node.FocusPreviousChild());
+            _actionService.RegisterAction($"/focusNext",$"{node.Scope}/**",() => node.FocusNextChild());
+            _actionService.RegisterAction($"/focusPrev",$"{node.Scope}/**",() => node.FocusPreviousChild());
+        }
+
+        protected virtual void RegisterOpenAction(ViewNode node)
+        {
+            _actionService.RegisterAction($"{node.Scope}.open","/**",() => {
+                _bufferService.OpenNewBuffer(node, "resource_groups");
+                return true;
+            });
         }
 
         public void RegisterBindings(ViewNode node)

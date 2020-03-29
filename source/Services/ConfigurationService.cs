@@ -5,6 +5,7 @@ using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 using Autofac;
 using myotui.Models.Config;
+using System.Linq;
 
 namespace myotui.Services
 {
@@ -30,6 +31,10 @@ namespace myotui.Services
                 .Build();
 
             _app =  deserializer.Deserialize<App>(fileContent);
+        }
+        public IBuffer GetBufferByName(string name)
+        {
+            return _app.Buffers.FirstOrDefault(x => x.Name == name);
         }
         
     }

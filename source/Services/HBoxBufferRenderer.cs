@@ -7,16 +7,16 @@ namespace myotui.Services
 {
     public class HBoxBufferRenderer : BufferRenderer
     {
-        public HBoxBufferRenderer(IActionService actionService, IKeyService keyService) : base(actionService, keyService)
+        public HBoxBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService) : base(actionService, keyService, bufferService)
         {
         }
 
         public override View Layout(ViewNode node)
         {
             var view = node.View;
+            view.RemoveAll();
             var count = node.Children.Count();
-            var layoutBuffer = node.Buffer as HBoxBuffer;
-            var dims = GetDims(layoutBuffer.Windows.Select(content => content.Width));
+            var dims = GetDims(node.Children.Select(child => child.Width));
             var elements = node.Children
                 .Select(child => child.View)
                 .Zip(dims, (element, dim) => 

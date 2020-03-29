@@ -9,7 +9,7 @@ namespace myotui.Services
         public IEnumerable<object> MapRawData(string data)
         {
             var json = JsonConvert.DeserializeObject<IEnumerable<dynamic>>(data);
-            return json.Select(x => x.name);
+            return json?.Select(x => x.name);
         }
     }
 }
