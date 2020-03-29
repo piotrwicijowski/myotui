@@ -8,28 +8,33 @@ namespace myotui.Services
     public class ActionService : IActionService
     {
         protected readonly List<ActionRegistration> _registeredActions = new List<ActionRegistration>();
+        protected readonly IScopeService _scopeService;
+
+        public ActionService(IScopeService scopeService)
+        {
+            _scopeService = scopeService;
+        }
+
         public void RegisterAction(string pattern, string scope, Func<bool> action)
         {
             _registeredActions.Add(new ActionRegistration
             {
-                action = action,
-                scope = scope,
-                pattern = pattern,
+                Action = action,
+                ActionScope = scope,
+                Pattern = pattern,
             });
         }
         public void DispatchAction(string actionExpression, string currentScope)
         {
             _registeredActions
-                .Where(reg => IsPatternMatching(actionExpression,reg.pattern))
-                .Where(reg => IsInScope(actionExpression,reg.pattern))
-                .OrderBy(reg => ScopeDepth(reg.scope))
+                .Where(reg => IsPatternMatching(actionExpression,reg.Pattern))
+                .Where(reg => _scopeService.IsInScope(currentScope,reg.ActionScope))
+                .OrderBy(reg => _scopeService.ScopeDepth(reg.ActionScope))
                 .Reverse()
-                // .ToList()
-                // .FirstOrDefault()?.action?.Invoke();
                 .TakeWhile(reg =>
                 {
                     var testreg = reg;
-                 return !testreg.action.Invoke();
+                 return !testreg.Action.Invoke();
                 }
                 ).ToList();
         }
@@ -39,23 +44,12 @@ namespace myotui.Services
             var endToEndPattern = $"^{pattern}$";
             return Regex.IsMatch(actionExpression,endToEndPattern);
         }
-        private static bool IsInScope(string currentScope, string actionScope)
-        {
-            //TODO create actual scope resolution
-            return true;
-        }
-
-        private static int ScopeDepth(string scope)
-        {
-            //TODO create actual scope depth calculation
-            return scope.Length;
-        }
 
         protected class ActionRegistration
         {
-            public Func<bool> action {get; set;}
-            public string pattern {get; set;}
-            public string scope {get; set;}
+            public Func<bool> Action {get; set;}
+            public string Pattern {get; set;}
+            public string ActionScope {get; set;}
         }
     }
 

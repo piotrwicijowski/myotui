@@ -22,9 +22,10 @@ namespace myotui
             builder.RegisterType<ConfigurationService>().As<IConfigurationService>().SingleInstance();
             builder.RegisterType<TuiService>().As<ITuiService>();
             builder.RegisterType<ActionService>().As<IActionService>().SingleInstance();
-            builder.RegisterType<KeyService>().As<IKeyService>().SingleInstance();
+            builder.RegisterType<KeyService>().As<IKeyService>();
             builder.RegisterType<NodeService>().As<INodeService>().SingleInstance();
             builder.RegisterType<BufferService>().As<IBufferService>();
+            builder.RegisterType<ScopeService>().As<IScopeService>();
             builder.RegisterType<CliRawContentService>().Keyed<IRawContentService>(typeof(CliValueContent));
             builder.RegisterType<ListRawContentService>().Keyed<IRawContentService>(typeof(ListValueContent));
             builder.RegisterType<JsonArrayMapService>().Keyed<IContentMapService>(ValueMapType.json_array_to_table);

@@ -84,7 +84,7 @@ namespace myotui.Services
                         pair => {
                             var (trigger, action) = pair;
 
-                            _keyService.RegisterKeyActionTrigger(trigger, action, binding.Scope ?? node.Scope);
+                            _keyService.RegisterKeyActionTrigger(trigger, action, binding.Scope, node);
                         } 
                     )
                 );

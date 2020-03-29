@@ -59,7 +59,7 @@ namespace myotui.Services
         }
         protected void RegisterFocusAction(ViewNode node)
         {
-            _actionService.RegisterAction($"{node.Scope}.focus",node.Scope,() => {node.Parent?.View.SetFocus(node.View);return true;});
+            _actionService.RegisterAction($"{node.Scope}.focus","/**",() => {node.Parent?.View.SetFocus(node.View);return true;});
         }
         
     }

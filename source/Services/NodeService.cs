@@ -35,6 +35,15 @@ namespace myotui.Services
                
         }
 
+        public ViewNode GetFocusedNode(ViewNode parentNode)
+        {
+            var focusedChild = parentNode.Children?.FirstOrDefault(child => parentNode.View.Focused == child.View);
+            if(focusedChild != null)
+            {
+                return GetFocusedNode(focusedChild);
+            }
+            return parentNode;
+        }
         // public View RenderNode(ViewNode node)
         // {
         //     var childViews = node.Children?.Select(child => RenderNode(child));

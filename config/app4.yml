@@ -8,13 +8,13 @@ buffers:
   name: root
   description: Root view
   bindings:
-  # - name: command_mode
-  #   description: Open command mode
-  #   triggers:
-  #   - "key :"
-  #   - "key o"
-  #   actions:
-  #   - "/root/cmd.focus"
+  - name: command_mode
+    description: Open command mode
+    triggers:
+    - "key Q"
+    - "key <ControlC>"
+    actions:
+    - "quit"
   - name: focus_right
     description: Focus Right View
     scope: "/**"
@@ -181,4 +181,5 @@ buffers:
     - name
     - kind
     - location
+
 

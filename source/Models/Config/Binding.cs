@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace myotui.Models.Config
 {
@@ -8,6 +9,8 @@ namespace myotui.Models.Config
         public string Description {get; set;}
         public IEnumerable<string> Triggers {get; set;}
         public IEnumerable<string> Actions {get; set;}
-        public string Scope {get; set;}
+
+        [DefaultValue("./**")]
+        public string Scope {get; set;} = "./**";
     }
 }
