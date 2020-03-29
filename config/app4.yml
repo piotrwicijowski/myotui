@@ -1,0 +1,185 @@
+name: test3
+modes:
+- name: normal
+- name: normal_ro
+buffers:
+
+- !vbox
+  name: root
+  description: Root view
+  bindings:
+  - name: command_mode
+    description: Open command mode
+    triggers:
+    - "key Q"
+    - "key <ControlC>"
+    actions:
+    - "quit"
+  - name: focus_right
+    description: Focus Right View
+    scope: "/**"
+    triggers:
+    - "key <ControlL>"
+    actions:
+    - "/focusRight"
+  - name: focus_left
+    description: Focus Right View
+    triggers:
+    - "key <Backspace>"
+    actions:
+    - "/focusLeft"
+  - name: focus_up
+    description: Focus Up View
+    scope: "/**/sidebar/**"
+    triggers:
+    - "key <ControlK>"
+    actions:
+    - "/focusUp"
+  - name: focus_down
+    description: Focus Down View
+    scope: "/**"
+    triggers:
+    - "key <ControlJ>"
+    actions:
+    - "/focusDown"
+  # - name: left
+  #   description: Focus left sidebar
+  #   triggers:
+  #   - "key l"
+  #   - "key i"
+  #   - "key j"
+  #   actions:
+  #   - "/root/body/sidebar.focus"
+  # - name: right
+  #   description: Focus right content
+  #   triggers:
+  #   - "key r"
+  #   actions:
+  #   - "/root/body/main.focus"
+  # - name: menu
+  #   description: Focus menu
+  #   triggers:
+  #   - "key <DeleteChar>"
+  #   - "key <ControlM>"
+  #   actions:
+  #   - "/root/head.focus"
+  windows:
+  - !buffer
+    name: head
+    value: menu
+    height:
+      mode: fixed
+      fixed: 4
+  - !buffer
+    name: menusplitter
+    value: splitter
+    height:
+      mode: fixed
+      fixed: 1
+  - !buffer
+    name: body
+    value: body
+
+- !table
+  name: menu
+  description: Application menu
+  content:
+    !list
+    value:
+    - menu
+
+- !table
+  name: sidebar
+  description: Sidebar
+  content:
+    !list
+    value:
+    - sdb
+
+- !hbox
+  name: body
+  description: Horizontal view with left sidebar and all the rest
+  windows:
+  - !buffer
+    name: sidebar
+    value: sidebar
+    width:
+      mode: fixed
+      fixed: 7
+  - !buffer
+    name: bodysplitter
+    value: splitter
+    width:
+      mode: fixed
+      fixed: 1
+  - !buffer
+    name: main
+    value: main
+
+- !hbox
+  name: main
+  description: Main container for content
+  bindings:
+  - name: focus_right
+    description: Focus Right View
+    # scope: "/*"
+    triggers:
+    - "key <ControlY>"
+    actions:
+    - "./focusRight"
+  - name: focus_left
+    description: Focus Right View
+    scope: "./**"
+    triggers:
+    - "key <ControlT>"
+    actions:
+    - "./focusLeft"
+  windows:
+  - !buffer
+    name: content
+    value: resource_groups
+  - !buffer
+    name: mainsplitter
+    value: splitter
+    width:
+      mode: fixed
+      fixed: 1
+  - !buffer
+    name: content1
+    value: resources
+
+- !splitter
+  name: splitter
+
+- !table
+  name: resource_groups
+  description: List of resource groups for selected subscription
+  content:
+    !cli
+    input: az group list
+    map: json_array_to_table
+    select:
+    - name
+    - location
+    order:
+    - name
+    - location
+
+
+- !table
+  name: resources
+  description: List of all resources
+  content:
+    !cli
+    input: az resource list
+    map: json_array_to_table
+    select:
+    - name
+    - kind
+    - location
+    order:
+    - name
+    - kind
+    - location
+
+

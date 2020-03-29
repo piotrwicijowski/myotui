@@ -12,14 +12,16 @@ namespace myotui.Services
         protected readonly IBufferService _bufferSerivce;
         protected readonly IKeyService _keyService;
         protected readonly INodeService _nodeService;
+        protected readonly IActionService _actionService;
         private ViewNode _rootNode;
 
-        public TuiService(IConfigurationService configuration, IBufferService bufferService, IKeyService keyService, INodeService nodeService)
+        public TuiService(IConfigurationService configuration, IBufferService bufferService, IKeyService keyService, INodeService nodeService, IActionService actionService)
         {
             _configuration = configuration;
             _bufferSerivce = bufferService;
             _keyService = keyService;
             _nodeService = nodeService;
+            _actionService = actionService;
         }
 
         public void Run()
@@ -29,6 +31,7 @@ namespace myotui.Services
             Terminal.Gui.Application.Init();
             var window = BuildWindow(_rootNode);
             var top = Terminal.Gui.Application.Top;
+            RegisterApplicationEvents();
             top.Add(window);
             Terminal.Gui.Application.Run();
         }
@@ -67,5 +70,9 @@ namespace myotui.Services
             return window;
         }
          
+        public void RegisterApplicationEvents()
+        {
+            _actionService.RegisterAction($"quit","/**",() => { Terminal.Gui.Application.RequestStop();return true;});
+        }
     }
 }
