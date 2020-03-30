@@ -8,12 +8,12 @@ namespace myotui.Models
 {
     public class TableDataSource : IListDataSource
     {
-        private IList<IDictionary<string, string>> _contentList;
+        private IList<IDictionary<string, object>> _contentList;
         private IList<string> _columnMapOrder;
         private IList<double> _columnProportions;
         public int Count => _contentList.Count();
 
-        public TableDataSource(IList<IDictionary<string, string>> contentList, IList<string> columnMapOrder, IList<double> columnPorportions)
+        public TableDataSource(IList<IDictionary<string, object>> contentList, IList<string> columnMapOrder, IList<double> columnPorportions)
         {
             _contentList = contentList;
             _columnMapOrder = columnMapOrder;
@@ -29,14 +29,14 @@ namespace myotui.Models
         {
             var widths = CalculateWidths(width, _columnProportions);
             var columnStarts = CalculateColumnStarts(width, widths);
-            for(int i = 0; i < columnStarts.Count - 1; i++)
+            for(int i = 0; i < columnStarts.Count; i++)
             {
                 var columnStart = columnStarts[i];
-                driver.Move(columnStart,line);
+                container.Move(columnStart,line);
                 var columnWidth = widths[i];
                 var columnName = _columnMapOrder[i];
-                var columnValue = _contentList[item][columnName];
-                RenderUstr(driver, columnValue, columnWidth);
+                var columnValue = _contentList[item][columnName] ?? "";
+                RenderUstr(driver, columnValue.ToString(), columnWidth);
             }
         }
 
@@ -86,7 +86,7 @@ namespace myotui.Models
 
         private IList<int> CalculateColumnStarts(int maxWidth, IList<int> widths)
         {
-            return widths.Skip(1).Aggregate(new List<int>(){0},(list, current) => 
+            return widths.SkipLast(1).Aggregate(new List<int>(){0},(list, current) => 
             {
                 var previous = list.Last();
                 list.Add(previous + current);

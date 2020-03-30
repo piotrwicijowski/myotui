@@ -5,6 +5,7 @@ using myotui.Services;
 using Autofac.Features.Indexed;
 using System;
 using myotui.Models;
+using myotui.Views;
 using System.Collections.Generic;
 
 namespace myotui.Services
@@ -39,23 +40,46 @@ namespace myotui.Services
             }
         }
 
+        // public View Render(ViewNode node)
+        // {
+        //     var buffer = node.Buffer;
+        //     var scope = node.Scope;
+        //     var tablebuffer = buffer as TableBuffer;
+        //     var view = new View();
+        //     var rawContentService = _rawContentServices[tablebuffer.Content.GetType()];
+        //     var rawContent = rawContentService.GetRawOutput(tablebuffer.Content, node.Parameters);
+        //     var map = _maps[tablebuffer.Content.Map];
+        //     var content = map.MapRawData(rawContent)?.ToList();
+        //     content = content ?? new List<object>();
+        //     var listView = new ListView(content);
+        //     listView.X = 0;
+        //     listView.Y = 0;
+        //     listView.Width = Dim.Fill();
+        //     listView.Height = Dim.Fill();
+        //     view.Add(listView);
+        //     node.View = view;
+        //     return view;
+        // }
+        
         public View Render(ViewNode node)
         {
             var buffer = node.Buffer;
             var scope = node.Scope;
             var tablebuffer = buffer as TableBuffer;
-            var view = new View();
             var rawContentService = _rawContentServices[tablebuffer.Content.GetType()];
             var rawContent = rawContentService.GetRawOutput(tablebuffer.Content, node.Parameters);
             var map = _maps[tablebuffer.Content.Map];
             var content = map.MapRawData(rawContent)?.ToList();
-            content = content ?? new List<object>();
-            var listView = new ListView(content);
-            listView.X = 0;
-            listView.Y = 0;
-            listView.Width = Dim.Fill();
-            listView.Height = Dim.Fill();
-            view.Add(listView);
+            content = content ?? new List<IDictionary<string,object>>();
+            //TODO
+            var columnMapOrder = content?.FirstOrDefault()?.Keys.Take(3).ToList();
+            var columnWidths = columnMapOrder.Select(x => 1.0).ToList();
+            var tableData = new TableData(content,columnMapOrder, columnWidths);
+            var view = new TableView(tableData);
+            // view.X = 0;
+            // view.Y = 0;
+            // view.Width = Dim.Fill();
+            // view.Height = Dim.Fill();
             node.View = view;
             return view;
         }
