@@ -25,7 +25,7 @@ namespace myotui.Views
 
             if(headerDataSource != null)
             {
-                _headerView = new ListView();
+                _headerView = new ListView(headerDataSource);
                 _headerView.CanFocus = false;
                 _headerView.X = 0;
                 _headerView.Y = 0;
