@@ -34,7 +34,7 @@ namespace myotui.Models
                 var columnStart = columnStarts[i];
                 container.Move(columnStart,line);
                 var columnWidth = widths[i];
-                var columnName = _columnMapOrder[i];
+                var columnName = _columnMapOrder.Count > 0 ? _columnMapOrder[i] : "value";
                 var columnValue = _contentList[item][columnName] ?? "";
                 RenderUstr(driver, columnValue.ToString(), columnWidth);
             }

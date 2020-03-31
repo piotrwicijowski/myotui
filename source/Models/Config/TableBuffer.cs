@@ -8,5 +8,6 @@ namespace myotui.Models.Config
         public IEnumerable<IBinding> Bindings {get; set;}
         public IEnumerable<IParameter> Parameters {get; set;}
         public IValueContent Content {get; set;}
+        public IList<ColumnDefinition> Columns {get; set;} = new List<ColumnDefinition>();
     }
 }

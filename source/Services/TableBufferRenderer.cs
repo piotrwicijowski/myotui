@@ -72,9 +72,11 @@ namespace myotui.Services
             var content = map.MapRawData(rawContent)?.ToList();
             content = content ?? new List<IDictionary<string,object>>();
             //TODO
-            var columnMapOrder = content?.FirstOrDefault()?.Keys.Take(3).ToList();
+            // var columnMapOrder = content?.FirstOrDefault()?.Keys.Take(3).ToList();
+            var columnMapOrder = tablebuffer.Columns?.Select(col => col.Name).ToList() ?? new List<string>();
+            var headerContent = new List<IDictionary<string, object>>(){tablebuffer.Columns?.ToDictionary(col => col.Name, col => (object)col.DisplayName)};
             var columnWidths = columnMapOrder.Select(x => 1.0).ToList();
-            var tableData = new TableData(content,columnMapOrder, columnWidths);
+            var tableData = new TableData(content,headerContent,columnMapOrder, columnWidths);
             var view = new TableView(tableData);
             // view.X = 0;
             // view.Y = 0;
