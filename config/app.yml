@@ -1,4 +1,4 @@
-name: test3
+name: Azure
 modes:
 - name: normal
 - name: normal_ro
@@ -164,12 +164,11 @@ buffers:
     !cli
     input: az account list
     map: json_array_to_table
-    select:
-    - name
-    - cloudName
-    order:
-    - name
-    - cloudName
+  columns:
+  - name : name
+    displayName : Name
+  - name : cloudName
+    displayName : Cloud Name
 
 - !table
   name: resource_groups
@@ -182,12 +181,11 @@ buffers:
     !cli
     input: az group list ?(subscription:--subscription) %(subscription)
     map: json_array_to_table
-    select:
-    - name
-    - location
-    order:
-    - name
-    - location
+  columns:
+  - name : name
+    displayName : Name
+  - name : location
+    displayName : Az location
 
 - !table
   name: resources
@@ -200,13 +198,10 @@ buffers:
     !cli
     input: az resource list ?(group:--resource-group) %(group)
     map: json_array_to_table
-    select:
-    - name
-    - kind
-    - location
-    order:
-    - name
-    - kind
-    - location
-
-
+  columns:
+  - name : name
+    displayName : Name
+  - name : kind
+    displayName : Kind
+  - name : location
+    displayName : Az location
