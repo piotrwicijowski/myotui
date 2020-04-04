@@ -15,9 +15,8 @@ namespace myotui.Services
         {
             var view = node.View;
             view.RemoveAll();
-            var count = node.Children.Count();
-            var dims = GetDims(node.Children.Select(child => child.Width));
-            var elements = node.Children
+            var dims = GetDims(node.ChildrenWithSplitters().Select(child => child.Width));
+            var elements = node.ChildrenWithSplitters()
                 .Select(child => child.View)
                 .Zip(dims, (element, dim) => 
                 {
@@ -35,6 +34,7 @@ namespace myotui.Services
                 );
             return view;
         }
+
         protected override void RegisterFocusAction(ViewNode node)
         {
             _actionService.RegisterAction($"{node.Scope}.focus","/**",(_) => {node.Parent?.View.SetFocus(node.View);return true;});

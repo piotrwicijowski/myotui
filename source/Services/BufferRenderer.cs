@@ -107,8 +107,7 @@ namespace myotui.Services
                 );
         }
 
-
-        public static double Clamp( double value, double min, double max )
+        private static double Clamp( double value, double min, double max )
         {
             return (value < min) ? min : (value > max) ? max : value;
         }

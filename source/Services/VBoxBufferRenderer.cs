@@ -15,9 +15,8 @@ namespace myotui.Services
         {
             var view = node.View;
             view.RemoveAll();
-            var count = node.Children.Count();
-            var dims = GetDims(node.Children.Select(child => child.Height));
-            var elements = node.Children
+            var dims = GetDims(node.ChildrenWithSplitters().Select(child => child.Height));
+            var elements = node.ChildrenWithSplitters()
                 .Select(child => child.View)
                 .Zip(dims, (element, dim) => 
                 {

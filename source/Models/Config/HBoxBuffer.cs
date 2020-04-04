@@ -11,5 +11,6 @@ namespace myotui.Models.Config
         public IEnumerable<IBinding> Bindings {get; set;}
         public IEnumerable<IParameter> Parameters {get; set;}
         public IEnumerable<ILayoutContent> Windows {get; set;}
+        public bool AutoSplitters {get; set;} = true;
     }
 }

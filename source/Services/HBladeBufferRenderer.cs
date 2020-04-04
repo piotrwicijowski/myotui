@@ -13,10 +13,8 @@ namespace myotui.Services
         public override View Layout(ViewNode node)
         {
             var view = node.View;
-            var count = node.Children.Count();
-            // var layoutBuffer = node.Buffer as HBladeBuffer;
-            var dims = GetDims(node.Children.Select(child => child.Width));
-            var elements = node.Children
+            var dims = GetDims(node.ChildrenWithSplitters().Select(child => child.Width));
+            var elements = node.ChildrenWithSplitters()
                 .Select(child => child.View)
                 .Zip(dims, (element, dim) => 
                 {

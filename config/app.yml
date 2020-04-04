@@ -67,12 +67,12 @@ buffers:
     height:
       mode: fixed
       fixed: 4
-  - !buffer
-    name: menusplitter
-    value: splitter
-    height:
-      mode: fixed
-      fixed: 1
+  # - !buffer
+  #   name: menusplitter
+  #   value: splitter
+  #   height:
+  #     mode: fixed
+  #     fixed: 1
   - !buffer
     name: body
     value: body
@@ -103,12 +103,12 @@ buffers:
     width:
       mode: fixed
       fixed: 7
-  - !buffer
-    name: bodysplitter
-    value: splitter
-    width:
-      mode: fixed
-      fixed: 1
+  # - !buffer
+  #   name: bodysplitter
+  #   value: splitter
+  #   width:
+  #     mode: fixed
+  #     fixed: 1
   - !buffer
     name: main
     value: main
@@ -116,6 +116,7 @@ buffers:
 - !hbox
   name: main
   description: Main container for content
+  # autoSplitters : false
   bindings:
   - name: focus_right
     description: Focus Right View
@@ -135,27 +136,27 @@ buffers:
   - !buffer
     name: content
     value: subscriptions
-  - !buffer
-    name: mainsplitter
-    value: splitter
-    width:
-      mode: fixed
-      fixed: 1
+  # - !buffer
+  #   name: mainsplitter
+  #   value: splitter
+  #   width:
+  #     mode: fixed
+  #     fixed: 1
   - !buffer
     name: content
     value: resource_groups
-  - !buffer
-    name: mainsplitter
-    value: splitter
-    width:
-      mode: fixed
-      fixed: 1
+  # - !buffer
+  #   name: mainsplitter
+  #   value: splitter
+  #   width:
+  #     mode: fixed
+  #     fixed: 1
   - !buffer
     name: content1
     value: resources
 
-- !splitter
-  name: splitter
+# - !splitter
+#   name: splitter
 
 - !table
   name: subscriptions
