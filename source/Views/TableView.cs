@@ -44,5 +44,15 @@ namespace myotui.Views
             Add(_tableListView);
         }
 
+        public bool FocusNextLine()
+        {
+            return _tableListView.MoveDown();
+        }
+
+        public bool FocusPrevLine()
+        {
+            return _tableListView.MoveUp();
+        }
+
     }
 }

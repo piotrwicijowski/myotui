@@ -38,8 +38,9 @@ buffers:
     - "key <ControlF>"
     actions:
     - "/root/body/main.open resources TechInterview"
-  - name: command_mode
-    description: Open command mode
+
+  - name: close_view
+    description: Close current view
     triggers:
     - "key Q"
     - "key <ControlC>"
@@ -72,6 +73,20 @@ buffers:
     - "key <ControlJ>"
     actions:
     - "/focusDown"
+  - name: line_up
+    description: Focus Previous Line
+    scope: "/**"
+    triggers:
+    - "key k"
+    actions:
+    - "/lineUp"
+  - name: line_down
+    description: Focus Next Line
+    scope: "/**"
+    triggers:
+    - "key j"
+    actions:
+    - "/lineDown"
   windows:
   - !buffer
     name: head

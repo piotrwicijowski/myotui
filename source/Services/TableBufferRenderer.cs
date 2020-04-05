@@ -38,6 +38,7 @@ namespace myotui.Services
         {
             RegisterFocusAction(node);
             RegisterCloseAction(node);
+            RegisterNavigationAction(node);
         }
 
         // public View Render(ViewNode node)
@@ -96,6 +97,14 @@ namespace myotui.Services
         {
             _actionService.RegisterAction($"{node.Scope}.close","/**",(_) => _bufferService.CloseBuffer(node));
             _actionService.RegisterAction($"/close",$"{node.Scope}/**",(_) => _bufferService.CloseBuffer(node));
+        }
+
+        protected virtual void RegisterNavigationAction(ViewNode node)
+        {
+            _actionService.RegisterAction($"{node.Scope}.lineUp","/**",(_) => (node.View as TableView).FocusPrevLine());
+            _actionService.RegisterAction($"/lineUp",$"{node.Scope}/**",(_) => (node.View as TableView).FocusPrevLine());
+            _actionService.RegisterAction($"{node.Scope}.lineDown","/**",(_) => (node.View as TableView).FocusNextLine());
+            _actionService.RegisterAction($"/lineDown",$"{node.Scope}/**",(_) => (node.View as TableView).FocusNextLine());
         }
     }
 }
