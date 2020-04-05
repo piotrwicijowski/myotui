@@ -83,6 +83,7 @@ namespace myotui.Services
             // view.Width = Dim.Fill();
             // view.Height = Dim.Fill();
             node.View = view;
+            view.CanFocus = node.Buffer.Focusable;
             return view;
         }
         

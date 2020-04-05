@@ -1,4 +1,5 @@
-﻿using Terminal.Gui;
+﻿using System.Collections.Generic;
+using Terminal.Gui;
 
 namespace myotui.Models.Config
 {
@@ -8,5 +9,7 @@ namespace myotui.Models.Config
         public string Value {get; set;}
         public SizeHint Width {get; set;} = new SizeHint();
         public SizeHint Height {get; set;} = new SizeHint();
+        public IEnumerable<IParameter> Parameters {get; set;}
+
     }
 }

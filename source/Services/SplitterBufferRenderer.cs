@@ -29,7 +29,6 @@ namespace myotui.Services
         public View Render(ViewNode node)
         {
             var view = new Splitter();
-            node.Focusable = false;
             node.View = view;
             return view;
         }

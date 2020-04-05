@@ -13,5 +13,6 @@ namespace myotui.Models.Config
         public IEnumerable<ILayoutContent> Windows {get; set;}
         public bool AutoSplitters {get; set;} = true;
         public bool Closable {get; set;} = false;
+        public bool Focusable {get; set;} = true;
     }
 }

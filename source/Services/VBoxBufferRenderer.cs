@@ -28,7 +28,7 @@ namespace myotui.Services
                 })
                 .Aggregate<View, View>(null, (last, element) => 
                 {
-                    element.Y = last == null ? 1 : Pos.Bottom(last);
+                    element.Y = last == null ? 0 : Pos.Bottom(last);
                     view.Add(element);
                     return element;
                 }

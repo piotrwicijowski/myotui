@@ -25,7 +25,7 @@ namespace myotui
                     {
                         Buffer = splitterBuffer,
                         Parent = parentNode,
-                        Focusable = false,
+                        // Focusable = false,
                         View = new Splitter(),
                         Width = new SizeHint
                         {

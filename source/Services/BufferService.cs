@@ -14,12 +14,14 @@ namespace myotui.Services
 
         protected readonly IConfigurationService _configuration;
         protected readonly INodeService _nodeService;
+        protected readonly IParameterService _parameterService;
         protected readonly IIndex<Type,IBufferRenderer> _bufferRenderers;
-        public BufferService(IConfigurationService configuration, IIndex<Type,IBufferRenderer> bufferRenderers, INodeService nodeService)
+        public BufferService(IConfigurationService configuration, IIndex<Type,IBufferRenderer> bufferRenderers, INodeService nodeService, IParameterService parameterService)
         {
             _configuration = configuration;
             _bufferRenderers = bufferRenderers;
             _nodeService = nodeService;
+            _parameterService = parameterService;
         }
 
         public View RenderNode(ViewNode node)
@@ -36,7 +38,9 @@ namespace myotui.Services
         {
             var buffer = _configuration.GetBufferByName(bufferName);
 
-            var newNode = _nodeService.BuildNodeTree(buffer, SuggestUniqueScope(parentNode, bufferName), parentNode, bufferParams: bufferParams);
+            var parameterNames = buffer.Parameters?.Select(parameter => parameter.Name);
+            var decodedBufferParams = _parameterService.DecodeParametersString(bufferParams, parameterNames?.ToList());
+            var newNode = _nodeService.BuildNodeTree(buffer, SuggestUniqueScope(parentNode, bufferName), parentNode, bufferParams: decodedBufferParams);
             newNode.View = RenderNode(newNode);
             if(parentNode.Children == null)
             {

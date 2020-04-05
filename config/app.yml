@@ -26,6 +26,12 @@ buffers:
     - "key <ControlR>"
     actions:
     - "/root/body/main.open resources logic-apps"
+  - name: open_resources
+    description: Open Resources for Logic Apps
+    triggers:
+    - "key r"
+    actions:
+    - "/root/body/main.open resources TechInterview"
   - name: open_tech_interview
     description: Open Resources for Tech Interview
     triggers:
@@ -148,9 +154,9 @@ buffers:
   # - !buffer
   #   name: content2
   #   value: resource_groups
-  # - !buffer
-  #   name: content1
-  #   value: resources
+  - !buffer
+    name: content1
+    value: resources
 
 # - !splitter
 #   name: splitter
@@ -186,8 +192,105 @@ buffers:
     displayName : Az location
 
 - !table
-  name: resources
+  name: resources_basic
   description: List of all resources
+  parameters:
+  - name: group  
+    type: string
+    defaultValue: ""
+  content:
+    !cli
+    input: az resource list ?(group:--resource-group) %(group)
+    map: json_array_to_table
+  columns:
+  - name : name
+    displayName : Name
+  - name : kind
+    displayName : Kind
+  - name : location
+    displayName : Az location
+
+- !vbox
+  name: resources
+  closable: true
+  parameters:
+  - name: group  
+    type: string
+    defaultValue: "TechInterview"
+  windows:
+  - !buffer
+    name: resources_header
+    value: resources_header
+    parameters:
+    - name: group  
+      type: string
+      defaultValue: "%(group)"
+    height:
+      mode: fixed
+      fixed: 1
+  - !buffer
+    name: resources_content
+    value: resources_content
+    parameters:
+    - name: group  
+      type: string
+      defaultValue: "%(group)"
+
+- !hbox
+  name: resources_content
+  parameters:
+  - name: group  
+    type: string
+    defaultValue: ""
+  windows:
+  - !buffer
+    name: resources_sidebar
+    value: resources_sidebar
+    parameters:
+    - name: group  
+      type: string
+      defaultValue: "%(group)"
+    width:
+      mode: fixed
+      fixed: 5
+  - !buffer
+    name: resources_table
+    value: resources_table
+    parameters:
+    - name: group  
+      type: string
+      defaultValue: "%(group)"
+
+- !table
+  name: resources_header
+  description: Resources header
+  closable: false
+  parameters:
+  - name: group  
+    type: string
+    defaultValue: ""
+  closable: false
+  focusable: false
+  content:
+    !list
+    value:
+    - "%(group)"
+
+- !table
+  name: resources_sidebar
+  description: Resources sidebar
+  closable: false
+  content:
+    !list
+    value:
+    - res
+    - param
+    - act
+
+- !table
+  name: resources_table
+  description: Table view for list of all resources
+  closable: false
   parameters:
   - name: group  
     type: string

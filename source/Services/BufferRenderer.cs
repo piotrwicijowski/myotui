@@ -21,13 +21,14 @@ namespace myotui.Services
         public virtual View Render(ViewNode node)
         {
             var view = new View();
-            var label = new Label(node.Buffer.Name)
-            {
-                X = 0 + 1,
-                Y = 0,
-            };
-            view.Add(label);
+            // var label = new Label(node.Buffer.Name)
+            // {
+            //     X = 0 + 1,
+            //     Y = 0,
+            // };
+            // view.Add(label);
             node.View = view;
+            view.CanFocus = node.Buffer.Focusable;
             return view;
         }
 

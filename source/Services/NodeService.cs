@@ -16,13 +16,13 @@ namespace myotui.Services
             _configuration = configuration;
             _parameterService = parameterService;
         }
-        public ViewNode BuildNodeTree(IBuffer buffer, string scope, ViewNode parent = null, string bufferParams = null, SizeHint width = null, SizeHint height = null)
+        public ViewNode BuildNodeTree(IBuffer buffer, string scope, ViewNode parent = null, IDictionary<string,string> bufferParams = null, SizeHint width = null, SizeHint height = null)
         {
             // var bufferCopy = buffer.Clone();
             var parameters = buffer.Parameters?.ToDictionary(parameter => parameter.Name, parameter => parameter.DefaultValue) ?? new Dictionary<string, string>();
-            var parameterNames = buffer.Parameters?.Select(parameter => parameter.Name);
-            var decodedBufferParams = _parameterService.DecodeParametersString(bufferParams, parameterNames?.ToList());
-            decodedBufferParams.ToList().ForEach(pair =>
+            // var parameterNames = buffer.Parameters?.Select(parameter => parameter.Name);
+            // var decodedBufferParams = _parameterService.DecodeParametersString(bufferParams, parameterNames?.ToList());
+            bufferParams?.ToList().ForEach(pair =>
                 {
                     try
                     {
@@ -50,7 +50,7 @@ namespace myotui.Services
                             _configuration.GetBufferByName(window.Value),
                             $"{scope}/{window.Name}",
                             currentNode,
-                            null,
+                            window.Parameters?.ToDictionary(par => par.Name, par => _parameterService.SubstituteParameters(par.DefaultValue,currentNode.Parameters)),
                             window.Width,
                             window.Height
                             )

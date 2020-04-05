@@ -10,5 +10,6 @@ namespace myotui.Models.Config
         public IValueContent Content {get; set;}
         public IList<ColumnDefinition> Columns {get; set;} = new List<ColumnDefinition>();
         public bool Closable {get; set;} = true;
+        public bool Focusable {get; set;} = true;
     }
 }

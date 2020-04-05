@@ -10,7 +10,7 @@ namespace myotui.Models
         public string Scope {get; set;}
         public IBuffer Buffer {get;set;}
         public ViewNode Parent {get; set;}
-        public bool Focusable {get; set;} = true;
+        // public bool Focusable {get; set;} = true;
         public IList<ViewNode> Children {get; set;}
         public IDictionary<string, string> Parameters {get; set;}
         public View View {get; set;}
@@ -26,7 +26,7 @@ namespace myotui.Models
             for(int i = focusedChildIndex + 1; i <= Children.Count - 1; ++i)
             {
                 var child = Children.ToList()[i];
-                if(child.Focusable)
+                if(child.Buffer.Focusable)
                 {
                     View.SetFocus(child.View);
                     return true;
@@ -44,7 +44,7 @@ namespace myotui.Models
             for(int i = focusedChildIndex - 1; i >= 0; --i)
             {
                 var child = Children.ToList()[i];
-                if(child.Focusable)
+                if(child.Buffer.Focusable)
                 {
                     View.SetFocus(child.View);
                     return true;
