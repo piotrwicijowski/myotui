@@ -13,25 +13,22 @@ namespace myotui.Services
     public class TableBufferRenderer : IBufferRenderer
     {
         protected readonly IActionService _actionService;
+        protected readonly IKeyService _keyService;
         protected readonly IBufferService _bufferService;
         protected readonly IIndex<Type,IRawContentService> _rawContentServices;
         protected readonly IIndex<ValueMapType,IContentMapService> _maps;
-        public TableBufferRenderer(IActionService actionService, IIndex<Type,IRawContentService> rawContentServices, IIndex<ValueMapType,IContentMapService> maps, IBufferService bufferService)
+        public TableBufferRenderer(IActionService actionService, IIndex<Type,IRawContentService> rawContentServices, IIndex<ValueMapType,IContentMapService> maps, IBufferService bufferService, IKeyService keyService)
         {
             _actionService = actionService;
             _rawContentServices = rawContentServices;
             _maps = maps;
             _bufferService = bufferService;
+            _keyService = keyService;
         }
 
         public View Layout(ViewNode node)
         {
             return node.View;
-        }
-
-        public void RegisterBindings(ViewNode node)
-        {
-            return;
         }
 
         public void RegisterEvents(ViewNode node)
@@ -79,6 +76,14 @@ namespace myotui.Services
             var columnWidths = columnMapOrder.Select(x => 1.0).ToList();
             var tableData = new TableData(content,headerContent,columnMapOrder, columnWidths);
             var view = new TableView(tableData);
+            view.FocusedItemChanged = (line) =>
+            {
+                line.Keys.ToList().ForEach(key =>
+                {
+                    node.Parameters[$"line.{key}"] = line[key]?.ToString() ?? "";
+                });
+            };
+            view.TriggerFocusedLineEvent();
             // view.X = 0;
             // view.Y = 0;
             // view.Width = Dim.Fill();
@@ -86,6 +91,30 @@ namespace myotui.Services
             node.View = view;
             view.CanFocus = node.Buffer.Focusable;
             return view;
+        }
+
+        public void RegisterBindings(ViewNode node)
+        {
+            var bindings = node.Buffer.Bindings;
+
+            bindings?
+            .ToList()
+            .ForEach(
+                binding => binding
+                    .Triggers
+                    .Where(trigger => trigger.StartsWith("key "))
+                    .SelectMany(
+                        trigger => binding.Actions,
+                        (trigger, action) => (trigger, action)
+                    )
+                    .ToList()
+                    .ForEach(
+                        pair => {
+                            var (trigger, action) = pair;
+                            _keyService.RegisterKeyActionTrigger(trigger, action, binding.Scope, node);
+                        } 
+                    )
+                );
         }
         
         protected void RegisterFocusAction(ViewNode node)

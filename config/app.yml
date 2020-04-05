@@ -164,14 +164,14 @@ buffers:
     - "./focusLeft"
   windows:
   - !buffer
-    name: content
+    name: subscriptions
     value: subscriptions
   # - !buffer
   #   name: content2
   #   value: resource_groups
-  - !buffer
-    name: content1
-    value: resources
+  # - !buffer
+  #   name: content1
+  #   value: resources
 
 # - !splitter
 #   name: splitter
@@ -183,6 +183,13 @@ buffers:
     !cli
     input: az account list
     map: json_array_to_table
+  bindings:
+  - name: open_highlighted_resource_groups
+    description: Open highlighted resource groups for subscription
+    triggers:
+    - "key <ControlM>"
+    actions:
+    - "/root/body/main.open resource_groups %(line.id)"
   columns:
   - name : name
     displayName : Name
@@ -190,10 +197,111 @@ buffers:
     displayName : Cloud Name
 
 - !table
+  name: resource_groups_basic
+  description: List of resource groups for selected subscription
+  parameters:
+  - name: subscription
+    type: string
+    defaultValue: ""
+  content:
+    !cli
+    input: az group list ?(subscription:--subscription) %(subscription)
+    map: json_array_to_table
+  columns:
+  - name : name
+    displayName : Name
+  - name : location
+    displayName : Az location
+
+- !vbox
   name: resource_groups
   description: List of resource groups for selected subscription
   parameters:
   - name: subscription  
+    type: string
+    defaultValue: ""
+  windows:
+  - !buffer
+    name: resource_groups_header
+    value: resource_groups_header
+    parameters:
+    - name: subscription
+      type: string
+      defaultValue: "%(subscription)"
+    height:
+      mode: fixed
+      fixed: 1
+  - !buffer
+    name: resource_groups_content
+    value: resource_groups_content
+    parameters:
+    - name: subscription
+      type: string
+      defaultValue: "%(subscription)"
+
+- !hbox
+  name: resource_groups_content
+  parameters:
+  - name: subscription
+    type: string
+    defaultValue: ""
+  windows:
+  - !buffer
+    name: resource_groups_sidebar
+    value: resource_groups_sidebar
+    parameters:
+    - name: subscription
+      type: string
+      defaultValue: "%(subscription)"
+    width:
+      mode: fixed
+      fixed: 5
+  - !buffer
+    name: resource_groups_table
+    value: resource_groups_table
+    parameters:
+    - name: subscription
+      type: string
+      defaultValue: "%(subscription)"
+
+- !table
+  name: resource_groups_header
+  description: Resource groups header
+  closable: false
+  focusable: false
+  parameters:
+  - name: subscription
+    type: string
+    defaultValue: ""
+  content:
+    !list
+    value:
+    - "%(subscription)"
+
+- !table
+  name: resource_groups_sidebar
+  description: Resource groups sidebar
+  closable: false
+  content:
+    !list
+    value:
+    - res
+    - param
+    - act
+
+- !table
+  name: resource_groups_table
+  description: Table with list of resource groups
+  closable: false
+  bindings:
+  - name: open_highlighted_resource
+    description: Open highlighted resource
+    triggers:
+    - "key <ControlM>"
+    actions:
+    - "/root/body/main.open resources %(line.name)"
+  parameters:
+  - name: subscription
     type: string
     defaultValue: ""
   content:
@@ -272,7 +380,7 @@ buffers:
     name: resources_table
     value: resources_table
     parameters:
-    - name: group  
+    - name: group
       type: string
       defaultValue: "%(group)"
 
@@ -280,12 +388,11 @@ buffers:
   name: resources_header
   description: Resources header
   closable: false
+  focusable: false
   parameters:
-  - name: group  
+  - name: group
     type: string
     defaultValue: ""
-  closable: false
-  focusable: false
   content:
     !list
     value:
@@ -306,6 +413,13 @@ buffers:
   name: resources_table
   description: Table view for list of all resources
   closable: false
+  bindings:
+  - name: open_highlighted_resource
+    description: Open highlighted resource
+    triggers:
+    - "key <ControlM>"
+    actions:
+    - "/root/body/main.open resource_details %(line.id)"
   parameters:
   - name: group  
     type: string
@@ -313,6 +427,25 @@ buffers:
   content:
     !cli
     input: az resource list ?(group:--resource-group) %(group)
+    map: json_array_to_table
+  columns:
+  - name : name
+    displayName : Name
+  - name : kind
+    displayName : Kind
+  - name : location
+    displayName : Az location
+
+- !table
+  name: resource_details
+  description: Details view for resource
+  parameters:
+  - name: resourceId  
+    type: string
+    defaultValue: ""
+  content:
+    !cli
+    input: az resource show ?(resourceId:--ids) %(resourceId)
     map: json_array_to_table
   columns:
   - name : name

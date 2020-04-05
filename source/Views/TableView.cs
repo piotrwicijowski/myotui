@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using myotui.Models;
 using Terminal.Gui;
 
@@ -9,6 +11,8 @@ namespace myotui.Views
         private ListView _headerView;
 
         private readonly ITableData _tableData;
+
+        public Action<IDictionary<string, object>> FocusedItemChanged;
         
         public TableView(ITableData tableData)
         {
@@ -41,6 +45,10 @@ namespace myotui.Views
                 Add(_headerView);
                 Add(splitter);
             }
+            _tableListView.SelectedChanged += () =>
+            {
+                TriggerFocusedLineEvent();
+            };
             Add(_tableListView);
         }
 
@@ -49,10 +57,18 @@ namespace myotui.Views
             return _tableListView.MoveDown();
         }
 
+        public void TriggerFocusedLineEvent()
+        {
+            if (FocusedItemChanged != null)
+            {
+                var selectedItemIndex = _tableListView.SelectedItem;
+                FocusedItemChanged(_tableData[selectedItemIndex]);
+            }
+        }
+
         public bool FocusPrevLine()
         {
             return _tableListView.MoveUp();
         }
-
     }
 }

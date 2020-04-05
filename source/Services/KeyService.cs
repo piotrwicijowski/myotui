@@ -12,12 +12,14 @@ namespace myotui.Services {
         protected readonly IActionService _actionService;
         protected readonly IScopeService _scopeService;
         protected readonly INodeService _nodeService;
+        protected readonly IParameterService _parameterService;
         public const string triggerPattern = "key ";
-        public KeyService (IActionService actionService, INodeService nodeService, IScopeService scopeService)
+        public KeyService (IActionService actionService, INodeService nodeService, IScopeService scopeService, IParameterService parameterService)
         {
             _actionService = actionService;
             _nodeService = nodeService;
             _scopeService = scopeService;
+            _parameterService = parameterService;
         }
         public bool ProcessKeyEvent (KeyEvent keyEvent, ViewNode node)
         {
@@ -34,7 +36,8 @@ namespace myotui.Services {
                     {
                         continue;
                     }
-                    _actionService.DispatchAction(action,focusedNode.Scope);
+                    var parametrizedAction = _parameterService.SubstituteParameters(action, focusedNode.Parameters);
+                    _actionService.DispatchAction(parametrizedAction,focusedNode.Scope);
                     return true;
                 }
             }

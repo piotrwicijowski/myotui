@@ -21,5 +21,9 @@ namespace myotui.Models
 
         public IListDataSource GetHeaderDataSource() => _headerDataSource;
         public IListDataSource GetBodyDataSource() => _bodyDataSource;
+        public IDictionary<string, object> this [int key]
+        {
+            get => _bodyDataSource[key];
+        }
     }
 }

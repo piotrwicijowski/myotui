@@ -40,6 +40,11 @@ namespace myotui.Models
             }
         }
 
+        public IDictionary<string, object> this[int key]
+        {
+            get => _contentList[key];
+        }
+
 		void RenderUstr (ConsoleDriver driver, ustring ustr, int width)
 		{
 			int byteLen = ustr.Length;

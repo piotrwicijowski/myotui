@@ -107,7 +107,6 @@ namespace myotui.Services
                     .ForEach(
                         pair => {
                             var (trigger, action) = pair;
-
                             _keyService.RegisterKeyActionTrigger(trigger, action, binding.Scope, node);
                         } 
                     )
