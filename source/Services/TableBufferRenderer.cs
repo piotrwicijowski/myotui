@@ -13,13 +13,15 @@ namespace myotui.Services
     public class TableBufferRenderer : IBufferRenderer
     {
         protected readonly IActionService _actionService;
+        protected readonly IBufferService _bufferService;
         protected readonly IIndex<Type,IRawContentService> _rawContentServices;
         protected readonly IIndex<ValueMapType,IContentMapService> _maps;
-        public TableBufferRenderer(IActionService actionService, IIndex<Type,IRawContentService> rawContentServices, IIndex<ValueMapType,IContentMapService> maps)
+        public TableBufferRenderer(IActionService actionService, IIndex<Type,IRawContentService> rawContentServices, IIndex<ValueMapType,IContentMapService> maps, IBufferService bufferService)
         {
             _actionService = actionService;
             _rawContentServices = rawContentServices;
             _maps = maps;
+            _bufferService = bufferService;
         }
 
         public View Layout(ViewNode node)
@@ -34,10 +36,8 @@ namespace myotui.Services
 
         public void RegisterEvents(ViewNode node)
         {
-            if(node.Parent != null)
-            {
-                RegisterFocusAction(node);
-            }
+            RegisterFocusAction(node);
+            RegisterCloseAction(node);
         }
 
         // public View Render(ViewNode node)
@@ -91,5 +91,10 @@ namespace myotui.Services
             _actionService.RegisterAction($"{node.Scope}.focus","/**",(_) => {node.Parent?.View.SetFocus(node.View);return true;});
         }
         
+        protected virtual void RegisterCloseAction(ViewNode node)
+        {
+            _actionService.RegisterAction($"{node.Scope}.close","/**",(_) => _bufferService.CloseBuffer(node));
+            _actionService.RegisterAction($"/close",$"{node.Scope}/**",(_) => _bufferService.CloseBuffer(node));
+        }
     }
 }

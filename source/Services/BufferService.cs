@@ -35,7 +35,8 @@ namespace myotui.Services
         public void OpenNewBuffer(ViewNode parentNode, string bufferName, string bufferParams)
         {
             var buffer = _configuration.GetBufferByName(bufferName);
-            var newNode = _nodeService.BuildNodeTree(buffer, $"{parentNode.Scope}/{buffer.Name}", parentNode, bufferParams: bufferParams);
+
+            var newNode = _nodeService.BuildNodeTree(buffer, SuggestUniqueScope(parentNode, bufferName), parentNode, bufferParams: bufferParams);
             newNode.View = RenderNode(newNode);
             if(parentNode.Children == null)
             {
@@ -45,6 +46,51 @@ namespace myotui.Services
             var parentRenderer = _bufferRenderers[parentNode.Buffer.GetType()];
             parentRenderer.Layout(parentNode);
             parentNode.View.LayoutSubviews();
+        }
+         
+        private string SuggestUniqueScope(ViewNode parentNode, string bufferName)
+        {
+            var baseScopeName = $"{parentNode.Scope}/{bufferName}";
+            var suggestedName = baseScopeName;
+            var childBufferScopes = parentNode.Children.Select(child => child.Scope).ToList();
+            for(int i = 1; i <= 20; ++ i)
+            {
+                if(!childBufferScopes.Contains(suggestedName))
+                {
+                    break;
+                }
+                else
+                {
+                    suggestedName = $"{baseScopeName}_{i}";
+                }
+            }
+            return suggestedName;
+            
+        }
+        public bool CloseBuffer(ViewNode node)
+        {
+            if(!node.Buffer.Closable)
+            {
+                return false;
+            }
+            var parentNode = node?.Parent;
+            if(parentNode == null)
+            {
+                return true;
+            }
+            var refocused = false;
+            var nodeToRefocus = parentNode;
+            while(!refocused && nodeToRefocus != null)
+            {
+                refocused = !refocused ? nodeToRefocus.FocusPreviousChild() : refocused;
+                refocused = !refocused ? nodeToRefocus.FocusNextChild() : refocused;
+                nodeToRefocus = nodeToRefocus.Parent;
+            }
+            parentNode.Children.Remove(node);
+            var parentRenderer = _bufferRenderers[parentNode.Buffer.GetType()];
+            parentRenderer.Layout(parentNode);
+            parentNode.View.LayoutSubviews();
+            return true;
         }
          
     }

@@ -35,6 +35,7 @@ namespace myotui.Services
         {
             RegisterFocusAction(node);
             RegisterOpenAction(node);
+            RegisterCloseAction(node);
         }
 
         public virtual View Layout(ViewNode node)
@@ -68,6 +69,11 @@ namespace myotui.Services
             _actionService.RegisterAction($"{node.Scope}.focusPrev",node.Scope,(_) => node.FocusPreviousChild());
             _actionService.RegisterAction($"/focusNext",$"{node.Scope}/**",(_) => node.FocusNextChild());
             _actionService.RegisterAction($"/focusPrev",$"{node.Scope}/**",(_) => node.FocusPreviousChild());
+        }
+        protected virtual void RegisterCloseAction(ViewNode node)
+        {
+            _actionService.RegisterAction($"{node.Scope}.close","/**",(_) => _bufferService.CloseBuffer(node));
+            _actionService.RegisterAction($"/close",$"{node.Scope}/**",(_) => _bufferService.CloseBuffer(node));
         }
 
         protected virtual void RegisterOpenAction(ViewNode node)

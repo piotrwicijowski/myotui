@@ -15,6 +15,7 @@ namespace myotui.Services
         {
             var view = node.View;
             view.RemoveAll();
+            view.Clear();
             var dims = GetDims(node.ChildrenWithSplitters().Select(child => child.Height));
             var elements = node.ChildrenWithSplitters()
                 .Select(child => child.View)

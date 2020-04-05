@@ -7,5 +7,6 @@ namespace myotui.Models.Config
         public string Description {get; set;}
         public IEnumerable<IBinding> Bindings {get; set;}
         public IEnumerable<IParameter> Parameters {get; set;}
+        public bool Closable {get; set;} = false;
     }
 }

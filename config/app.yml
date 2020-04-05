@@ -14,6 +14,12 @@ buffers:
   #   - "key <ControlR>"
   #   actions:
   #   - "/root/body/main.open"
+  - name: close_current_buffer
+    description: Open Resources for Logic Apps
+    triggers:
+    - "key q"
+    actions:
+    - "/close"
   - name: open_logic_apps
     description: Open Resources for Logic Apps
     triggers:
@@ -80,6 +86,7 @@ buffers:
 - !table
   name: menu
   description: Application menu
+  closable: false
   content:
     !list
     value:
@@ -88,6 +95,7 @@ buffers:
 - !table
   name: sidebar
   description: Sidebar
+  closable: false
   content:
     !list
     value:
@@ -116,6 +124,7 @@ buffers:
 - !hbox
   name: main
   description: Main container for content
+  # closable: true
   # autoSplitters : false
   bindings:
   - name: focus_right
@@ -137,23 +146,11 @@ buffers:
     name: content
     value: subscriptions
   # - !buffer
-  #   name: mainsplitter
-  #   value: splitter
-  #   width:
-  #     mode: fixed
-  #     fixed: 1
-  - !buffer
-    name: content
-    value: resource_groups
+  #   name: content2
+  #   value: resource_groups
   # - !buffer
-  #   name: mainsplitter
-  #   value: splitter
-  #   width:
-  #     mode: fixed
-  #     fixed: 1
-  - !buffer
-    name: content1
-    value: resources
+  #   name: content1
+  #   value: resources
 
 # - !splitter
 #   name: splitter
