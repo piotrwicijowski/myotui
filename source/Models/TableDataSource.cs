@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NStack;
 using Terminal.Gui;
+using Unix.Terminal;
 
 namespace myotui.Models
 {
@@ -12,6 +13,18 @@ namespace myotui.Models
         private IList<string> _columnMapOrder;
         private IList<double> _columnProportions;
         public int Count => _contentList.Count();
+        private static readonly List<Terminal.Gui.Attribute> Colors = new List<Terminal.Gui.Attribute>()
+        {
+            CursesDriver.MakeColor(Curses.COLOR_WHITE, Curses.COLOR_BLACK),
+            CursesDriver.MakeColor(Curses.COLOR_YELLOW, Curses.COLOR_BLACK),
+            CursesDriver.MakeColor(Curses.COLOR_GREEN, Curses.COLOR_BLACK),
+        };
+        private static readonly List<Terminal.Gui.Attribute> FocusColors = new List<Terminal.Gui.Attribute>()
+        {
+            CursesDriver.MakeColor(Curses.COLOR_BLACK, Curses.COLOR_WHITE),
+            CursesDriver.MakeColor(Curses.COLOR_BLACK, Curses.COLOR_YELLOW),
+            CursesDriver.MakeColor(Curses.COLOR_BLACK, Curses.COLOR_GREEN),
+        };
 
         public TableDataSource(IList<IDictionary<string, object>> contentList, IList<string> columnMapOrder, IList<double> columnPorportions)
         {
@@ -27,6 +40,10 @@ namespace myotui.Models
 
         public void Render(ListView container, ConsoleDriver driver, bool selected, int item, int col, int line, int width)
         {
+            var currentColor = container.HasFocus ? (selected ? container.ColorScheme.Focus : container.ColorScheme.Normal) : container.ColorScheme.Normal;
+            var savedColor = currentColor;
+            // var currentAttribute = container.ColorScheme.Focus;
+
             var widths = CalculateWidths(width, _columnProportions);
             var columnStarts = CalculateColumnStarts(width, widths);
             for(int i = 0; i < columnStarts.Count; i++)
@@ -37,8 +54,18 @@ namespace myotui.Models
                 var columnName = _columnMapOrder.Count > 0 ? _columnMapOrder[i] : "value";
                 var columnValue = _contentList[item][columnName] ?? "";
                 columnValue = columnValue.ToString().Replace(Environment.NewLine," ");
+                var newColor = (container.HasFocus && selected) ? FocusColors[i % Colors.Count()] : Colors[i % Colors.Count()];
+                if(currentColor != newColor){
+                    driver.SetAttribute(newColor);
+                    currentColor = newColor;
+                }
                 RenderUstr(driver, columnValue.ToString(), columnWidth);
             }
+            if(savedColor != currentColor)
+            {
+                driver.SetAttribute(savedColor);
+            }
+            // container.ColorScheme = currentAttribute;
         }
 
         public IDictionary<string, object> this[int key]
@@ -58,6 +85,8 @@ namespace myotui.Models
 
 		void RenderUstr (ConsoleDriver driver, ustring ustr, int width)
 		{
+            // var (fg, bg) = colors;
+            // driver.SetColors(fg, bg);
 			int byteLen = ustr.Length;
 			int used = 0;
 			for (int i = 0; i < byteLen;) {
