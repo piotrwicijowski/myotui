@@ -36,6 +36,7 @@ namespace myotui.Models
                 var columnWidth = widths[i];
                 var columnName = _columnMapOrder.Count > 0 ? _columnMapOrder[i] : "value";
                 var columnValue = _contentList[item][columnName] ?? "";
+                columnValue = columnValue.ToString().Replace(Environment.NewLine," ");
                 RenderUstr(driver, columnValue.ToString(), columnWidth);
             }
         }
@@ -44,7 +45,7 @@ namespace myotui.Models
         {
             get
             {
-                if(key < _contentList.Count() && key >=0)
+                if(_contentList != null && key < _contentList.Count() && key >=0)
                 {
                     return _contentList[key];
                 }

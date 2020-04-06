@@ -30,12 +30,14 @@ namespace myotui
             builder.RegisterType<CliRawContentService>().Keyed<IRawContentService>(typeof(CliValueContent));
             builder.RegisterType<ListRawContentService>().Keyed<IRawContentService>(typeof(ListValueContent));
             builder.RegisterType<JsonArrayMapService>().Keyed<IContentMapService>(ValueMapType.json_array_to_table);
+            builder.RegisterType<JsonObjectMapService>().Keyed<IContentMapService>(ValueMapType.json_object_to_dict);
             builder.RegisterType<StringArrayMapService>().Keyed<IContentMapService>(ValueMapType.string_to_string_array);
 
             builder.RegisterType<VBoxBufferRenderer>().Keyed<IBufferRenderer>(typeof(VBoxBuffer));
             builder.RegisterType<HBoxBufferRenderer>().Keyed<IBufferRenderer>(typeof(HBoxBuffer));
             builder.RegisterType<HBladeBufferRenderer>().Keyed<IBufferRenderer>(typeof(HBladeBuffer));
             builder.RegisterType<TableBufferRenderer>().Keyed<IBufferRenderer>(typeof(TableBuffer));
+            builder.RegisterType<DictBufferRenderer>().Keyed<IBufferRenderer>(typeof(DictBuffer));
             builder.RegisterType<SplitterBufferRenderer>().Keyed<IBufferRenderer>(typeof(SplitterBuffer));
 
             builder.RegisterType<App>().As<IApp>();
@@ -43,6 +45,7 @@ namespace myotui
             builder.RegisterType<CliValueContent>().As<IValueContent>();
             builder.RegisterType<ListValueContent>().As<IValueContent>();
             builder.RegisterType<TableBuffer>().As<IBuffer>();
+            builder.RegisterType<DictBuffer>().As<IBuffer>();
             builder.RegisterType<SplitterBuffer>().As<IBuffer>();
             builder.RegisterType<HBoxBuffer>().As<IBuffer>();
             builder.RegisterType<VBoxBuffer>().As<IBuffer>();

@@ -4,12 +4,12 @@ using Newtonsoft.Json;
 
 namespace myotui.Services
 {
-    public class JsonArrayMapService : IContentMapService
+    public class JsonObjectMapService : IContentMapService
     {
         public IEnumerable<IDictionary<string,object>> MapRawData(string data)
         {
-            var json = JsonConvert.DeserializeObject<IEnumerable<IDictionary<string,object>>>(data);
-            return json;
+            var json = JsonConvert.DeserializeObject<IDictionary<string,object>>(data);
+            return new List<IDictionary<string,object>>(){json};
         }
     }
 }

@@ -10,14 +10,14 @@ using System.Collections.Generic;
 
 namespace myotui.Services
 {
-    public class TableBufferRenderer : IBufferRenderer
+    public class DictBufferRenderer : IBufferRenderer
     {
         protected readonly IActionService _actionService;
         protected readonly IKeyService _keyService;
         protected readonly IBufferService _bufferService;
         protected readonly IIndex<Type,IRawContentService> _rawContentServices;
         protected readonly IIndex<ValueMapType,IContentMapService> _maps;
-        public TableBufferRenderer(IActionService actionService, IIndex<Type,IRawContentService> rawContentServices, IIndex<ValueMapType,IContentMapService> maps, IBufferService bufferService, IKeyService keyService)
+        public DictBufferRenderer(IActionService actionService, IIndex<Type,IRawContentService> rawContentServices, IIndex<ValueMapType,IContentMapService> maps, IBufferService bufferService, IKeyService keyService)
         {
             _actionService = actionService;
             _rawContentServices = rawContentServices;
@@ -42,22 +42,34 @@ namespace myotui.Services
         {
             var buffer = node.Buffer;
             var scope = node.Scope;
-            var tablebuffer = buffer as TableBuffer;
-            var rawContentService = _rawContentServices[tablebuffer.Content.GetType()];
-            var rawContent = rawContentService.GetRawOutput(tablebuffer.Content, node.Parameters);
-            var map = _maps[tablebuffer.Content.Map];
-            var content = map.MapRawData(rawContent)?.ToList();
-            content = content ?? new List<IDictionary<string,object>>();
-            //TODO
-            // var columnMapOrder = content?.FirstOrDefault()?.Keys.Take(3).ToList();
-            var columnMapOrder = tablebuffer.Columns?.Select(col => col.Name).ToList() ?? new List<string>();
-            var headerContent = new List<IDictionary<string, object>>(){tablebuffer.Columns?.ToDictionary(col => col.Name, col => (object)col.DisplayName)};
+            var dictBuffer = buffer as DictBuffer;
+            var rawContentService = _rawContentServices[dictBuffer.Content.GetType()];
+            var rawContent = rawContentService.GetRawOutput(dictBuffer.Content, node.Parameters);
+            var map = _maps[dictBuffer.Content.Map];
+            var dictContent = map.MapRawData(rawContent)?.FirstOrDefault();
+            dictContent = dictContent ?? new Dictionary<string,object>();
+
+            // var rowMapOrder = dictBuffer.Columns?.Select(col => col.Name).ToList() ?? new List<string>();
+            var rowMapOrder = dictContent.Keys;
+            var headerContent = new List<IDictionary<string, object>>(){
+                new Dictionary<string,object>()
+                {
+                    {"key","Parameter Name"},{"value", "Value"}
+                }
+            };
+
+            var columnMapOrder = new List<string>()
+            {
+                "key",
+                "value"
+            };
             var columnWidths = columnMapOrder.Select(x => 1.0).ToList();
-            var tableData = new TableData(content,headerContent,columnMapOrder, columnWidths);
+            IList<IDictionary<string,object>> listContent = rowMapOrder.Select(rowName => new Dictionary<string,object>(){{"key", rowName},{"value", dictContent[rowName]}} as IDictionary<string,object>).ToList();
+            var tableData = new TableData(listContent, headerContent, columnMapOrder, columnWidths);
             var view = new TableView(tableData);
             view.FocusedItemChanged = (line) =>
             {
-                line.Keys.ToList().ForEach(key =>
+                line?.Keys.ToList().ForEach(key =>
                 {
                     node.Parameters[$"line.{key}"] = line[key]?.ToString() ?? "";
                 });

@@ -438,7 +438,7 @@ buffers:
   - name : location
     displayName : Az location
 
-- !table
+- !dict
   name: resource_details
   description: Details view for resource
   parameters:
@@ -448,7 +448,7 @@ buffers:
   content:
     !cli
     input: az resource show ?(resourceId:--ids) %(resourceId)
-    map: json_array_to_table
+    map: json_object_to_dict
   columns:
   - name : name
     displayName : Name
