@@ -216,6 +216,7 @@ buffers:
 - !vbox
   name: resource_groups
   description: List of resource groups for selected subscription
+  closable: true
   parameters:
   - name: subscription  
     type: string
@@ -241,6 +242,7 @@ buffers:
 
 - !hbox
   name: resource_groups_content
+  closable: false
   parameters:
   - name: subscription
     type: string

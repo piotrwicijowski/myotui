@@ -42,7 +42,17 @@ namespace myotui.Models
 
         public IDictionary<string, object> this[int key]
         {
-            get => _contentList[key];
+            get
+            {
+                if(key < _contentList.Count() && key >=0)
+                {
+                    return _contentList[key];
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
 
 		void RenderUstr (ConsoleDriver driver, ustring ustr, int width)

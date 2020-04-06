@@ -33,6 +33,11 @@ namespace myotui.Services
             var top = Terminal.Gui.Application.Top;
             RegisterApplicationEvents();
             top.Add(window);
+            var curserDriver = Terminal.Gui.Application.Driver as CursesDriver;
+            if(curserDriver!= null)
+            {
+                Unix.Terminal.Curses.nonl();
+            }
             Terminal.Gui.Application.Run();
         }
 

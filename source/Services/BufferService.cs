@@ -34,7 +34,7 @@ namespace myotui.Services
             return parentRenderer.Layout(node);
         }
 
-        public void OpenNewBuffer(ViewNode parentNode, string bufferName, string bufferParams)
+        public ViewNode OpenNewBuffer(ViewNode parentNode, string bufferName, string bufferParams)
         {
             var buffer = _configuration.GetBufferByName(bufferName);
 
@@ -50,6 +50,7 @@ namespace myotui.Services
             var parentRenderer = _bufferRenderers[parentNode.Buffer.GetType()];
             parentRenderer.Layout(parentNode);
             parentNode.View.LayoutSubviews();
+            return newNode;
         }
          
         private string SuggestUniqueScope(ViewNode parentNode, string bufferName)

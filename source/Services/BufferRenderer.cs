@@ -84,7 +84,10 @@ namespace myotui.Services
                 var parametersSplit = parameters.Split(" ");
                 var bufferName = parametersSplit.FirstOrDefault();
                 var bufferParameters = parametersSplit.Length <= 1 ? "" : string.Join(' ',parametersSplit.Skip(1));
-                _bufferService.OpenNewBuffer(node, bufferName, bufferParameters);
+                var hasFocusParameter = bool.TryParse(bufferParameters, out var focus);
+                focus = hasFocusParameter ? focus : true;
+                var newNode = _bufferService.OpenNewBuffer(node, bufferName, bufferParameters);
+                node.View.SetFocus(newNode.View);
                 return true;
             });
         }

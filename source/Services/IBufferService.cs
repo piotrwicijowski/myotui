@@ -8,7 +8,7 @@ namespace myotui.Services
     {
         public View RenderNode(ViewNode node);
          
-        public void OpenNewBuffer(ViewNode parentNode, string bufferName, string bufferParams);
+        public ViewNode OpenNewBuffer(ViewNode parentNode, string bufferName, string bufferParams);
 
         public bool CloseBuffer(ViewNode node);
     }
