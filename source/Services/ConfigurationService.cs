@@ -6,6 +6,8 @@ using YamlDotNet.Serialization.NamingConventions;
 using Autofac;
 using myotui.Models.Config;
 using System.Linq;
+using DotLiquid;
+using DotLiquid.FileSystems;
 
 namespace myotui.Services
 {
@@ -20,17 +22,22 @@ namespace myotui.Services
             _resolver = resolver;
         }
 
-        public async Task BuildAppConfiguration(string configPath)
+        public async Task BuildAppConfiguration(string configDirectory)
         {
-            var fileStream = new FileStream(configPath, FileMode.Open);
+            var dirFullPath = Path.GetFullPath(configDirectory);
+            var mainPath = Path.Join(dirFullPath,@"main.yml");
+            var fileStream = new FileStream(mainPath, FileMode.Open);
             using var reader = new StreamReader(fileStream);
             var fileContent = await reader.ReadToEndAsync();
+            Template.FileSystem = new LocalFileSystem(dirFullPath);
+            var configTemplate = Template.Parse(fileContent);
+            var renderedConfig = configTemplate.Render();
             var deserializer = new DeserializerBuilder()
                 .WithNodeTypeResolver(_resolver)
                 .WithNamingConvention(CamelCaseNamingConvention.Instance)
                 .Build();
 
-            _app =  deserializer.Deserialize<App>(fileContent);
+            _app =  deserializer.Deserialize<App>(renderedConfig);
         }
         public IBuffer GetBufferByName(string name)
         {

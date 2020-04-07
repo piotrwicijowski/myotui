@@ -5,7 +5,7 @@ namespace myotui.Services
 {
     public interface IConfigurationService
     {
-        public Task BuildAppConfiguration(string configPath);
+        public Task BuildAppConfiguration(string configDirectory);
         public IBuffer GetBufferByName(string name);
         public App AppConfiguration {get; }
          
