@@ -6,6 +6,8 @@ using YamlDotNet.Serialization.NamingConventions;
 using Autofac;
 using myotui.Models.Config;
 using System.Linq;
+using System.Collections.Generic;
+using HandlebarsDotNet;
 
 namespace myotui.Services
 {
@@ -20,18 +22,34 @@ namespace myotui.Services
             _resolver = resolver;
         }
 
-        public async Task BuildAppConfiguration(string configPath)
+        public async Task BuildAppConfiguration(string configDirectory)
         {
-            var fileStream = new FileStream(configPath, FileMode.Open);
+            var dirFullPath = Path.GetFullPath(configDirectory);
+            var mainPath = Path.Join(dirFullPath,@"main.yml");
+            var fileStream = new FileStream(mainPath, FileMode.Open);
             using var reader = new StreamReader(fileStream);
-            var fileContent = await reader.ReadToEndAsync();
+            var mainContent = await reader.ReadToEndAsync();
+
+            var partials = GetPartialsFromDirectory(configDirectory);
+            partials.Keys.ToList().ForEach(key => Handlebars.RegisterTemplate(key,partials[key]));
+
+            var mainTemplate = Handlebars.Compile(mainContent);
+            var renderedMain = mainTemplate(new {});
+
             var deserializer = new DeserializerBuilder()
                 .WithNodeTypeResolver(_resolver)
                 .WithNamingConvention(CamelCaseNamingConvention.Instance)
                 .Build();
 
-            _app =  deserializer.Deserialize<App>(fileContent);
+            _app =  deserializer.Deserialize<App>(renderedMain);
         }
+
+        private IDictionary<string,string> GetPartialsFromDirectory(string directoryPath)
+        {
+            return Directory.EnumerateFiles(directoryPath,"*", SearchOption.AllDirectories).ToDictionary(filePath => Path.GetRelativePath(directoryPath,filePath), filePath =>
+                File.ReadAllText(filePath));
+        }
+
         public IBuffer GetBufferByName(string name)
         {
             return _app.Buffers.FirstOrDefault(x => x.Name == name);
