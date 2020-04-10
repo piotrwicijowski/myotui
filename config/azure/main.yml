@@ -1,4 +1,4 @@
-name: test3
+name: Azure
 modes:
 - name: normal
 - name: normal_ro
@@ -14,20 +14,14 @@ buffers:
   #   - "key <ControlR>"
   #   actions:
   #   - "/root/body/main.open"
-  - name: open_logic_apps
+  - name: close_current_buffer
     description: Open Resources for Logic Apps
     triggers:
-    - "key <ControlR>"
+    - "key q"
     actions:
-    - "/root/body/main.open resources logic-apps"
-  - name: open_tech_interview
-    description: Open Resources for Tech Interview
-    triggers:
-    - "key <ControlF>"
-    actions:
-    - "/root/body/main.open resources TechInterview"
-  - name: command_mode
-    description: Open command mode
+    - "/close"
+  - name: close_view
+    description: Close current view
     triggers:
     - "key Q"
     - "key <ControlC>"
@@ -48,7 +42,6 @@ buffers:
     - "/focusLeft"
   - name: focus_up
     description: Focus Up View
-    # scope: "/**/sidebar/**"
     triggers:
     - "key <ControlK>"
     actions:
@@ -60,6 +53,20 @@ buffers:
     - "key <ControlJ>"
     actions:
     - "/focusDown"
+  - name: line_up
+    description: Focus Previous Line
+    scope: "/**"
+    triggers:
+    - "key k"
+    actions:
+    - "/lineUp"
+  - name: line_down
+    description: Focus Next Line
+    scope: "/**"
+    triggers:
+    - "key j"
+    actions:
+    - "/lineDown"
   windows:
   - !buffer
     name: head
@@ -67,12 +74,12 @@ buffers:
     height:
       mode: fixed
       fixed: 4
-  - !buffer
-    name: menusplitter
-    value: splitter
-    height:
-      mode: fixed
-      fixed: 1
+  # - !buffer
+  #   name: menusplitter
+  #   value: splitter
+  #   height:
+  #     mode: fixed
+  #     fixed: 1
   - !buffer
     name: body
     value: body
@@ -80,6 +87,7 @@ buffers:
 - !table
   name: menu
   description: Application menu
+  closable: false
   content:
     !list
     value:
@@ -88,6 +96,7 @@ buffers:
 - !table
   name: sidebar
   description: Sidebar
+  closable: false
   content:
     !list
     value:
@@ -103,12 +112,12 @@ buffers:
     width:
       mode: fixed
       fixed: 7
-  - !buffer
-    name: bodysplitter
-    value: splitter
-    width:
-      mode: fixed
-      fixed: 1
+  # - !buffer
+  #   name: bodysplitter
+  #   value: splitter
+  #   width:
+  #     mode: fixed
+  #     fixed: 1
   - !buffer
     name: main
     value: main
@@ -116,6 +125,8 @@ buffers:
 - !hbox
   name: main
   description: Main container for content
+  # closable: true
+  # autoSplitters : false
   bindings:
   - name: focus_right
     description: Focus Right View
@@ -133,29 +144,8 @@ buffers:
     - "./focusLeft"
   windows:
   - !buffer
-    name: content
+    name: subscriptions
     value: subscriptions
-  - !buffer
-    name: mainsplitter
-    value: splitter
-    width:
-      mode: fixed
-      fixed: 1
-  - !buffer
-    name: content
-    value: resource_groups
-  - !buffer
-    name: mainsplitter
-    value: splitter
-    width:
-      mode: fixed
-      fixed: 1
-  - !buffer
-    name: content1
-    value: resources
-
-- !splitter
-  name: splitter
 
 - !table
   name: subscriptions
@@ -164,49 +154,38 @@ buffers:
     !cli
     input: az account list
     map: json_array_to_table
-    select:
-    - name
-    - cloudName
-    order:
-    - name
-    - cloudName
+  bindings:
+  - name: open_highlighted_resource_groups
+    description: Open highlighted resource groups for subscription
+    triggers:
+    - "key <ControlM>"
+    actions:
+    - "/root/body/main.open resource_groups %(line.id)"
+  columns:
+  - name : name
+    displayName : Name
+  - name : cloudName
+    displayName : Cloud Name
 
-- !table
-  name: resource_groups
-  description: List of resource groups for selected subscription
+{{#complex_buffers}}
+{{> buffers/complex_buffer.yml}}
+{{/complex_buffers}}
+
+- !dict
+  name: resource_details
+  description: Details view for resource
   parameters:
-  - name: subscription  
+  - name: resourceId  
     type: string
     defaultValue: ""
   content:
     !cli
-    input: az group list ?(subscription:--subscription) %(subscription)
-    map: json_array_to_table
-    select:
-    - name
-    - location
-    order:
-    - name
-    - location
-
-- !table
-  name: resources
-  description: List of all resources
-  parameters:
-  - name: group  
-    type: string
-    defaultValue: ""
-  content:
-    !cli
-    input: az resource list ?(group:--resource-group) %(group)
-    map: json_array_to_table
-    select:
-    - name
-    - kind
-    - location
-    order:
-    - name
-    - kind
-    - location
-
-
+    input: az resource show ?(resourceId:--ids) %(resourceId)
+    map: json_object_to_dict
+  columns:
+  - name : name
+    displayName : Name
+  - name : kind
+    displayName : Kind
+  - name : location
+    displayName : Az location
