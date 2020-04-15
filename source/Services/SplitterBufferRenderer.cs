@@ -20,6 +20,10 @@ namespace myotui.Services
         {
             return;
         }
+        public void RemoveBindings(ViewNode node)
+        {
+            return;
+        }
 
         public void RegisterEvents(ViewNode node)
         {

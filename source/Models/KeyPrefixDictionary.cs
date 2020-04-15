@@ -9,6 +9,7 @@ namespace myotui.Models
     using  KeyPrefixToFullKeyListDictionary = Dictionary<KeyList<Key>,List<KeyList<Key>>>;
     public class KeyPrefixDictionary
     {
+        private readonly ISet<(KeyList<Key>,string,string)> _allMappingsSet = new HashSet<(KeyList<Key> keyList,string action,string scope)>();
         private readonly KeyActionDictionary _globalKeyPrefixDictionary = new KeyActionDictionary();
         private readonly KeyPrefixToFullKeyListDictionary _keyPrefixToFullKeyListDictionary = new KeyPrefixToFullKeyListDictionary();
 
@@ -22,6 +23,10 @@ namespace myotui.Models
         public IList<string> GetAllActionsByKeyPrefix(IList<Key> keyPrefix, string scope)
         {
             var actionDictionaryInScope = GetKeyActionDictionaryByScope(scope);
+            if(!_keyPrefixToFullKeyListDictionary.ContainsKey(new KeyList<Key>(keyPrefix)))
+            {
+                return null;
+            }
             var allMatchingPrefixes = _keyPrefixToFullKeyListDictionary[new KeyList<Key>(keyPrefix)];
             if(allMatchingPrefixes == null || allMatchingPrefixes.Count == 0)
             {
@@ -49,11 +54,16 @@ namespace myotui.Models
         public void AddAction(IList<Key> keys, string action, string scope)
         {
             var fullKeyList = new KeyList<Key>(keys);
-            if(!_globalKeyPrefixDictionary.ContainsKey(fullKeyList))
+            _allMappingsSet.Add((fullKeyList,action,scope));
+            RecalculateAction(fullKeyList, action, scope);
+        }
+        public void RecalculateAction(KeyList<Key> keys, string action, string scope)
+        {
+            if(!_globalKeyPrefixDictionary.ContainsKey(keys))
             {
-                _globalKeyPrefixDictionary.Add(fullKeyList,new List<(string action, string scope)>());
+                _globalKeyPrefixDictionary.Add(keys,new List<(string action, string scope)>());
             }
-            _globalKeyPrefixDictionary[fullKeyList].Add((action,scope));
+            _globalKeyPrefixDictionary[keys].Add((action,scope));
 
             for(int i = keys.Count - 1; i >= 0; --i)
             {
@@ -62,7 +72,23 @@ namespace myotui.Models
                 {
                     _keyPrefixToFullKeyListDictionary.Add(prefix,new List<KeyList<Key>>());
                 }
-                _keyPrefixToFullKeyListDictionary[prefix].Add(fullKeyList);
+                if(!_keyPrefixToFullKeyListDictionary[prefix].Contains(keys))
+                {
+                    _keyPrefixToFullKeyListDictionary[prefix].Add(keys);
+                }
+            }
+        }
+
+        public void RemoveAction(IList<Key> keys, string action, string scope)
+        {
+            var fullKeyList = new KeyList<Key>(keys);
+            _allMappingsSet.Remove((fullKeyList,action,scope));
+            _globalKeyPrefixDictionary.Clear();
+            _keyPrefixToFullKeyListDictionary.Clear();
+            foreach(var item in _allMappingsSet)
+            {
+                var (mappingKeys, mappingAction, mappingScope) = item;
+                RecalculateAction(mappingKeys, mappingAction, mappingScope);
             }
         }
     }

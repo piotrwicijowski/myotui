@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace myotui.Models
 {
-    sealed class KeyList<T> : IReadOnlyList<T>, IEquatable<KeyList<T>>
+    public sealed class KeyList<T> : IReadOnlyList<T>, IEquatable<KeyList<T>>
     {
         int _hashCode;
         List<T> _items;

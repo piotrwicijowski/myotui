@@ -72,7 +72,7 @@ namespace myotui.Services
             return view;
         }
 
-        public void RegisterBindings(ViewNode node)
+        private void HandleBindings(ViewNode node, Action<string,string,string,ViewNode> bindingAction)
         {
             var bindings = node.Buffer.Bindings;
 
@@ -90,10 +90,22 @@ namespace myotui.Services
                     .ForEach(
                         pair => {
                             var (trigger, action) = pair;
-                            _keyService.RegisterKeyActionTrigger(trigger, action, binding.Scope, node);
+                            bindingAction(trigger, action, binding.Scope, node);
+                            // _keyService.RegisterKeyActionTrigger(trigger, action, binding.Scope, node);
                         } 
                     )
                 );
+
+        }
+
+        public void RegisterBindings(ViewNode node)
+        {
+            HandleBindings(node, _keyService.RegisterKeyActionTrigger);
+        }
+
+        public void RemoveBindings(ViewNode node)
+        {
+            HandleBindings(node, _keyService.RemoveKeyActionTrigger);
         }
         
         protected void RegisterFocusAction(ViewNode node)
@@ -113,6 +125,10 @@ namespace myotui.Services
             _actionService.RegisterAction($"/lineUp",$"{node.Scope}/**",(_) => (node.View as TableView).FocusPrevLine());
             _actionService.RegisterAction($"{node.Scope}.lineDown","/**",(_) => (node.View as TableView).FocusNextLine());
             _actionService.RegisterAction($"/lineDown",$"{node.Scope}/**",(_) => (node.View as TableView).FocusNextLine());
+            _actionService.RegisterAction($"{node.Scope}.lineLast","/**",(_) => (node.View as TableView).FocusLastLine());
+            _actionService.RegisterAction($"/lineLast",$"{node.Scope}/**",(_) => (node.View as TableView).FocusLastLine());
+            _actionService.RegisterAction($"{node.Scope}.lineFirst","/**",(_) => (node.View as TableView).FocusFirstLine());
+            _actionService.RegisterAction($"/lineFirst",$"{node.Scope}/**",(_) => (node.View as TableView).FocusFirstLine());
         }
     }
 }

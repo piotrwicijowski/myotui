@@ -12,5 +12,6 @@ namespace myotui.Services
         public View Layout(ViewNode node);
         public void RegisterEvents(ViewNode node);
         public void RegisterBindings(ViewNode node);
+        public void RemoveBindings(ViewNode node);
     }
 }

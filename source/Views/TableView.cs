@@ -70,5 +70,29 @@ namespace myotui.Views
         {
             return _tableListView.MoveUp();
         }
+
+        public bool FocusFirstLine()
+        {
+            var previousSelected = _tableListView.SelectedItem;
+            _tableListView.SelectedItem = 0;
+            if(previousSelected != _tableListView.SelectedItem)
+            {
+                TriggerFocusedLineEvent();
+            }
+            _tableListView.SetNeedsDisplay();
+            return true;
+        }
+        public bool FocusLastLine()
+        {
+            var previousSelected = _tableListView.SelectedItem;
+            _tableListView.SelectedItem = _tableListView.Source.Count - 1;
+            if(previousSelected != _tableListView.SelectedItem)
+            {
+                TriggerFocusedLineEvent();
+            }
+            _tableListView.SetNeedsDisplay();
+            return true;
+        }
+
     }
 }

@@ -72,6 +72,18 @@ namespace myotui.Services
             return suggestedName;
             
         }
+        private void RemoveBindingsRecursive(ViewNode node)
+        {
+            if(node.Children != null){
+                foreach(var child in node.Children)
+                {
+                    RemoveBindingsRecursive(child);
+                }
+            }
+            var nodeRenderer = _bufferRenderers[node.Buffer.GetType()];
+            nodeRenderer.RemoveBindings(node);
+        }
+
         public bool CloseBuffer(ViewNode node)
         {
             if(!node.Buffer.Closable)
@@ -91,6 +103,8 @@ namespace myotui.Services
                 refocused = !refocused ? nodeToRefocus.FocusNextChild() : refocused;
                 nodeToRefocus = nodeToRefocus.Parent;
             }
+            RemoveBindingsRecursive(node);
+
             parentNode.Children.Remove(node);
             var parentRenderer = _bufferRenderers[parentNode.Buffer.GetType()];
             parentRenderer.Layout(parentNode);

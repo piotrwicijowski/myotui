@@ -32,18 +32,21 @@ buffers:
     scope: "/**"
     triggers:
     - "key <ControlL>"
+    - "key gl"
     actions:
     - "/focusRight"
   - name: focus_left
     description: Focus Right View
     triggers:
     - "key <Backspace>"
+    - "key gh"
     actions:
     - "/focusLeft"
   - name: focus_up
     description: Focus Up View
     triggers:
     - "key <ControlK>"
+    - "key gk"
     actions:
     - "/focusUp"
   - name: focus_down
@@ -51,6 +54,7 @@ buffers:
     scope: "/**"
     triggers:
     - "key <ControlJ>"
+    - "key gj"
     actions:
     - "/focusDown"
   - name: line_up
@@ -67,6 +71,20 @@ buffers:
     - "key j"
     actions:
     - "/lineDown"
+  - name: line_first
+    description: Focus First Line
+    scope: "/**"
+    triggers:
+    - "key gg"
+    actions:
+    - "/lineFirst"
+  - name: line_last
+    description: Focus Last Line
+    scope: "/**"
+    triggers:
+    - "key G"
+    actions:
+    - "/lineLast"
   windows:
   - !buffer
     name: head
