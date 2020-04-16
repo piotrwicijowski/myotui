@@ -13,20 +13,20 @@ namespace myotui.Services
         {
         }
 
-        public override void RegisterEvents(ViewNode node)
+        public override void RegisterActions(ViewNode node)
         {
-            base.RegisterEvents(node);
+            base.RegisterActions(node);
             RegisterFocusAction(node);
             RegisterOpenAction(node);
         }
 
         protected virtual void RegisterFocusAction(ViewNode node)
         {
-            _actionService.RegisterAction($"{node.Scope}.focus","/**",(_) => {node.Parent?.View.SetFocus(node.View);return true;});
-            _actionService.RegisterAction($"{node.Scope}.focusNext",node.Scope,(_) => node.FocusNextChild());
-            _actionService.RegisterAction($"{node.Scope}.focusPrev",node.Scope,(_) => node.FocusPreviousChild());
-            _actionService.RegisterAction($"/focusNext",$"{node.Scope}/**",(_) => node.FocusNextChild());
-            _actionService.RegisterAction($"/focusPrev",$"{node.Scope}/**",(_) => node.FocusPreviousChild());
+            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.focus","/**",(_) => {node.Parent?.View.SetFocus(node.View);return true;}));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.focusNext",node.Scope,(_) => node.FocusNextChild()));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.focusPrev",node.Scope,(_) => node.FocusPreviousChild()));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"/focusNext",$"{node.Scope}/**",(_) => node.FocusNextChild()));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"/focusPrev",$"{node.Scope}/**",(_) => node.FocusPreviousChild()));
         }
 
         protected virtual void RegisterOpenAction(ViewNode node)

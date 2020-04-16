@@ -15,15 +15,24 @@ namespace myotui.Services
             _scopeService = scopeService;
         }
 
-        public void RegisterAction(string pattern, string scope, Func<string,bool> action)
+        public Guid RegisterAction(string pattern, string scope, Func<string,bool> action)
         {
+            var registrationId = Guid.NewGuid();
             _registeredActions.Add(new ActionRegistration
             {
                 Action = action,
                 ActionScope = scope,
                 Pattern = pattern,
+                Id = registrationId
             });
+            return registrationId;
         }
+
+        public void RemoveAction(Guid id)
+        {
+            _registeredActions.RemoveAll(registration => registration.Id == id);
+        }
+
         public void DispatchAction(string actionExpression, string currentScope)
         {
             var actionSplit = actionExpression.Split(" ");
@@ -46,6 +55,7 @@ namespace myotui.Services
 
         protected class ActionRegistration
         {
+            public Guid Id {get; set;}
             public Func<string,bool> Action {get; set;}
             public string Pattern {get; set;}
             public string ActionScope {get; set;}

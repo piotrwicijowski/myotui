@@ -10,7 +10,8 @@ namespace myotui.Services
     {
         public View Render(ViewNode node);
         public View Layout(ViewNode node);
-        public void RegisterEvents(ViewNode node);
+        public void RegisterActions(ViewNode node);
+        public void RemoveActions(ViewNode node);
         public void RegisterBindings(ViewNode node);
         public void RemoveBindings(ViewNode node);
     }

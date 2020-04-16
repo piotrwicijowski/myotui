@@ -12,15 +12,15 @@ namespace myotui.Services
         protected ContentBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService) : base(actionService, keyService, bufferService)
         {
         }
-        public override void RegisterEvents(ViewNode node)
+        public override void RegisterActions(ViewNode node)
         {
-            base.RegisterEvents(node);
+            base.RegisterActions(node);
             RegisterFocusAction(node);
         }
 
         protected void RegisterFocusAction(ViewNode node)
         {
-            _actionService.RegisterAction($"{node.Scope}.focus","/**",(_) => {node.Parent?.View.SetFocus(node.View);return true;});
+            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.focus","/**",(_) => {node.Parent?.View.SetFocus(node.View);return true;}));
         }
 
         public override View Layout(ViewNode node)

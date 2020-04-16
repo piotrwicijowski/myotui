@@ -29,7 +29,7 @@ namespace myotui.Services
             var parentRenderer = _bufferRenderers[node.Buffer.GetType()];
             parentRenderer.Render(node);
             node.Children?.ToList().ForEach(childNode => RenderNode(childNode));
-            parentRenderer.RegisterEvents(node);
+            parentRenderer.RegisterActions(node);
             parentRenderer.RegisterBindings(node);
             return parentRenderer.Layout(node);
         }
@@ -72,6 +72,7 @@ namespace myotui.Services
             return suggestedName;
             
         }
+
         private void RemoveBindingsRecursive(ViewNode node)
         {
             if(node.Children != null){
@@ -82,6 +83,18 @@ namespace myotui.Services
             }
             var nodeRenderer = _bufferRenderers[node.Buffer.GetType()];
             nodeRenderer.RemoveBindings(node);
+        }
+
+        private void RemoveActionsRecursive(ViewNode node)
+        {
+            if(node.Children != null){
+                foreach(var child in node.Children)
+                {
+                    RemoveActionsRecursive(child);
+                }
+            }
+            var nodeRenderer = _bufferRenderers[node.Buffer.GetType()];
+            nodeRenderer.RemoveActions(node);
         }
 
         public bool CloseBuffer(ViewNode node)
@@ -104,6 +117,7 @@ namespace myotui.Services
                 nodeToRefocus = nodeToRefocus.Parent;
             }
             RemoveBindingsRecursive(node);
+            RemoveActionsRecursive(node);
 
             parentNode.Children.Remove(node);
             var parentRenderer = _bufferRenderers[parentNode.Buffer.GetType()];

@@ -27,9 +27,17 @@ namespace myotui.Services
             return view;
         }
 
-        public virtual void RegisterEvents(ViewNode node)
+        public virtual void RegisterActions(ViewNode node)
         {
             RegisterCloseAction(node);
+        }
+
+        public virtual void RemoveActions(ViewNode node)
+        {
+            foreach(var actionGuid in node.RegisteredActions)
+            {
+                _actionService.RemoveAction(actionGuid);
+            }
         }
 
         public virtual View Layout(ViewNode node)
@@ -58,8 +66,8 @@ namespace myotui.Services
 
         protected virtual void RegisterCloseAction(ViewNode node)
         {
-            _actionService.RegisterAction($"{node.Scope}.close","/**",(_) => _bufferService.CloseBuffer(node));
-            _actionService.RegisterAction($"/close",$"{node.Scope}/**",(_) => _bufferService.CloseBuffer(node));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.close","/**",(_) => _bufferService.CloseBuffer(node)));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"/close",$"{node.Scope}/**",(_) => _bufferService.CloseBuffer(node)));
         }
 
         private void HandleBindings(ViewNode node, Action<string,string,string,ViewNode> bindingAction)

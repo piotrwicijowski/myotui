@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using myotui.Models.Config;
@@ -16,6 +17,7 @@ namespace myotui.Models
         public View View {get; set;}
         public SizeHint Width {get; set;} = new SizeHint();
         public SizeHint Height {get; set;} = new SizeHint();
+        public List<Guid> RegisteredActions = new List<Guid>();
 
         public bool FocusNextChild()
         {
