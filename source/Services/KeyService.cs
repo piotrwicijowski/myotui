@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using myotui.Models;
 using Terminal.Gui;
 
@@ -16,6 +18,8 @@ namespace myotui.Services {
         public const string triggerPattern = "key ";
         protected readonly Stack<Key> _keyStack = new Stack<Key>();
         protected readonly KeyPrefixDictionary _keyPrefixDictionary;
+
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         public KeyService (IActionService actionService, INodeService nodeService, IScopeService scopeService, IParameterService parameterService, KeyPrefixDictionary keyPrefixDictionary)
         {
             _actionService = actionService;
@@ -48,6 +52,16 @@ namespace myotui.Services {
                 }
                 else
                 {
+                    _cancellationTokenSource.Cancel();
+                    _cancellationTokenSource = new CancellationTokenSource();
+                    var cancellationToken = _cancellationTokenSource.Token;
+                    Task.Delay(2000, cancellationToken).ContinueWith((t) =>
+                    {
+                        if(!cancellationToken.IsCancellationRequested)
+                        {
+                            ClearStack();
+                        }
+                    }, cancellationToken);
                     return true;
                 }
             }
