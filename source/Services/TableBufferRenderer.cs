@@ -10,35 +10,23 @@ using System.Collections.Generic;
 
 namespace myotui.Services
 {
-    public class TableBufferRenderer : IBufferRenderer
+    public class TableBufferRenderer : ContentBufferRenderer
     {
-        protected readonly IActionService _actionService;
-        protected readonly IKeyService _keyService;
-        protected readonly IBufferService _bufferService;
         protected readonly IIndex<Type,IRawContentService> _rawContentServices;
         protected readonly IIndex<ValueMapType,IContentMapService> _maps;
-        public TableBufferRenderer(IActionService actionService, IIndex<Type,IRawContentService> rawContentServices, IIndex<ValueMapType,IContentMapService> maps, IBufferService bufferService, IKeyService keyService)
+        public TableBufferRenderer(IActionService actionService, IIndex<Type,IRawContentService> rawContentServices, IIndex<ValueMapType,IContentMapService> maps, IBufferService bufferService, IKeyService keyService) : base(actionService, keyService, bufferService)
         {
-            _actionService = actionService;
             _rawContentServices = rawContentServices;
             _maps = maps;
-            _bufferService = bufferService;
-            _keyService = keyService;
         }
 
-        public View Layout(ViewNode node)
+        public override void RegisterEvents(ViewNode node)
         {
-            return node.View;
-        }
-
-        public void RegisterEvents(ViewNode node)
-        {
-            RegisterFocusAction(node);
-            RegisterCloseAction(node);
+            base.RegisterEvents(node);
             RegisterNavigationAction(node);
         }
 
-        public View Render(ViewNode node)
+        public override View Render(ViewNode node)
         {
             var buffer = node.Buffer;
             var scope = node.Scope;
@@ -70,53 +58,6 @@ namespace myotui.Services
             node.View = view;
             view.CanFocus = node.Buffer.Focusable;
             return view;
-        }
-
-        private void HandleBindings(ViewNode node, Action<string,string,string,ViewNode> bindingAction)
-        {
-            var bindings = node.Buffer.Bindings;
-
-            bindings?
-            .ToList()
-            .ForEach(
-                binding => binding
-                    .Triggers
-                    .Where(trigger => trigger.StartsWith("key "))
-                    .SelectMany(
-                        trigger => binding.Actions,
-                        (trigger, action) => (trigger, action)
-                    )
-                    .ToList()
-                    .ForEach(
-                        pair => {
-                            var (trigger, action) = pair;
-                            bindingAction(trigger, action, binding.Scope, node);
-                            // _keyService.RegisterKeyActionTrigger(trigger, action, binding.Scope, node);
-                        } 
-                    )
-                );
-
-        }
-
-        public void RegisterBindings(ViewNode node)
-        {
-            HandleBindings(node, _keyService.RegisterKeyActionTrigger);
-        }
-
-        public void RemoveBindings(ViewNode node)
-        {
-            HandleBindings(node, _keyService.RemoveKeyActionTrigger);
-        }
-        
-        protected void RegisterFocusAction(ViewNode node)
-        {
-            _actionService.RegisterAction($"{node.Scope}.focus","/**",(_) => {node.Parent?.View.SetFocus(node.View);return true;});
-        }
-        
-        protected virtual void RegisterCloseAction(ViewNode node)
-        {
-            _actionService.RegisterAction($"{node.Scope}.close","/**",(_) => _bufferService.CloseBuffer(node));
-            _actionService.RegisterAction($"/close",$"{node.Scope}/**",(_) => _bufferService.CloseBuffer(node));
         }
 
         protected virtual void RegisterNavigationAction(ViewNode node)

@@ -5,11 +5,12 @@ using Terminal.Gui;
 
 namespace myotui.Services
 {
-    public class HBladeBufferRenderer : BufferRenderer
+    public class HBladeBufferRenderer : LayoutBufferRenderer
     {
         public HBladeBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService) : base(actionService, keyService, bufferService)
         {
         }
+
         public override View Layout(ViewNode node)
         {
             var view = node.View;

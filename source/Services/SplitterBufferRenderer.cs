@@ -9,28 +9,13 @@ using myotui.Views;
 
 namespace myotui.Services
 {
-    public class SplitterBufferRenderer : IBufferRenderer
+    public class SplitterBufferRenderer : ContentBufferRenderer
     {
-        public View Layout(ViewNode node)
+        protected SplitterBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService) : base(actionService, keyService, bufferService)
         {
-            return node.View;
         }
 
-        public void RegisterBindings(ViewNode node)
-        {
-            return;
-        }
-        public void RemoveBindings(ViewNode node)
-        {
-            return;
-        }
-
-        public void RegisterEvents(ViewNode node)
-        {
-            return;
-        }
-
-        public View Render(ViewNode node)
+        public override View Render(ViewNode node)
         {
             var view = new Splitter();
             node.View = view;

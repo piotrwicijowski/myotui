@@ -18,24 +18,17 @@ namespace myotui.Services
             _keyService = keyService;
             _bufferService = bufferService;
         }
+
         public virtual View Render(ViewNode node)
         {
             var view = new View();
-            // var label = new Label(node.Buffer.Name)
-            // {
-            //     X = 0 + 1,
-            //     Y = 0,
-            // };
-            // view.Add(label);
             node.View = view;
             view.CanFocus = node.Buffer.Focusable;
             return view;
         }
 
-        public void RegisterEvents(ViewNode node)
+        public virtual void RegisterEvents(ViewNode node)
         {
-            RegisterFocusAction(node);
-            RegisterOpenAction(node);
             RegisterCloseAction(node);
         }
 
@@ -63,33 +56,10 @@ namespace myotui.Services
             return dims;
         }
 
-        protected virtual void RegisterFocusAction(ViewNode node)
-        {
-            _actionService.RegisterAction($"{node.Scope}.focus","/**",(_) => {node.Parent?.View.SetFocus(node.View);return true;});
-            _actionService.RegisterAction($"{node.Scope}.focusNext",node.Scope,(_) => node.FocusNextChild());
-            _actionService.RegisterAction($"{node.Scope}.focusPrev",node.Scope,(_) => node.FocusPreviousChild());
-            _actionService.RegisterAction($"/focusNext",$"{node.Scope}/**",(_) => node.FocusNextChild());
-            _actionService.RegisterAction($"/focusPrev",$"{node.Scope}/**",(_) => node.FocusPreviousChild());
-        }
         protected virtual void RegisterCloseAction(ViewNode node)
         {
             _actionService.RegisterAction($"{node.Scope}.close","/**",(_) => _bufferService.CloseBuffer(node));
             _actionService.RegisterAction($"/close",$"{node.Scope}/**",(_) => _bufferService.CloseBuffer(node));
-        }
-
-        protected virtual void RegisterOpenAction(ViewNode node)
-        {
-            _actionService.RegisterAction($"{node.Scope}.open","/**",(parameters) => {
-
-                var parametersSplit = parameters.Split(" ");
-                var bufferName = parametersSplit.FirstOrDefault();
-                var bufferParameters = parametersSplit.Length <= 1 ? "" : string.Join(' ',parametersSplit.Skip(1));
-                var hasFocusParameter = bool.TryParse(bufferParameters, out var focus);
-                focus = hasFocusParameter ? focus : true;
-                var newNode = _bufferService.OpenNewBuffer(node, bufferName, bufferParameters);
-                node.View.SetFocus(newNode.View);
-                return true;
-            });
         }
 
         private void HandleBindings(ViewNode node, Action<string,string,string,ViewNode> bindingAction)
@@ -111,7 +81,6 @@ namespace myotui.Services
                         pair => {
                             var (trigger, action) = pair;
                             bindingAction(trigger, action, binding.Scope, node);
-                            // _keyService.RegisterKeyActionTrigger(trigger, action, binding.Scope, node);
                         } 
                     )
                 );
@@ -128,7 +97,7 @@ namespace myotui.Services
             HandleBindings(node, _keyService.RemoveKeyActionTrigger);
         }
 
-        private static double Clamp( double value, double min, double max )
+        protected static double Clamp( double value, double min, double max )
         {
             return (value < min) ? min : (value > max) ? max : value;
         }

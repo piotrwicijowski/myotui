@@ -6,7 +6,7 @@ using Terminal.Gui;
 
 namespace myotui.Services
 {
-    public class VBoxBufferRenderer : BufferRenderer
+    public class VBoxBufferRenderer : LayoutBufferRenderer
     {
         public VBoxBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService) : base(actionService, keyService, bufferService)
         {
