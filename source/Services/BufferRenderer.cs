@@ -92,7 +92,7 @@ namespace myotui.Services
             });
         }
 
-        public void RegisterBindings(ViewNode node)
+        private void HandleBindings(ViewNode node, Action<string,string,string,ViewNode> bindingAction)
         {
             var bindings = node.Buffer.Bindings;
 
@@ -110,10 +110,22 @@ namespace myotui.Services
                     .ForEach(
                         pair => {
                             var (trigger, action) = pair;
-                            _keyService.RegisterKeyActionTrigger(trigger, action, binding.Scope, node);
+                            bindingAction(trigger, action, binding.Scope, node);
+                            // _keyService.RegisterKeyActionTrigger(trigger, action, binding.Scope, node);
                         } 
                     )
                 );
+
+        }
+
+        public void RegisterBindings(ViewNode node)
+        {
+            HandleBindings(node, _keyService.RegisterKeyActionTrigger);
+        }
+
+        public void RemoveBindings(ViewNode node)
+        {
+            HandleBindings(node, _keyService.RemoveKeyActionTrigger);
         }
 
         private static double Clamp( double value, double min, double max )

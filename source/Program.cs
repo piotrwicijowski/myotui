@@ -8,6 +8,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac;
 using Terminal.Gui;
+using myotui.Models;
 
 namespace myotui
 {
@@ -22,7 +23,7 @@ namespace myotui
             builder.RegisterType<ConfigurationService>().As<IConfigurationService>().SingleInstance();
             builder.RegisterType<TuiService>().As<ITuiService>();
             builder.RegisterType<ActionService>().As<IActionService>().SingleInstance();
-            builder.RegisterType<KeyService>().As<IKeyService>();
+            builder.RegisterType<KeyService>().As<IKeyService>().SingleInstance();
             builder.RegisterType<NodeService>().As<INodeService>().SingleInstance();
             builder.RegisterType<BufferService>().As<IBufferService>();
             builder.RegisterType<ScopeService>().As<IScopeService>();
@@ -54,6 +55,8 @@ namespace myotui
             builder.RegisterType<ModeDefinition>().As<IModeDefinition>();
             builder.RegisterType<Parameter>().As<IParameter>();
             builder.RegisterType<Binding>().As<IBinding>();
+
+            builder.RegisterType<KeyPrefixDictionary>();
             builder.Populate(collection);
             var container = builder.Build();
             return container;

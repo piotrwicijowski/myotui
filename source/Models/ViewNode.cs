@@ -16,7 +16,6 @@ namespace myotui.Models
         public View View {get; set;}
         public SizeHint Width {get; set;} = new SizeHint();
         public SizeHint Height {get; set;} = new SizeHint();
-        public readonly Dictionary<Key, (string action, string scope)> TriggerActionDictionary = new Dictionary<Key, (string action, string scope)>();
 
         public bool FocusNextChild()
         {
