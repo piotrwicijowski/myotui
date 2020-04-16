@@ -14,6 +14,12 @@ buffers:
   #   - "key <ControlR>"
   #   actions:
   #   - "/root/body/main.open"
+  - name: clear_key_stack
+    description: Clear key chord stack
+    triggers:
+    - "key <Esc>"
+    actions:
+    - "clearKeyStack"
   - name: close_current_buffer
     description: Open Resources for Logic Apps
     triggers:

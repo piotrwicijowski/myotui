@@ -78,6 +78,7 @@ namespace myotui.Services
         public void RegisterApplicationActions()
         {
             _actionService.RegisterAction($"quit","/**",(_) => { Terminal.Gui.Application.RequestStop();return true;});
+            _actionService.RegisterAction($"clearKeyStack","/**",(_) => { _keyService.ClearStack();return true;});
         }
     }
 }

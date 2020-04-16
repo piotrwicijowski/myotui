@@ -88,5 +88,10 @@ namespace myotui.Services {
                 ).ToList();
             return matches;
         }
+
+        public void ClearStack()
+        {
+            _keyStack.Clear();
+        }
     }
 }
