@@ -41,6 +41,7 @@
     defaultValue: ""
 {{/parameters}}
   windows:
+{{#if sidebar}}
   - !buffer
     name: {{ name }}_sidebar
     value: {{ name }}_sidebar
@@ -53,6 +54,7 @@
     width:
       mode: fixed
       fixed: 5
+{{/if}}
   - !buffer
     name: {{ name }}_table
     value: {{ name }}_table
@@ -79,6 +81,7 @@
     value:
     - "{{ header_value }}"
 
+{{#if sidebar}}
 - !table
   name: {{ name }}_sidebar
   description: {{ short_description }} sidebar
@@ -86,9 +89,10 @@
   content:
     !list
     value:
-    - res
-    - param
-    - act
+{{#sidebar}}
+    - {{ this }}
+{{/sidebar}}
+{{/if}}
 
 - !table
   name: {{ name }}_table
