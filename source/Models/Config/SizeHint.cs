@@ -5,7 +5,7 @@ namespace myotui.Models.Config
     public class SizeHint
     {
         [DefaultValue(SizeMode.Fill)]
-        public SizeMode Mode {get; set;} = SizeMode.Fill;
+        public SizeMode Mode {get; set;} = SizeMode.Auto;
         [DefaultValue(0)]
         public int Fixed {get; set;} = 0;
         [DefaultValue(1.0)]

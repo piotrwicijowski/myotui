@@ -40,7 +40,8 @@ namespace myotui.Services
             // var columnMapOrder = content?.FirstOrDefault()?.Keys.Take(3).ToList();
             var columnMapOrder = tablebuffer.Columns?.Select(col => col.Name).ToList() ?? new List<string>();
             var headerContent = new List<IDictionary<string, object>>(){tablebuffer.Columns?.ToDictionary(col => col.Name, col => (object)col.DisplayName)};
-            var columnWidths = columnMapOrder.Select(x => 1.0).ToList();
+            // var columnWidths = columnMapOrder.Select(x => 1.0).ToList();
+            var columnWidths = tablebuffer.Columns.Select(column => column.Width).ToList();
             var tableData = new TableData(content,headerContent,columnMapOrder, columnWidths);
             var view = new TableView(tableData);
             view.FocusedItemChanged = (line) =>

@@ -48,14 +48,19 @@ namespace myotui.Services
         public IEnumerable<Dim> GetDims(IEnumerable<SizeHint> sizeHints)
         {
             var dims = new List<Dim>();
-            var ratioScale = 100.0/sizeHints.Where(hint => hint.Mode == SizeMode.Fill).Sum(hint => hint.FillRatio);
+            var ratioScale = 100.0/sizeHints.Where(hint => hint.Mode == SizeMode.Fill || hint.Mode == SizeMode.Auto).Sum(hint => hint.FillRatio);
             sizeHints.Aggregate(100.0, (remainingPercentage, hint) => 
             {
-                var fillPercentage = hint.Mode == SizeMode.Fill ? Clamp(value: hint.FillRatio * ratioScale, min: hint.FillMinPercentage, max: hint.FillMaxPercentage) : 0.0;
+                var fillPercentage = 
+                    (hint.Mode == SizeMode.Fill ||
+                    hint.Mode == SizeMode.Auto)
+                    ? Helpers.Clamp(value: hint.FillRatio * ratioScale, min: hint.FillMinPercentage, max: hint.FillMaxPercentage)
+                    : 0.0;
                 Dim dim = hint.Mode switch
                 {
                     SizeMode.Fixed => Dim.Sized(hint.Fixed),
                     SizeMode.Fill => Dim.Percent((float)(fillPercentage/remainingPercentage*100.0)),
+                    SizeMode.Auto => Dim.Percent((float)(fillPercentage/remainingPercentage*100.0)),
                 };
                 dims.Add(dim);
                 return remainingPercentage -  fillPercentage;
@@ -105,9 +110,5 @@ namespace myotui.Services
             HandleBindings(node, _keyService.RemoveKeyActionTrigger);
         }
 
-        protected static double Clamp( double value, double min, double max )
-        {
-            return (value < min) ? min : (value > max) ? max : value;
-        }
     }
 }

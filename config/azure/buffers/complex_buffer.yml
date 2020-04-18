@@ -125,4 +125,7 @@
 {{#columns}}
   - name : "{{ name }}"
     displayName : "{{ displayName }}"
+{{#exists 'width'}}
+    width: {{json 'width'}}
+{{/exists}}
 {{/columns}}
