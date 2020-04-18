@@ -95,6 +95,12 @@
   description: Table with list of {{ short_description }}
   closable: false
   bindings:
+  - name: replace_with_highlighted_resource
+    description: Replace view with highlighted resource
+    triggers:
+    - "key gr"
+    actions:
+    - "{{ on_replace }}"
   - name: open_highlighted_resource
     description: Open highlighted resource
     triggers:

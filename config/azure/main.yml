@@ -14,6 +14,12 @@ buffers:
   #   - "key <ControlR>"
   #   actions:
   #   - "/root/body/main.open"
+  - name: replace_with_subscriptions
+    description: Replace main with with subscriptions
+    triggers:
+    - "key rsub"
+    actions:
+    - "/root/body/main.replace subscriptions"
   - name: clear_key_stack
     description: Clear key chord stack
     triggers:
@@ -176,7 +182,7 @@ buffers:
   description: List of subscriptions
   content:
     !cli
-    input: az account list
+    input: az account list --all
     map: json_array_to_table
   bindings:
   - name: open_highlighted_resource_groups

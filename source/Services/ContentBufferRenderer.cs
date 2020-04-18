@@ -7,7 +7,7 @@ using Terminal.Gui;
 
 namespace myotui.Services
 {
-    public class ContentBufferRenderer : BufferRenderer
+    public abstract class ContentBufferRenderer : BufferRenderer
     {
         protected ContentBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService) : base(actionService, keyService, bufferService)
         {

@@ -6,6 +6,7 @@ complex_buffers:
   - subscription
   cli: "az group list ?(subscription:--subscription) %(subscription)"
   on_enter: "/root/body/main.open resources %(line.name)"
+  on_replace: "/root/body/main.replace resources %(line.name)"
   header_value: "%(subscription)"
   columns:
   - name : name
@@ -19,6 +20,7 @@ complex_buffers:
   - group
   cli: "az resource list ?(group:--resource-group) %(group)"
   on_enter: "/root/body/main.open resource_details %(line.id)"
+  on_replace: "/root/body/main.replace resource_details %(line.id)"
   header_value: "%(group)"
   columns:
   - name : name

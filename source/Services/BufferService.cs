@@ -97,6 +97,15 @@ namespace myotui.Services
             nodeRenderer.RemoveActions(node);
         }
 
+        public bool CloseAllChildren(ViewNode parentNode)
+        {
+            var childList = new List<ViewNode>(parentNode.Children);
+            foreach(var child in childList)
+            {
+                CloseBuffer(child);
+            }
+            return true;
+        }
         public bool CloseBuffer(ViewNode node)
         {
             if(!node.Buffer.Closable)

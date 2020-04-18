@@ -7,7 +7,7 @@ using Terminal.Gui;
 
 namespace myotui.Services
 {
-    public class LayoutBufferRenderer : BufferRenderer
+    public abstract class LayoutBufferRenderer : BufferRenderer
     {
         protected LayoutBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService) : base(actionService, keyService, bufferService)
         {
@@ -31,17 +31,25 @@ namespace myotui.Services
 
         protected virtual void RegisterOpenAction(ViewNode node)
         {
-            _actionService.RegisterAction($"{node.Scope}.open","/**",(parameters) => {
-
-                var parametersSplit = parameters.Split(" ");
-                var bufferName = parametersSplit.FirstOrDefault();
-                var bufferParameters = parametersSplit.Length <= 1 ? "" : string.Join(' ',parametersSplit.Skip(1));
-                var hasFocusParameter = bool.TryParse(bufferParameters, out var focus);
-                focus = hasFocusParameter ? focus : true;
-                var newNode = _bufferService.OpenNewBuffer(node, bufferName, bufferParameters);
-                node.View.SetFocus(newNode.View);
-                return true;
+            _actionService.RegisterAction($"{node.Scope}.open","/**",(parameters) => OpenAction(node, parameters));
+            _actionService.RegisterAction($"{node.Scope}.replace","/**",(parameters) =>
+            {
+                _bufferService.CloseAllChildren(node);
+                return OpenAction(node, parameters);
             });
         }
+
+        private bool OpenAction(ViewNode node, string parameters)
+        {
+            var parametersSplit = parameters.Split(" ");
+            var bufferName = parametersSplit.FirstOrDefault();
+            var bufferParameters = parametersSplit.Length <= 1 ? "" : string.Join(' ',parametersSplit.Skip(1));
+            var hasFocusParameter = bool.TryParse(bufferParameters, out var focus);
+            focus = hasFocusParameter ? focus : true;
+            var newNode = _bufferService.OpenNewBuffer(node, bufferName, bufferParameters);
+            node.View.SetFocus(newNode.View);
+            return true;
+        }
+
     }
 }

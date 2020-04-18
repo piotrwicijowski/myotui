@@ -11,5 +11,7 @@ namespace myotui.Services
         public ViewNode OpenNewBuffer(ViewNode parentNode, string bufferName, string bufferParams);
 
         public bool CloseBuffer(ViewNode node);
+
+        public bool CloseAllChildren(ViewNode parentNode);
     }
 }
