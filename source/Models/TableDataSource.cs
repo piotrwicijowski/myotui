@@ -15,15 +15,17 @@ namespace myotui.Models
         public int Count => _contentList.Count();
         private static readonly List<Terminal.Gui.Attribute> Colors = new List<Terminal.Gui.Attribute>()
         {
-            CursesDriver.MakeColor(Curses.COLOR_WHITE, Curses.COLOR_BLACK),
-            CursesDriver.MakeColor(Curses.COLOR_YELLOW, Curses.COLOR_BLACK),
-            CursesDriver.MakeColor(Curses.COLOR_GREEN, Curses.COLOR_BLACK),
+            Terminal.Gui.Attribute.Make(Color.White,   Color.Black),
+            Terminal.Gui.Attribute.Make(Color.Brown,   Color.Black),
+            Terminal.Gui.Attribute.Make(Color.Green,   Color.Black),
+            Terminal.Gui.Attribute.Make(Color.Magenta, Color.Black),
         };
         private static readonly List<Terminal.Gui.Attribute> FocusColors = new List<Terminal.Gui.Attribute>()
         {
-            CursesDriver.MakeColor(Curses.COLOR_BLACK, Curses.COLOR_WHITE),
-            CursesDriver.MakeColor(Curses.COLOR_BLACK, Curses.COLOR_YELLOW),
-            CursesDriver.MakeColor(Curses.COLOR_BLACK, Curses.COLOR_GREEN),
+            Terminal.Gui.Attribute.Make(Color.Black, Color.White  ),
+            Terminal.Gui.Attribute.Make(Color.Black, Color.Brown  ),
+            Terminal.Gui.Attribute.Make(Color.Black, Color.Green  ),
+            Terminal.Gui.Attribute.Make(Color.Black, Color.Magenta),
         };
 
         public TableDataSource(IList<IDictionary<string, object>> contentList, IList<string> columnMapOrder, IList<double> columnPorportions)
@@ -42,7 +44,6 @@ namespace myotui.Models
         {
             var currentColor = container.HasFocus ? (selected ? container.ColorScheme.Focus : container.ColorScheme.Normal) : container.ColorScheme.Normal;
             var savedColor = currentColor;
-            // var currentAttribute = container.ColorScheme.Focus;
 
             var widths = CalculateWidths(width, _columnProportions);
             var columnStarts = CalculateColumnStarts(width, widths);
@@ -65,7 +66,6 @@ namespace myotui.Models
             {
                 driver.SetAttribute(savedColor);
             }
-            // container.ColorScheme = currentAttribute;
         }
 
         public IDictionary<string, object> this[int key]
@@ -85,8 +85,6 @@ namespace myotui.Models
 
 		void RenderUstr (ConsoleDriver driver, ustring ustr, int width)
 		{
-            // var (fg, bg) = colors;
-            // driver.SetColors(fg, bg);
 			int byteLen = ustr.Length;
 			int used = 0;
 			for (int i = 0; i < byteLen;) {
