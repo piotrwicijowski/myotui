@@ -19,7 +19,7 @@ complex_buffers:
   parameters:
   - group
   cli: "az resource list ?(group:--resource-group) %(group)"
-  on_enter: "/root/body/main.open resource_details %(line.id)"
+  on_enter: "/root/body/main.replace_subsequent resource_details %(line.id)"
   on_replace: "/root/body/main.replace resource_details %(line.id)"
   header_value: "%(group)"
   columns:
@@ -29,6 +29,18 @@ complex_buffers:
     displayName : Kind
   - name : location
     displayName : Az location
+- name: subscriptions
+  short_description: Subscriptions
+  description: List of subscriptions
+  cli: "az account list --all"
+  on_enter: "/root/body/main.replace_subsequent resource_groups %(line.id)"
+  on_replace: "/root/body/main.replace resource_groups %(line.id)"
+  header_value: "Subscriptions"
+  columns:
+  - name : name
+    displayName : Name
+  - name : cloudName
+    displayName : Cloud Name
 
 bindings:
 - keys: "j"

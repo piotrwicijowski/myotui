@@ -177,26 +177,6 @@ buffers:
     name: subscriptions
     value: subscriptions
 
-- !table
-  name: subscriptions
-  description: List of subscriptions
-  content:
-    !cli
-    input: az account list --all
-    map: json_array_to_table
-  bindings:
-  - name: open_highlighted_resource_groups
-    description: Open highlighted resource groups for subscription
-    triggers:
-    - "key <ControlM>"
-    actions:
-    - "/root/body/main.open resource_groups %(line.id)"
-  columns:
-  - name : name
-    displayName : Name
-  - name : cloudName
-    displayName : Cloud Name
-
 {{#complex_buffers}}
 {{> buffers/complex_buffer.yml}}
 {{/complex_buffers}}
