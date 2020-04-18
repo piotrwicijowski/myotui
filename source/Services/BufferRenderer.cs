@@ -54,7 +54,7 @@ namespace myotui.Services
                 var fillPercentage = 
                     (hint.Mode == SizeMode.Fill ||
                     hint.Mode == SizeMode.Auto)
-                    ? Clamp(value: hint.FillRatio * ratioScale, min: hint.FillMinPercentage, max: hint.FillMaxPercentage)
+                    ? Helpers.Clamp(value: hint.FillRatio * ratioScale, min: hint.FillMinPercentage, max: hint.FillMaxPercentage)
                     : 0.0;
                 Dim dim = hint.Mode switch
                 {
@@ -110,9 +110,5 @@ namespace myotui.Services
             HandleBindings(node, _keyService.RemoveKeyActionTrigger);
         }
 
-        protected static double Clamp( double value, double min, double max )
-        {
-            return (value < min) ? min : (value > max) ? max : value;
-        }
     }
 }

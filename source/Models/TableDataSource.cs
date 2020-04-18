@@ -47,7 +47,7 @@ namespace myotui.Models
             var currentColor = container.HasFocus ? (selected ? container.ColorScheme.Focus : container.ColorScheme.Normal) : container.ColorScheme.Normal;
             var savedColor = currentColor;
 
-            var widths = CalculateWidths(width, _columnWidths);
+            var widths = _columnWidths.Count == 0 ? new List<int>(){width} : CalculateWidths(width, _columnWidths);
             var columnStarts = CalculateColumnStarts(width, widths);
             for(int i = 0; i < columnStarts.Count; i++)
             {
@@ -122,14 +122,40 @@ namespace myotui.Models
             return 0;
         }
 
-        private IList<int> CalculateWidths(int maxWidth, IList<SizeHint> widths)
+        private IList<int> CalculateWidths(int maxWidth, IList<SizeHint> hints)
         {
             // var proportionsSum = proportions.Sum();
             // var absoluteWidths = proportions.SkipLast(1).Select(prop => (int)(maxWidth*prop/proportionsSum)).ToList();
-            var totalGapsWidth = widths.Count() - 1;
-            var absoluteWidths = _maxColumnWidths.SkipLast(1).ToList();
-            absoluteWidths.Add(maxWidth - absoluteWidths.Sum() - totalGapsWidth);
-            return absoluteWidths;
+            var totalGapsWidth = hints.Count() - 1;
+            var usableWidth = maxWidth - totalGapsWidth;
+
+            var totalFixedWidth = hints.Where(hint => hint.Mode == SizeMode.Fixed).Select(hint => hint.Fixed).Sum();
+            var totalAutoWidth = hints.Select((hint,index) => (hint, index)).Where(item => item.hint.Mode == SizeMode.Auto).Select(item => _maxColumnWidths[item.index]).Sum();
+            var fillColumnsRatioScale = hints.Where(hint => hint.Mode == SizeMode.Fill).Sum(hint => hint.FillRatio);
+            var autoColumnsRatioScale = hints.Where(hint => hint.Mode == SizeMode.Auto).Sum(hint => hint.FillRatio);
+            var remainingFlexWidth = usableWidth - totalAutoWidth - totalFixedWidth;
+
+            var absoluteWidths = hints.Select((hint, index) => 
+            {
+                return hint.Mode switch
+                {
+                    SizeMode.Fixed => hint.Fixed,
+                    SizeMode.Auto => _maxColumnWidths[index],
+                    SizeMode.Fill => (int)Math.Floor(Helpers.Clamp(value: hint.FillRatio * remainingFlexWidth / fillColumnsRatioScale, min: hint.FillMinPercentage * remainingFlexWidth / 100.0 , max: hint.FillMaxPercentage * remainingFlexWidth / 100.0)),
+                };
+            });
+            var overshoot = absoluteWidths.Sum() - usableWidth;
+            absoluteWidths = absoluteWidths.Zip(hints, (calculatedWidth, hint) =>
+            {
+                return hint.Mode switch
+                {
+                    SizeMode.Fixed => calculatedWidth,
+                    SizeMode.Auto => calculatedWidth - (int)Math.Floor(overshoot * hint.FillRatio / (fillColumnsRatioScale + autoColumnsRatioScale)),
+                    SizeMode.Fill => calculatedWidth - (int)Math.Floor(overshoot * hint.FillRatio / (fillColumnsRatioScale + autoColumnsRatioScale)),
+                };
+            });
+
+            return absoluteWidths.ToList();
         }
 
         private IList<int> CalculateColumnStarts(int maxWidth, IList<int> widths)

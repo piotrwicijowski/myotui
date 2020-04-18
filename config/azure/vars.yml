@@ -46,8 +46,14 @@ complex_buffers:
   columns:
   - name : name
     displayName : Name
+    # width:
+    #   mode: fill
+    #   fillRatio: 1
   - name : cloudName
     displayName : Cloud Name
+    width:
+      mode: auto
+      fillRatio: 0
 
 bindings:
 - keys: "j"

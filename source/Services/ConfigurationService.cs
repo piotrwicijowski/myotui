@@ -7,6 +7,7 @@ using Autofac;
 using myotui.Models.Config;
 using System.Linq;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using HandlebarsDotNet;
 
 namespace myotui.Services
@@ -26,15 +27,30 @@ namespace myotui.Services
         {
             var dirFullPath = Path.GetFullPath(configDirectory);
 
+            var runtime = Handlebars.Create();
+
+            runtime.RegisterHelper("exists", ( writer, options, context, arguments ) =>
+            {
+                if(context.ContainsKey(arguments[0]) && context[arguments[0]] != null)
+                {
+                    options.Template(writer, context);
+                }
+            });
+            runtime.RegisterHelper("json", ( writer, context, arguments ) =>
+            {
+                var whatever = JsonConvert.SerializeObject(context[arguments[0]]) as string;
+                writer.WriteSafeString(whatever);
+            });
+
             var partials = GetPartialsFromDirectory(configDirectory);
-            partials.Keys.ToList().ForEach(key => Handlebars.RegisterTemplate(key,partials[key]));
+            partials.Keys.ToList().ForEach(key => runtime.RegisterTemplate(key,partials[key]));
 
             dynamic vars = new {};
             var varsPath = Path.Join(dirFullPath,@"vars.yml");
             if(File.Exists(varsPath))
             {
                 var varsContent = await File.ReadAllTextAsync(varsPath);
-                var varsTemplate = Handlebars.Compile(varsContent);
+                var varsTemplate = runtime.Compile(varsContent);
 
                 var varsDeserializer = new Deserializer();
                 vars = varsDeserializer.Deserialize<dynamic>(varsTemplate(new {}));
@@ -44,7 +60,7 @@ namespace myotui.Services
             var mainPath = Path.Join(dirFullPath,@"main.yml");
             var mainContent = await File.ReadAllTextAsync(mainPath);
 
-            var mainTemplate = Handlebars.Compile(mainContent);
+            var mainTemplate = runtime.Compile(mainContent);
             var renderedMain = mainTemplate(vars);
 
             var deserializer = new DeserializerBuilder()
