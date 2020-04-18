@@ -105,7 +105,7 @@ namespace myotui.Services
         public bool CloseBuffers(IList<ViewNode> buffers)
         {
             var listCopy = new List<ViewNode>(buffers);
-            foreach(var buffer in buffers)
+            foreach(var buffer in listCopy)
             {
                 CloseBuffer(buffer);
             }

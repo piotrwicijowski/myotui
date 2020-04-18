@@ -51,7 +51,12 @@ namespace myotui.Services
                 "key",
                 "value"
             };
-            var columnWidths = columnMapOrder.Select(x => 1.0).ToList();
+            // var columnWidths = columnMapOrder.Select(x => 1.0).ToList();
+            var columnWidths = new List<SizeHint>()
+            {
+                new SizeHint(),
+                new SizeHint(),
+            };
             IList<IDictionary<string,object>> listContent = rowMapOrder.Select(rowName => new Dictionary<string,object>(){{"key", rowName},{"value", dictContent[rowName]}} as IDictionary<string,object>).ToList();
             var tableData = new TableData(listContent, headerContent, columnMapOrder, columnWidths);
             var view = new TableView(tableData);

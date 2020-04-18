@@ -94,5 +94,10 @@ namespace myotui.Views
             return true;
         }
 
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+        }
+
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using myotui.Models.Config;
 using NStack;
 using Terminal.Gui;
 using Unix.Terminal;
@@ -11,7 +12,8 @@ namespace myotui.Models
     {
         private IList<IDictionary<string, object>> _contentList;
         private IList<string> _columnMapOrder;
-        private IList<double> _columnProportions;
+        private IList<SizeHint> _columnWidths;
+        private IList<int> _maxColumnWidths = new List<int>();
         public int Count => _contentList.Count();
         private static readonly List<Terminal.Gui.Attribute> Colors = new List<Terminal.Gui.Attribute>()
         {
@@ -28,11 +30,11 @@ namespace myotui.Models
             Terminal.Gui.Attribute.Make(Color.Black, Color.Magenta),
         };
 
-        public TableDataSource(IList<IDictionary<string, object>> contentList, IList<string> columnMapOrder, IList<double> columnPorportions)
+        public TableDataSource(IList<IDictionary<string, object>> contentList, IList<string> columnMapOrder, IList<SizeHint> columnWidths)
         {
             _contentList = contentList;
             _columnMapOrder = columnMapOrder;
-            _columnProportions = columnPorportions;
+            _columnWidths = columnWidths;
         }
         public bool IsMarked(int item)
         {
@@ -45,7 +47,7 @@ namespace myotui.Models
             var currentColor = container.HasFocus ? (selected ? container.ColorScheme.Focus : container.ColorScheme.Normal) : container.ColorScheme.Normal;
             var savedColor = currentColor;
 
-            var widths = CalculateWidths(width, _columnProportions);
+            var widths = CalculateWidths(width, _columnWidths);
             var columnStarts = CalculateColumnStarts(width, widths);
             for(int i = 0; i < columnStarts.Count; i++)
             {
@@ -61,6 +63,7 @@ namespace myotui.Models
                     currentColor = newColor;
                 }
                 RenderUstr(driver, columnValue.ToString(), columnWidth);
+				driver.AddRune(' ');
             }
             if(savedColor != currentColor)
             {
@@ -90,7 +93,7 @@ namespace myotui.Models
 			for (int i = 0; i < byteLen;) {
 				(var rune, var size) = Utf8.DecodeRune (ustr, i, i - byteLen);
 				var count = Rune.ColumnWidth (rune);
-				if (used+count >= width)
+				if (used+count-1 >= width)
 					break;
 				driver.AddRune (rune);
 				used += count;
@@ -119,11 +122,13 @@ namespace myotui.Models
             return 0;
         }
 
-        private IList<int> CalculateWidths(int maxWidth, IList<double> proportions)
+        private IList<int> CalculateWidths(int maxWidth, IList<SizeHint> widths)
         {
-            var proportionsSum = proportions.Sum();
-            var absoluteWidths = proportions.SkipLast(1).Select(prop => (int)(maxWidth*prop/proportionsSum)).ToList();
-            absoluteWidths.Add(maxWidth - absoluteWidths.Sum());
+            // var proportionsSum = proportions.Sum();
+            // var absoluteWidths = proportions.SkipLast(1).Select(prop => (int)(maxWidth*prop/proportionsSum)).ToList();
+            var totalGapsWidth = widths.Count() - 1;
+            var absoluteWidths = _maxColumnWidths.SkipLast(1).ToList();
+            absoluteWidths.Add(maxWidth - absoluteWidths.Sum() - totalGapsWidth);
             return absoluteWidths;
         }
 
@@ -132,10 +137,22 @@ namespace myotui.Models
             return widths.SkipLast(1).Aggregate(new List<int>(){0},(list, current) => 
             {
                 var previous = list.Last();
-                list.Add(previous + current);
+                list.Add(previous + current + 1);
                 return list;
             }
             );
+        }
+
+        public IDictionary<string, int> GetMaxColumnContentWidths()
+        {
+            var dictWidths = _contentList.Select(row => row.ToDictionary(kp => kp.Key, kp => kp.Value?.ToString().Length ?? 0));
+            var keys = _contentList.FirstOrDefault().Keys;
+            return keys.ToDictionary(key => key, key => dictWidths.Select(dict => dict[key]).Max());
+        }
+
+        public void SetMaxColumnWidths(IDictionary<string,int> maxColumnWidths)
+        {
+            _maxColumnWidths = new List<int>(_columnMapOrder.Select(columnName => maxColumnWidths[columnName]));
         }
     }
 }
