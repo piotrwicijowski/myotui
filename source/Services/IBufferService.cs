@@ -1,6 +1,7 @@
 using Terminal.Gui;
 using myotui.Models.Config;
 using myotui.Models;
+using System.Collections.Generic;
 
 namespace myotui.Services
 {
@@ -13,5 +14,8 @@ namespace myotui.Services
         public bool CloseBuffer(ViewNode node);
 
         public bool CloseAllChildren(ViewNode parentNode);
+
+        public bool CloseBuffers(IList<ViewNode> buffers);
+
     }
 }

@@ -37,6 +37,14 @@ namespace myotui.Services
                 _bufferService.CloseAllChildren(node);
                 return OpenAction(node, parameters);
             });
+            _actionService.RegisterAction($"{node.Scope}.replace_subsequent","/**",(parameters) =>
+            {
+                var focusedView = node.View.Focused;
+                var (focusedNode, focusedIndex) = node.Children.Select((child, index) => (child, index)).Where(item => item.child.View == focusedView).FirstOrDefault();
+                var nodesToClose = node.Children.Select((item, index) => (item, index)).Where(pair => pair.index > focusedIndex).Select(pair => pair.item).ToList();
+                _bufferService.CloseBuffers(nodesToClose);
+                return OpenAction(node, parameters);
+            });
         }
 
         private bool OpenAction(ViewNode node, string parameters)

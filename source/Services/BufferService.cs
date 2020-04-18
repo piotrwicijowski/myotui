@@ -99,13 +99,19 @@ namespace myotui.Services
 
         public bool CloseAllChildren(ViewNode parentNode)
         {
-            var childList = new List<ViewNode>(parentNode.Children);
-            foreach(var child in childList)
+            return CloseBuffers(parentNode.Children);
+        }
+
+        public bool CloseBuffers(IList<ViewNode> buffers)
+        {
+            var listCopy = new List<ViewNode>(buffers);
+            foreach(var buffer in buffers)
             {
-                CloseBuffer(child);
+                CloseBuffer(buffer);
             }
             return true;
         }
+
         public bool CloseBuffer(ViewNode node)
         {
             if(!node.Buffer.Closable)

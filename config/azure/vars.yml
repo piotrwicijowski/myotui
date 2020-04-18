@@ -5,7 +5,7 @@ complex_buffers:
   parameters:
   - subscription
   cli: "az group list ?(subscription:--subscription) %(subscription)"
-  on_enter: "/root/body/main.open resources %(line.name)"
+  on_enter: "/root/body/main.replace_subsequent resources %(line.name)"
   on_replace: "/root/body/main.replace resources %(line.name)"
   header_value: "%(subscription)"
   columns:
