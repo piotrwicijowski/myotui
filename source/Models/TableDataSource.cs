@@ -15,10 +15,10 @@ namespace myotui.Models
         public int Count => _contentList.Count();
         private static readonly List<Terminal.Gui.Attribute> Colors = new List<Terminal.Gui.Attribute>()
         {
-            Terminal.Gui.Attribute.Make(Color.White,   Color.Black),
-            Terminal.Gui.Attribute.Make(Color.Brown,   Color.Black),
-            Terminal.Gui.Attribute.Make(Color.Green,   Color.Black),
-            Terminal.Gui.Attribute.Make(Color.Magenta, Color.Black),
+            Terminal.Gui.Attribute.Make(Color.White,   Globals.DefaultOrBlack),
+            Terminal.Gui.Attribute.Make(Color.Brown,   Globals.DefaultOrBlack),
+            Terminal.Gui.Attribute.Make(Color.Green,   Globals.DefaultOrBlack),
+            Terminal.Gui.Attribute.Make(Color.Magenta, Globals.DefaultOrBlack),
         };
         private static readonly List<Terminal.Gui.Attribute> FocusColors = new List<Terminal.Gui.Attribute>()
         {

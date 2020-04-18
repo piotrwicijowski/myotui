@@ -52,10 +52,10 @@ namespace myotui.Services
                 Height = Dim.Fill(),
                 ColorScheme = new ColorScheme()
                 {
-                    Focus = Attribute.Make(Color.Black, Color.White),
-                    Normal = Attribute.Make(Color.White, Color.Black),
-                    HotFocus = Attribute.Make(Color.BrightBlue, Color.Brown),
-                    HotNormal = Attribute.Make(Color.Red, Color.BrightRed),
+                    Focus     = Attribute.Make(Color.Black,            Color.White),
+                    Normal    = Attribute.Make(Color.White,            Globals.DefaultOrBlack),
+                    HotFocus  = Attribute.Make(Color.BrightBlue,       Color.Brown),
+                    HotNormal = Attribute.Make(Color.Red,              Color.BrightRed),
                 },
 
             };
@@ -66,6 +66,7 @@ namespace myotui.Services
                 Y = 0,
             };
             var rootView = _bufferSerivce.RenderNode(node);
+            
             rootView.X = 0;
             rootView.Y = 1;
             rootView.Width = Dim.Fill();
