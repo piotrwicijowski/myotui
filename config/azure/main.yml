@@ -128,9 +128,24 @@ buffers:
   description: Sidebar
   closable: false
   content:
-    !list
+    !actionList
     value:
-    - sdb
+    - displayName: SB
+      action: "/root/body/main.replace subscriptions"
+    - displayName: RG
+      action: "/root/body/main.replace resources"
+  columns:
+  - name : DisplayName
+    displayName : XX
+  bindings:
+  - name: run_action
+    description: run_selected_action
+    triggers:
+    - "key <ControlM>"
+    actions:
+    - "%(line.Action)"
+
+
 
 - !hbox
   name: body
