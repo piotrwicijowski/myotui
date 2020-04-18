@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NStack;
 using Terminal.Gui;
+using Unix.Terminal;
 
 namespace myotui.Models
 {
@@ -12,6 +13,20 @@ namespace myotui.Models
         private IList<string> _columnMapOrder;
         private IList<double> _columnProportions;
         public int Count => _contentList.Count();
+        private static readonly List<Terminal.Gui.Attribute> Colors = new List<Terminal.Gui.Attribute>()
+        {
+            Terminal.Gui.Attribute.Make(Color.White,   Color.Black),
+            Terminal.Gui.Attribute.Make(Color.Brown,   Color.Black),
+            Terminal.Gui.Attribute.Make(Color.Green,   Color.Black),
+            Terminal.Gui.Attribute.Make(Color.Magenta, Color.Black),
+        };
+        private static readonly List<Terminal.Gui.Attribute> FocusColors = new List<Terminal.Gui.Attribute>()
+        {
+            Terminal.Gui.Attribute.Make(Color.Black, Color.White  ),
+            Terminal.Gui.Attribute.Make(Color.Black, Color.Brown  ),
+            Terminal.Gui.Attribute.Make(Color.Black, Color.Green  ),
+            Terminal.Gui.Attribute.Make(Color.Black, Color.Magenta),
+        };
 
         public TableDataSource(IList<IDictionary<string, object>> contentList, IList<string> columnMapOrder, IList<double> columnPorportions)
         {
@@ -27,6 +42,9 @@ namespace myotui.Models
 
         public void Render(ListView container, ConsoleDriver driver, bool selected, int item, int col, int line, int width)
         {
+            var currentColor = container.HasFocus ? (selected ? container.ColorScheme.Focus : container.ColorScheme.Normal) : container.ColorScheme.Normal;
+            var savedColor = currentColor;
+
             var widths = CalculateWidths(width, _columnProportions);
             var columnStarts = CalculateColumnStarts(width, widths);
             for(int i = 0; i < columnStarts.Count; i++)
@@ -37,7 +55,16 @@ namespace myotui.Models
                 var columnName = _columnMapOrder.Count > 0 ? _columnMapOrder[i] : "value";
                 var columnValue = _contentList[item][columnName] ?? "";
                 columnValue = columnValue.ToString().Replace(Environment.NewLine," ");
+                var newColor = (container.HasFocus && selected) ? FocusColors[i % Colors.Count()] : Colors[i % Colors.Count()];
+                if(currentColor != newColor){
+                    driver.SetAttribute(newColor);
+                    currentColor = newColor;
+                }
                 RenderUstr(driver, columnValue.ToString(), columnWidth);
+            }
+            if(savedColor != currentColor)
+            {
+                driver.SetAttribute(savedColor);
             }
         }
 
