@@ -32,7 +32,7 @@ namespace myotui.Models
             {
                 return null;
             }
-            return allMatchingPrefixes.SelectMany(matchingPrefix => actionDictionaryInScope[matchingPrefix]).Select(item => item.action).ToList();
+            return allMatchingPrefixes.Where(matchingPrefix => actionDictionaryInScope.ContainsKey(matchingPrefix)).SelectMany(matchingPrefix => actionDictionaryInScope[matchingPrefix]).Select(item => item.action).ToList();
             
         }
         private KeyActionDictionary GetKeyActionDictionaryByScope(string curentScope)
