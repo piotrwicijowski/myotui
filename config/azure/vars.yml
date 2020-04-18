@@ -1,0 +1,56 @@
+complex_buffers:
+- name: resource_groups
+  short_description: Resource groups
+  description: List of resource groups for selected subscription
+  parameters:
+  - subscription
+  cli: "az group list ?(subscription:--subscription) %(subscription)"
+  on_enter: "/root/body/main.replace_subsequent resources %(line.name)"
+  on_replace: "/root/body/main.replace resources %(line.name)"
+  header_value: "%(subscription)"
+  columns:
+  - name : name
+    displayName : Name
+  - name : location
+    displayName : Az location
+  sidebar:
+  - res
+  - param
+  - act
+- name: resources
+  short_description: Resources
+  description: List of resources in resource group
+  parameters:
+  - group
+  cli: "az resource list ?(group:--resource-group) %(group)"
+  on_enter: "/root/body/main.replace_subsequent resource_details %(line.id)"
+  on_replace: "/root/body/main.replace resource_details %(line.id)"
+  header_value: "%(group)"
+  columns:
+  - name : name
+    displayName : Name
+  - name : kind
+    displayName : Kind
+  - name : location
+    displayName : Az location
+  sidebar:
+  - res
+  - wha
+- name: subscriptions
+  short_description: Subscriptions
+  description: List of subscriptions
+  cli: "az account list --all"
+  on_enter: "/root/body/main.replace_subsequent resource_groups %(line.id)"
+  on_replace: "/root/body/main.replace resource_groups %(line.id)"
+  header_value: "Subscriptions"
+  columns:
+  - name : name
+    displayName : Name
+  - name : cloudName
+    displayName : Cloud Name
+
+bindings:
+- keys: "j"
+  action: "/lineDown"
+- keys: "k"
+  action: "/lineUp"

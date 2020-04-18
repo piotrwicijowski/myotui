@@ -5,7 +5,7 @@ using Terminal.Gui;
 
 namespace myotui.Services
 {
-    public class HBoxBufferRenderer : BufferRenderer
+    public class HBoxBufferRenderer : LayoutBufferRenderer
     {
         public HBoxBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService) : base(actionService, keyService, bufferService)
         {
@@ -38,11 +38,11 @@ namespace myotui.Services
 
         protected override void RegisterFocusAction(ViewNode node)
         {
-            _actionService.RegisterAction($"{node.Scope}.focus","/**",(_) => {node.Parent?.View.SetFocus(node.View);return true;});
-            _actionService.RegisterAction($"{node.Scope}.focusRight","/**",(_) => node.FocusNextChild());
-            _actionService.RegisterAction($"{node.Scope}.focusLeft","/**",(_) => node.FocusPreviousChild());
-            _actionService.RegisterAction($"/focusRight",$"{node.Scope}/**",(_) => node.FocusNextChild());
-            _actionService.RegisterAction($"/focusLeft",$"{node.Scope}/**",(_) => node.FocusPreviousChild());
+            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.focus","/**",(_) => {node.Parent?.View.SetFocus(node.View);return true;}));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.focusRight","/**",(_) => node.FocusNextChild()));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.focusLeft","/**",(_) => node.FocusPreviousChild()));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"/focusRight",$"{node.Scope}/**",(_) => node.FocusNextChild()));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"/focusLeft",$"{node.Scope}/**",(_) => node.FocusPreviousChild()));
         }
     }
 }

@@ -31,7 +31,7 @@ namespace myotui.Services
             Terminal.Gui.Application.Init();
             var window = BuildWindow(_rootNode);
             var top = Terminal.Gui.Application.Top;
-            RegisterApplicationEvents();
+            RegisterApplicationActions();
             top.Add(window);
             var curserDriver = Terminal.Gui.Application.Driver as CursesDriver;
             if(curserDriver!= null)
@@ -75,9 +75,10 @@ namespace myotui.Services
             return window;
         }
          
-        public void RegisterApplicationEvents()
+        public void RegisterApplicationActions()
         {
             _actionService.RegisterAction($"quit","/**",(_) => { Terminal.Gui.Application.RequestStop();return true;});
+            _actionService.RegisterAction($"clearKeyStack","/**",(_) => { _keyService.ClearStack();return true;});
         }
     }
 }

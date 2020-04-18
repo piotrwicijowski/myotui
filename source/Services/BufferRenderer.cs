@@ -18,25 +18,26 @@ namespace myotui.Services
             _keyService = keyService;
             _bufferService = bufferService;
         }
+
         public virtual View Render(ViewNode node)
         {
             var view = new View();
-            // var label = new Label(node.Buffer.Name)
-            // {
-            //     X = 0 + 1,
-            //     Y = 0,
-            // };
-            // view.Add(label);
             node.View = view;
             view.CanFocus = node.Buffer.Focusable;
             return view;
         }
 
-        public void RegisterEvents(ViewNode node)
+        public virtual void RegisterActions(ViewNode node)
         {
-            RegisterFocusAction(node);
-            RegisterOpenAction(node);
             RegisterCloseAction(node);
+        }
+
+        public virtual void RemoveActions(ViewNode node)
+        {
+            foreach(var actionGuid in node.RegisteredActions)
+            {
+                _actionService.RemoveAction(actionGuid);
+            }
         }
 
         public virtual View Layout(ViewNode node)
@@ -63,36 +64,13 @@ namespace myotui.Services
             return dims;
         }
 
-        protected virtual void RegisterFocusAction(ViewNode node)
-        {
-            _actionService.RegisterAction($"{node.Scope}.focus","/**",(_) => {node.Parent?.View.SetFocus(node.View);return true;});
-            _actionService.RegisterAction($"{node.Scope}.focusNext",node.Scope,(_) => node.FocusNextChild());
-            _actionService.RegisterAction($"{node.Scope}.focusPrev",node.Scope,(_) => node.FocusPreviousChild());
-            _actionService.RegisterAction($"/focusNext",$"{node.Scope}/**",(_) => node.FocusNextChild());
-            _actionService.RegisterAction($"/focusPrev",$"{node.Scope}/**",(_) => node.FocusPreviousChild());
-        }
         protected virtual void RegisterCloseAction(ViewNode node)
         {
-            _actionService.RegisterAction($"{node.Scope}.close","/**",(_) => _bufferService.CloseBuffer(node));
-            _actionService.RegisterAction($"/close",$"{node.Scope}/**",(_) => _bufferService.CloseBuffer(node));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.close","/**",(_) => _bufferService.CloseBuffer(node)));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"/close",$"{node.Scope}/**",(_) => _bufferService.CloseBuffer(node)));
         }
 
-        protected virtual void RegisterOpenAction(ViewNode node)
-        {
-            _actionService.RegisterAction($"{node.Scope}.open","/**",(parameters) => {
-
-                var parametersSplit = parameters.Split(" ");
-                var bufferName = parametersSplit.FirstOrDefault();
-                var bufferParameters = parametersSplit.Length <= 1 ? "" : string.Join(' ',parametersSplit.Skip(1));
-                var hasFocusParameter = bool.TryParse(bufferParameters, out var focus);
-                focus = hasFocusParameter ? focus : true;
-                var newNode = _bufferService.OpenNewBuffer(node, bufferName, bufferParameters);
-                node.View.SetFocus(newNode.View);
-                return true;
-            });
-        }
-
-        public void RegisterBindings(ViewNode node)
+        private void HandleBindings(ViewNode node, Action<string,string,string,ViewNode> bindingAction)
         {
             var bindings = node.Buffer.Bindings;
 
@@ -110,13 +88,24 @@ namespace myotui.Services
                     .ForEach(
                         pair => {
                             var (trigger, action) = pair;
-                            _keyService.RegisterKeyActionTrigger(trigger, action, binding.Scope, node);
+                            bindingAction(trigger, action, binding.Scope, node);
                         } 
                     )
                 );
+
         }
 
-        private static double Clamp( double value, double min, double max )
+        public void RegisterBindings(ViewNode node)
+        {
+            HandleBindings(node, _keyService.RegisterKeyActionTrigger);
+        }
+
+        public void RemoveBindings(ViewNode node)
+        {
+            HandleBindings(node, _keyService.RemoveKeyActionTrigger);
+        }
+
+        protected static double Clamp( double value, double min, double max )
         {
             return (value < min) ? min : (value > max) ? max : value;
         }

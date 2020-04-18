@@ -1,0 +1,128 @@
+- !vbox
+  name: {{ name }}
+  description: {{ description }}
+  closable: true
+  parameters:
+{{#parameters}}
+  - name: {{ this }}
+    type: string
+    defaultValue: ""
+{{/parameters}}
+  windows:
+  - !buffer
+    name: {{ name }}_header
+    value: {{ name }}_header
+    parameters:
+{{#parameters}}
+    - name: {{ this }}
+      type: string
+      defaultValue: "%({{ this }})"
+{{/parameters}}
+    height:
+      mode: fixed
+      fixed: 1
+  - !buffer
+    name: {{ name }}_content
+    value: {{ name }}_content
+    parameters:
+{{#parameters}}
+    - name: {{ this }}
+      type: string
+      defaultValue: "%({{ this }})"
+{{/parameters}}
+
+- !hbox
+  name: {{ name }}_content
+  closable: false
+  parameters:
+{{#parameters}}
+  - name: {{ this }}
+    type: string
+    defaultValue: ""
+{{/parameters}}
+  windows:
+{{#if sidebar}}
+  - !buffer
+    name: {{ name }}_sidebar
+    value: {{ name }}_sidebar
+    parameters:
+{{#parameters}}
+    - name: {{ this }}
+      type: string
+      defaultValue: "%({{ this }})"
+{{/parameters}}
+    width:
+      mode: fixed
+      fixed: 5
+{{/if}}
+  - !buffer
+    name: {{ name }}_table
+    value: {{ name }}_table
+    parameters:
+{{#parameters}}
+    - name: {{ this }}
+      type: string
+      defaultValue: "%({{ this }})"
+{{/parameters}}
+
+- !table
+  name: {{ name }}_header
+  description: {{ short_description }} header
+  closable: false
+  focusable: false
+  parameters:
+{{#parameters}}
+  - name: {{ this }}
+    type: string
+    defaultValue: ""
+{{/parameters}}
+  content:
+    !list
+    value:
+    - "{{ header_value }}"
+
+{{#if sidebar}}
+- !table
+  name: {{ name }}_sidebar
+  description: {{ short_description }} sidebar
+  closable: false
+  content:
+    !list
+    value:
+{{#sidebar}}
+    - {{ this }}
+{{/sidebar}}
+{{/if}}
+
+- !table
+  name: {{ name }}_table
+  description: Table with list of {{ short_description }}
+  closable: false
+  bindings:
+  - name: replace_with_highlighted_resource
+    description: Replace view with highlighted resource
+    triggers:
+    - "key gr"
+    actions:
+    - "{{ on_replace }}"
+  - name: open_highlighted_resource
+    description: Open highlighted resource
+    triggers:
+    - "key <ControlM>"
+    actions:
+    - "{{ on_enter }}"
+  parameters:
+{{#parameters}}
+  - name: {{ this }}
+    type: string
+    defaultValue: ""
+{{/parameters}}
+  content:
+    !cli
+    input: {{ cli }}
+    map: json_array_to_table
+  columns:
+{{#columns}}
+  - name : "{{ name }}"
+    displayName : "{{ displayName }}"
+{{/columns}}

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using myotui.Models;
 using Terminal.Gui;
 
@@ -14,46 +16,74 @@ namespace myotui.Services {
         protected readonly INodeService _nodeService;
         protected readonly IParameterService _parameterService;
         public const string triggerPattern = "key ";
-        public KeyService (IActionService actionService, INodeService nodeService, IScopeService scopeService, IParameterService parameterService)
+        protected readonly Stack<Key> _keyStack = new Stack<Key>();
+        protected readonly KeyPrefixDictionary _keyPrefixDictionary;
+
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        public KeyService (IActionService actionService, INodeService nodeService, IScopeService scopeService, IParameterService parameterService, KeyPrefixDictionary keyPrefixDictionary)
         {
             _actionService = actionService;
             _nodeService = nodeService;
             _scopeService = scopeService;
             _parameterService = parameterService;
+            _keyPrefixDictionary = keyPrefixDictionary;
         }
         public bool ProcessKeyEvent (KeyEvent keyEvent, ViewNode node)
         {
             var focusedNode = _nodeService.GetFocusedNode(node);
             var checkedNode = focusedNode;
+            _keyStack.Push(keyEvent.Key);
             while(checkedNode != null)
             {
-                var isRegistered = checkedNode.TriggerActionDictionary.TryGetValue(keyEvent.Key, out var item);
-                checkedNode = checkedNode.Parent;
-                if(isRegistered)
+                var allActionsForPrefix = _keyPrefixDictionary.GetAllActionsByKeyPrefix(_keyStack.Reverse().ToList(),checkedNode.Scope);
+                if(allActionsForPrefix == null || allActionsForPrefix.Count == 0)
                 {
-                    var (action, bindingScope) = item;
-                    if(!_scopeService.IsInScope(focusedNode.Scope,bindingScope))
-                    {
-                        continue;
-                    }
+                    checkedNode = checkedNode.Parent;
+                    continue;
+                }
+                else if(allActionsForPrefix.Count == 1)
+                {
+                    var action = allActionsForPrefix.FirstOrDefault();
                     var parametrizedAction = _parameterService.SubstituteParameters(action, focusedNode.Parameters);
-                    _actionService.DispatchAction(parametrizedAction,focusedNode.Scope);
+                    parametrizedAction = _parameterService.SubstituteParameters(parametrizedAction, checkedNode.Parameters);
+                    _actionService.DispatchAction(parametrizedAction, checkedNode.Scope);
+                    _keyStack.Clear();
+                    return true;
+                }
+                else
+                {
+                    _cancellationTokenSource.Cancel();
+                    _cancellationTokenSource = new CancellationTokenSource();
+                    var cancellationToken = _cancellationTokenSource.Token;
+                    Task.Delay(2000, cancellationToken).ContinueWith((t) =>
+                    {
+                        if(!cancellationToken.IsCancellationRequested)
+                        {
+                            ClearStack();
+                        }
+                    }, cancellationToken);
                     return true;
                 }
             }
+            _keyStack.Clear();
             return false;
         }
 
         public void RegisterKeyActionTrigger(string trigger, string action, string bindingScope, ViewNode node)
         {
             var keys = DecodeKeySequence(trigger);
-            if(keys.Any()){
-                node.TriggerActionDictionary.Add(
-                    keys.FirstOrDefault(), (_scopeService.ResolveRelativeAction(node.Scope, action), _scopeService.ResolveRelativeScope(node.Scope,bindingScope))
-                );
-            }
+            var resolvedAction = _scopeService.ResolveRelativeAction(node.Scope, action);
+            var resolvedScope = _scopeService.ResolveRelativeScope(node.Scope, bindingScope);
+            _keyPrefixDictionary.AddAction(keys, resolvedAction, resolvedScope);
         }
 
+        public void RemoveKeyActionTrigger(string trigger, string action, string bindingScope, ViewNode node)
+        {
+            var keys = DecodeKeySequence(trigger);
+            var resolvedAction = _scopeService.ResolveRelativeAction(node.Scope, action);
+            var resolvedScope = _scopeService.ResolveRelativeScope(node.Scope, bindingScope);
+            _keyPrefixDictionary.RemoveAction(keys, resolvedAction, resolvedScope);
+        }
 
         private List<Key> DecodeKeySequence(string trigger)
         {
@@ -71,6 +101,11 @@ namespace myotui.Services {
                     }
                 ).ToList();
             return matches;
+        }
+
+        public void ClearStack()
+        {
+            _keyStack.Clear();
         }
     }
 }
