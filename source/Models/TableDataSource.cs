@@ -55,7 +55,10 @@ namespace myotui.Models
                 container.Move(columnStart,line);
                 var columnWidth = widths[i];
                 var columnName = _columnMapOrder.Count > 0 ? _columnMapOrder[i] : "value";
-                var columnValue = _contentList[item][columnName] ?? "";
+                // var columnValue = _contentList[item][columnName] ?? "";
+                object columnValue;
+                var hasValue = _contentList[item].TryGetValue(columnName, out columnValue);
+                columnValue = columnValue ?? "";
                 columnValue = columnValue.ToString().Replace(Environment.NewLine," ");
                 var newColor = (container.HasFocus && selected) ? FocusColors[i % Colors.Count()] : Colors[i % Colors.Count()];
                 if(currentColor != newColor){
