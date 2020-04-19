@@ -3,6 +3,7 @@ using Terminal.Gui;
 using myotui.Models.Config;
 using myotui.Views;
 using myotui.Models;
+using System.Threading.Tasks;
 
 namespace myotui.Services
 {
@@ -79,6 +80,11 @@ namespace myotui.Services
         {
             _actionService.RegisterAction($"quit","/**",(_) => { Terminal.Gui.Application.RequestStop();return true;});
             _actionService.RegisterAction($"clearKeyStack","/**",(_) => { _keyService.ClearStack();return true;});
+            _actionService.RegisterAction($"yank","/**",(text) => {
+                Task.Run(async () => await TextCopy.Clipboard.SetText(text)).Wait();
+                return true;
+            });
+
         }
     }
 }
