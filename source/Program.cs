@@ -38,6 +38,7 @@ namespace myotui
             builder.RegisterType<VBoxBufferRenderer>().Keyed<IBufferRenderer>(typeof(VBoxBuffer));
             builder.RegisterType<HBoxBufferRenderer>().Keyed<IBufferRenderer>(typeof(HBoxBuffer));
             builder.RegisterType<HBladeBufferRenderer>().Keyed<IBufferRenderer>(typeof(HBladeBuffer));
+            builder.RegisterType<StackBufferRenderer>().Keyed<IBufferRenderer>(typeof(StackBuffer));
             builder.RegisterType<TableBufferRenderer>().Keyed<IBufferRenderer>(typeof(TableBuffer));
             builder.RegisterType<DictBufferRenderer>().Keyed<IBufferRenderer>(typeof(DictBuffer));
             builder.RegisterType<SplitterBufferRenderer>().Keyed<IBufferRenderer>(typeof(SplitterBuffer));
@@ -54,6 +55,7 @@ namespace myotui
             builder.RegisterType<VBoxBuffer>().As<IBuffer>();
             builder.RegisterType<HBladeBuffer>().As<IBuffer>();
             builder.RegisterType<VBladeBuffer>().As<IBuffer>();
+            builder.RegisterType<StackBuffer>().As<IBuffer>();
             builder.RegisterType<ModeDefinition>().As<IModeDefinition>();
             builder.RegisterType<Parameter>().As<IParameter>();
             builder.RegisterType<Binding>().As<IBinding>();

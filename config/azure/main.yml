@@ -166,7 +166,7 @@ buffers:
     name: main
     value: main
 
-- !hbox
+- !stack
   name: main
   description: Main container for content
   # closable: true
