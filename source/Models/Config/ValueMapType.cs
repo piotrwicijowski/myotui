@@ -5,6 +5,7 @@
         string_to_string_array = 0,
         json_array_to_table = 1,
         json_object_to_dict = 2,
+        object_array_to_table = 3,
 
     }
 }

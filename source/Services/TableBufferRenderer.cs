@@ -38,9 +38,15 @@ namespace myotui.Services
             content = content ?? new List<IDictionary<string,object>>();
             //TODO
             // var columnMapOrder = content?.FirstOrDefault()?.Keys.Take(3).ToList();
+            var detectectedColumns = content.FirstOrDefault().Select(kv => kv.Key).ToList();
             var columnMapOrder = tablebuffer.Columns?.Select(col => col.Name).ToList() ?? new List<string>();
-            var headerContent = new List<IDictionary<string, object>>(){tablebuffer.Columns?.ToDictionary(col => col.Name, col => (object)col.DisplayName)};
-            // var columnWidths = columnMapOrder.Select(x => 1.0).ToList();
+            if(columnMapOrder == null || columnMapOrder.Count == 0)
+            {
+                columnMapOrder = detectectedColumns;
+            }
+            var headerContent = tablebuffer.Columns != null && tablebuffer.Columns.Count > 0 ?
+                new List<IDictionary<string, object>>(){tablebuffer.Columns?.ToDictionary(col => col.Name, col => (object)col.DisplayName)} :
+                null;
             var columnWidths = tablebuffer.Columns.Select(column => column.Width).ToList();
             var tableData = new TableData(content,headerContent,columnMapOrder, columnWidths);
             var view = new TableView(tableData);
@@ -52,10 +58,6 @@ namespace myotui.Services
                 });
             };
             view.TriggerFocusedLineEvent();
-            // view.X = 0;
-            // view.Y = 0;
-            // view.Width = Dim.Fill();
-            // view.Height = Dim.Fill();
             node.View = view;
             view.CanFocus = node.Buffer.Focusable;
             return view;

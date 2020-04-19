@@ -30,6 +30,7 @@ namespace myotui
             builder.RegisterType<ParameterService>().As<IParameterService>();
             builder.RegisterType<CliRawContentService>().Keyed<IRawContentService>(typeof(CliValueContent));
             builder.RegisterType<ListRawContentService>().Keyed<IRawContentService>(typeof(ListValueContent));
+            builder.RegisterType<ActionListRawContentService>().Keyed<IRawContentService>(typeof(ActionListValueContent));
             builder.RegisterType<JsonArrayMapService>().Keyed<IContentMapService>(ValueMapType.json_array_to_table);
             builder.RegisterType<JsonObjectMapService>().Keyed<IContentMapService>(ValueMapType.json_object_to_dict);
             builder.RegisterType<StringArrayMapService>().Keyed<IContentMapService>(ValueMapType.string_to_string_array);
@@ -44,6 +45,7 @@ namespace myotui
             builder.RegisterType<App>().As<IApp>();
             builder.RegisterType<BufferLayoutContent>().As<ILayoutContent>();
             builder.RegisterType<CliValueContent>().As<IValueContent>();
+            builder.RegisterType<ActionListValueContent>().As<IValueContent>();
             builder.RegisterType<ListValueContent>().As<IValueContent>();
             builder.RegisterType<TableBuffer>().As<IBuffer>();
             builder.RegisterType<DictBuffer>().As<IBuffer>();

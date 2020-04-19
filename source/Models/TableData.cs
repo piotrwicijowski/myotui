@@ -15,7 +15,7 @@ namespace myotui.Models
         {
             // var headerContent = columnMapOrder.ToDictionary(x => x, x => (object)x);
             // var headerContentList = new List<IDictionary<string,object>>(){headerContent};
-            if(headerContent.Count != 0 && columnMapOrder.Count != 0)
+            if(headerContent != null && headerContent.Count != 0 && columnMapOrder.Count != 0)
             { 
                 _headerDataSource = new TableDataSource(headerContent, columnMapOrder, columnWidthHints);
             }
