@@ -8,5 +8,6 @@ namespace myotui.Models
         public IListDataSource GetHeaderDataSource();
         public IListDataSource GetBodyDataSource();
         public IDictionary<string, object> this [int key] {get;}
+        public IList<int> GetRowIndexesForSearchPhrase(string phrase);
     }
 }

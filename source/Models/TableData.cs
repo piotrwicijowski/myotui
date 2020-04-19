@@ -47,5 +47,18 @@ namespace myotui.Models
         {
             get => _bodyDataSource[key];
         }
+        public IList<int> GetRowIndexesForSearchPhrase(string phrase)
+        {
+            var result = new List<int>();
+            for(int i = 0; i < _bodyDataSource.Count; i++)
+            {
+                var rowMatches = _bodyDataSource[i].Values.Any(value => value != null && value.ToString().Contains(phrase));
+                if(rowMatches)
+                {
+                    result.Add(i);
+                }
+            }
+            return result;
+        }
     }
 }

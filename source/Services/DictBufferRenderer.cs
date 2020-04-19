@@ -59,7 +59,7 @@ namespace myotui.Services
             };
             IList<IDictionary<string,object>> listContent = rowMapOrder.Select(rowName => new Dictionary<string,object>(){{"key", rowName},{"value", dictContent[rowName]}} as IDictionary<string,object>).ToList();
             var tableData = new TableData(listContent, headerContent, columnMapOrder, columnWidths);
-            var view = new TableView(tableData);
+            var view = new TableView(tableData, false, true);
             view.FocusedItemChanged = (line) =>
             {
                 line?.Keys.ToList().ForEach(key =>

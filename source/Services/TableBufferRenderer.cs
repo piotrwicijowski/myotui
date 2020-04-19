@@ -24,6 +24,23 @@ namespace myotui.Services
         {
             base.RegisterActions(node);
             RegisterNavigationAction(node);
+            var tablebuffer = node.Buffer as TableBuffer;
+            if(tablebuffer != null && tablebuffer.HasSearch)
+            {
+                var tableView = (node.View as TableView);
+                if(tableView != null)
+                {
+                    tableView.SearchOnEnter += (sender, args) =>
+                    {
+                        node.SkipKeyHandling = true;
+                    };
+                    tableView.SearchOnLeave += (sender, args) =>
+                    {
+                        node.SkipKeyHandling = false;
+                    };
+                }
+                RegisterSearchAction(node);
+            }
         }
 
         public override View Render(ViewNode node)
@@ -36,8 +53,6 @@ namespace myotui.Services
             var map = _maps[tablebuffer.Content.Map];
             var content = map.MapRawData(rawContent)?.ToList();
             content = content ?? new List<IDictionary<string,object>>();
-            //TODO
-            // var columnMapOrder = content?.FirstOrDefault()?.Keys.Take(3).ToList();
             var detectectedColumns = content.FirstOrDefault().Select(kv => kv.Key).ToList();
             var columnMapOrder = tablebuffer.Columns?.Select(col => col.Name).ToList() ?? new List<string>();
             if(columnMapOrder == null || columnMapOrder.Count == 0)
@@ -52,7 +67,7 @@ namespace myotui.Services
                 : null;
             var columnWidths = tablebuffer.Columns.Select(column => column.Width).ToList();
             var tableData = new TableData(content,headerContent,columnMapOrder, columnWidths);
-            var view = new TableView(tableData);
+            var view = new TableView(tableData, tablebuffer.HasHeader, tablebuffer.HasSearch);
             view.FocusedItemChanged = (line) =>
             {
                 line.Keys.ToList().ForEach(key =>
@@ -76,6 +91,18 @@ namespace myotui.Services
             node.RegisteredActions.Add(_actionService.RegisterAction($"/lineLast",$"{node.Scope}/**",(_) => (node.View as TableView).FocusLastLine()));
             node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.lineFirst","/**",(_) => (node.View as TableView).FocusFirstLine()));
             node.RegisteredActions.Add(_actionService.RegisterAction($"/lineFirst",$"{node.Scope}/**",(_) => (node.View as TableView).FocusFirstLine()));
+        }
+
+        protected virtual void RegisterSearchAction(ViewNode node)
+        {
+            // node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.search","/**",(_) => {node.SkipKeyHandling = true; return (node.View as TableView).FocusSearch();}));
+            // node.RegisteredActions.Add(_actionService.RegisterAction($"/search",$"{node.Scope}/**",(_) => {node.SkipKeyHandling = true; return (node.View as TableView).FocusSearch();}));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.search","/**",(_) => (node.View as TableView).FocusSearch()));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"/search",$"{node.Scope}/**",(_) => (node.View as TableView).FocusSearch()));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.focusPrevResult","/**",(_) => (node.View as TableView).FocusPrevSearch()));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"/focusPrevResult",$"{node.Scope}/**",(_) => (node.View as TableView).FocusPrevSearch()));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.focusNextResult","/**",(_) => (node.View as TableView).FocusNextSearch()));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"/focusNextResult",$"{node.Scope}/**",(_) => (node.View as TableView).FocusNextSearch()));
         }
     }
 }

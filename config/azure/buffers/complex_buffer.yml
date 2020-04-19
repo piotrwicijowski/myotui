@@ -98,6 +98,7 @@
   name: {{ name }}_table
   description: Table with list of {{ short_description }}
   closable: false
+  hasSearch: true
   bindings:
   - name: yank_id
     description: Yank id
@@ -123,6 +124,24 @@
     - "key <ControlM>"
     actions:
     - "{{ on_enter }}"
+  - name: search
+    description: Focus search field
+    triggers:
+    - "key /"
+    actions:
+    - "/search"
+  - name: search_next
+    description: Focus next search result
+    triggers:
+    - "key n"
+    actions:
+    - "/focusNextResult"
+  - name: search_prev
+    description: Focus previous search result
+    triggers:
+    - "key N"
+    actions:
+    - "/focusPrevResult"
   parameters:
 {{#parameters}}
   - name: {{ this }}
