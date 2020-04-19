@@ -18,40 +18,7 @@ namespace myotui.Models
         public SizeHint Width {get; set;} = new SizeHint();
         public SizeHint Height {get; set;} = new SizeHint();
         public List<Guid> RegisteredActions = new List<Guid>();
+        public ViewNode LastFocusedNode;
 
-        public bool FocusNextChild()
-        {
-            if(!View.HasFocus) {return false;}
-            if(Children == null || !Children.Any()) { return false; } 
-            var focusedChildIndex = Children.Select(child => child.View).ToList().IndexOf(this.View.Focused);
-            for(int i = focusedChildIndex + 1; i <= Children.Count - 1; ++i)
-            {
-                var child = Children.ToList()[i];
-                if(child.Buffer.Focusable)
-                {
-                    View.SetFocus(child.View);
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public bool FocusPreviousChild()
-        {
-            if(!View.HasFocus) {return false;}
-            if(Children == null || !Children.Any()) { return false; } 
-            var focusedChildIndex = Children.Select(child => child.View).ToList().IndexOf(this.View.Focused);
-            for(int i = focusedChildIndex - 1; i >= 0; --i)
-            {
-                var child = Children.ToList()[i];
-                if(child.Buffer.Focusable)
-                {
-                    View.SetFocus(child.View);
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 }

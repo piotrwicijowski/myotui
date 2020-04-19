@@ -28,6 +28,7 @@ namespace myotui.Services
         {
             var parentRenderer = _bufferRenderers[node.Buffer.GetType()];
             parentRenderer.Render(node);
+            WireUpFocusSaving(node);
             node.Children?.ToList().ForEach(childNode => RenderNode(childNode));
             parentRenderer.RegisterActions(node);
             parentRenderer.RegisterBindings(node);
@@ -70,7 +71,6 @@ namespace myotui.Services
                 }
             }
             return suggestedName;
-            
         }
 
         private void RemoveBindingsRecursive(ViewNode node)
@@ -127,8 +127,8 @@ namespace myotui.Services
             var nodeToRefocus = parentNode;
             while(!refocused && nodeToRefocus != null)
             {
-                refocused = !refocused ? nodeToRefocus.FocusPreviousChild() : refocused;
-                refocused = !refocused ? nodeToRefocus.FocusNextChild() : refocused;
+                refocused = !refocused ? FocusPreviousChild(nodeToRefocus) : refocused;
+                refocused = !refocused ? FocusNextChild(nodeToRefocus) : refocused;
                 nodeToRefocus = nodeToRefocus.Parent;
             }
             RemoveBindingsRecursive(node);
@@ -139,6 +139,56 @@ namespace myotui.Services
             parentRenderer.Layout(parentNode);
             parentNode.View.LayoutSubviews();
             return true;
+        }
+
+        public bool WireUpFocusSaving(ViewNode node)
+        {
+            if(node.View == null) {return false;}
+            node.View.OnLeave += (sender, args) => 
+            {
+                node.LastFocusedNode = node.Children?.FirstOrDefault(child => child.View == node.View.Focused);
+            };
+            node.View.OnEnter += (sender, args) => 
+            {
+                if(node.LastFocusedNode != null)
+                {
+                    node.View.SetFocus(node.LastFocusedNode.View);
+                }
+            };
+            return true;
+        }
+        public bool FocusNextChild(ViewNode node)
+        {
+            if(!node.View.HasFocus) {return false;}
+            if(node.Children == null || !node.Children.Any()) { return false; } 
+            var focusedChildIndex = node.Children.Select(child => child.View).ToList().IndexOf(node.View.Focused);
+            for(int i = focusedChildIndex + 1; i <= node.Children.Count - 1; ++i)
+            {
+                var child = node.Children.ToList()[i];
+                if(child.Buffer.Focusable)
+                {
+                    node.View.SetFocus(child.View);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool FocusPreviousChild(ViewNode node)
+        {
+            if(!node.View.HasFocus) {return false;}
+            if(node.Children == null || !node.Children.Any()) { return false; } 
+            var focusedChildIndex = node.Children.Select(child => child.View).ToList().IndexOf(node.View.Focused);
+            for(int i = focusedChildIndex - 1; i >= 0; --i)
+            {
+                var child = node.Children.ToList()[i];
+                if(child.Buffer.Focusable)
+                {
+                    node.View.SetFocus(child.View);
+                    return true;
+                }
+            }
+            return false;
         }
          
     }
