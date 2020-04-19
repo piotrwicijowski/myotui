@@ -140,22 +140,24 @@ namespace myotui.Models
 
             var absoluteWidths = hints.Select((hint, index) => 
             {
-                return hint.Mode switch
+                var unclamped = hint.Mode switch
                 {
                     SizeMode.Fixed => hint.Fixed,
                     SizeMode.Auto => _maxColumnWidths[index],
                     SizeMode.Fill => (int)Math.Floor(Helpers.Clamp(value: hint.FillRatio * remainingFlexWidth / fillColumnsRatioScale, min: hint.FillMinPercentage * remainingFlexWidth / 100.0 , max: hint.FillMaxPercentage * remainingFlexWidth / 100.0)),
                 };
+                return Helpers.Clamp(unclamped, 0, maxWidth);
             });
             var overshoot = absoluteWidths.Sum() - usableWidth;
             absoluteWidths = absoluteWidths.Zip(hints, (calculatedWidth, hint) =>
             {
-                return hint.Mode switch
+                var unclamped = hint.Mode switch
                 {
                     SizeMode.Fixed => calculatedWidth,
                     SizeMode.Auto => calculatedWidth - (int)Math.Floor(overshoot * hint.FillRatio / (fillColumnsRatioScale + autoColumnsRatioScale)),
                     SizeMode.Fill => calculatedWidth - (int)Math.Floor(overshoot * hint.FillRatio / (fillColumnsRatioScale + autoColumnsRatioScale)),
                 };
+                return Helpers.Clamp(unclamped, 0, maxWidth);
             });
 
             return absoluteWidths.ToList();
