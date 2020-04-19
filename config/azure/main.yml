@@ -136,7 +136,6 @@ buffers:
       action: "/root/body/main.replace resources"
   columns:
   - name : DisplayName
-    displayName : XX
   bindings:
   - name: run_action
     description: run_selected_action

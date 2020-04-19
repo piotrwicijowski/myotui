@@ -44,9 +44,12 @@ namespace myotui.Services
             {
                 columnMapOrder = detectectedColumns;
             }
-            var headerContent = tablebuffer.Columns != null && tablebuffer.Columns.Count > 0 ?
-                new List<IDictionary<string, object>>(){tablebuffer.Columns?.ToDictionary(col => col.Name, col => (object)col.DisplayName)} :
-                null;
+            var headerContentExists = tablebuffer.Columns != null
+                && tablebuffer.Columns.Count > 0
+                && tablebuffer.Columns.Select(column => column.DisplayName).Any(displayName => !string.IsNullOrEmpty(displayName));
+            var headerContent = headerContentExists
+                ? new List<IDictionary<string, object>>(){tablebuffer.Columns?.ToDictionary(col => col.Name, col => (object)col.DisplayName)}
+                : null;
             var columnWidths = tablebuffer.Columns.Select(column => column.Width).ToList();
             var tableData = new TableData(content,headerContent,columnMapOrder, columnWidths);
             var view = new TableView(tableData);

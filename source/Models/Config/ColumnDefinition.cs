@@ -5,7 +5,7 @@ namespace myotui.Models.Config
         private string _displayName;
 
         public string Name { get; set; }
-        public string DisplayName { get => _displayName ?? Name; set => _displayName = value; }
+        public string DisplayName { get; set; }
         public SizeHint Width {get; set;} = new SizeHint();
     }
 }

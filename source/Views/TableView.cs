@@ -27,7 +27,8 @@ namespace myotui.Views
             _tableListView.Width = Dim.Fill();
             _tableListView.Height = Dim.Fill();
 
-            if(headerDataSource != null)
+            var headerIsEmpty = headerDataSource == null || headerDataSource.Count == 0;
+            if(!headerIsEmpty)
             {
                 _headerView = new ListView(headerDataSource);
                 _headerView.CanFocus = false;
