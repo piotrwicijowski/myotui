@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using myotui.Models;
 using Terminal.Gui;
 
@@ -9,12 +10,14 @@ namespace myotui.Views
     {
         private ListView _tableListView;
         private ListView _headerView;
-
+        private SearchTextField _searchField;
         private readonly ITableData _tableData;
-
+        public string SearchPhrase {get; set;} = "";
+        protected IList<int> _searchResultIndexes {get; set;} = new List<int>();
         public Action<IDictionary<string, object>> FocusedItemChanged;
-        
-        public TableView(ITableData tableData)
+        public event EventHandler SearchOnEnter;
+        public event EventHandler SearchOnLeave;
+        public TableView(ITableData tableData, bool hasHeader, bool hasSearch)
         {
             _tableData = tableData;
 
@@ -25,10 +28,10 @@ namespace myotui.Views
             _tableListView.X = 0;
             _tableListView.Y = headerDataSource != null ? 2 : 0;
             _tableListView.Width = Dim.Fill();
-            _tableListView.Height = Dim.Fill();
+            _tableListView.Height = Dim.Fill() - (hasSearch ? 1 : 0);
 
             var headerIsEmpty = headerDataSource == null || headerDataSource.Count == 0;
-            if(!headerIsEmpty)
+            if(!headerIsEmpty && hasSearch)
             {
                 _headerView = new ListView(headerDataSource);
                 _headerView.CanFocus = false;
@@ -51,6 +54,32 @@ namespace myotui.Views
                 TriggerFocusedLineEvent();
             };
             Add(_tableListView);
+            if(hasSearch)
+            {
+                _searchField = new SearchTextField();
+                _searchField.X = 0;
+                _searchField.Y = Pos.Bottom(_tableListView);
+                _searchField.Width = Dim.Fill();
+                _searchField.Height = 1;
+                _searchField.CanFocus = true;
+                _searchField.OnLeave += (sender, args) =>
+                {
+                    if(sender == _searchField)
+                    {
+                        SearchOnLeave?.Invoke(this,args);
+                    }
+                };
+                _searchField.SearchAccepted += (sender, args) =>
+                {
+                    SetFocus(_tableListView);
+                    ApplySearch();
+                };
+                _searchField.SearchAborted += (sender, args) =>
+                {
+                    SetFocus(_tableListView);
+                };
+                Add(_searchField);
+            }
         }
 
         public bool FocusNextLine()
@@ -98,6 +127,61 @@ namespace myotui.Views
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
+        }
+
+        public bool FocusSearch()
+        {
+            if(_searchField != null)
+            {
+                SearchOnEnter?.Invoke(this,new EventArgs());
+                SetFocus(_searchField);
+                _searchField.EnsureFocus();
+                return true;
+            }
+            return false;
+        }
+
+        private void ApplySearch()
+        {
+            SearchPhrase = _searchField.SearchPhrase;
+            _tableData.SetHighlight(SearchPhrase);
+            FocusNextSearch();
+        }
+
+        public bool FocusNextSearch()
+        {
+            var currentIndex = _tableListView.SelectedItem;
+            _searchResultIndexes = _tableData.GetRowIndexesForSearchPhrase(SearchPhrase);
+            var nextSearchIndexes = _searchResultIndexes.Where(index => index > currentIndex);
+            if(nextSearchIndexes.Count() > 0)
+            {
+                _tableListView.SelectedItem = nextSearchIndexes.FirstOrDefault();
+                if(currentIndex != _tableListView.SelectedItem)
+                {
+                    TriggerFocusedLineEvent();
+                }
+                _tableListView.SetNeedsDisplay();
+                return true;
+            }
+            return false;
+        }
+
+        public bool FocusPrevSearch()
+        {
+            var currentIndex = _tableListView.SelectedItem;
+            _searchResultIndexes = _tableData.GetRowIndexesForSearchPhrase(SearchPhrase);
+            var nextSearchIndexes = _searchResultIndexes.Where(index => index < currentIndex);
+            if(nextSearchIndexes.Count() > 0)
+            {
+                _tableListView.SelectedItem = nextSearchIndexes.LastOrDefault();
+                if(currentIndex != _tableListView.SelectedItem)
+                {
+                    TriggerFocusedLineEvent();
+                }
+                _tableListView.SetNeedsDisplay();
+                return true;
+            }
+            return false;
         }
 
     }

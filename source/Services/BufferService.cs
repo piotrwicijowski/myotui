@@ -150,6 +150,7 @@ namespace myotui.Services
             };
             node.View.OnEnter += (sender, args) => 
             {
+                node.SkipKeyHandling = false;
                 if(node.LastFocusedNode != null)
                 {
                     node.View.SetFocus(node.LastFocusedNode.View);

@@ -15,6 +15,7 @@ namespace myotui.Models
         private IList<SizeHint> _columnWidths;
         private IList<int> _maxColumnWidths = new List<int>();
         public int Count => _contentList.Count();
+        public string Highlight {get; set;}
         private static readonly List<Terminal.Gui.Attribute> Colors = new List<Terminal.Gui.Attribute>()
         {
             Terminal.Gui.Attribute.Make(Color.White,   Color.Black),
@@ -29,6 +30,8 @@ namespace myotui.Models
             Terminal.Gui.Attribute.Make(Color.Black, Color.Green  ),
             Terminal.Gui.Attribute.Make(Color.Black, Color.Magenta),
         };
+        private static readonly Terminal.Gui.Attribute _highlightColor = Terminal.Gui.Attribute.Make(Color.Red, Color.Black);
+        private static readonly Terminal.Gui.Attribute _highlightFocusColor = Terminal.Gui.Attribute.Make(Color.Black, Color.Red);
 
         public TableDataSource(IList<IDictionary<string, object>> contentList, IList<string> columnMapOrder, IList<SizeHint> columnWidths)
         {
@@ -44,7 +47,9 @@ namespace myotui.Models
 
         public void Render(ListView container, ConsoleDriver driver, bool selected, int item, int col, int line, int width)
         {
-            var currentColor = container.HasFocus ? (selected ? container.ColorScheme.Focus : container.ColorScheme.Normal) : container.ColorScheme.Normal;
+            var focusedAndSelected = container.HasFocus && selected;
+            // var currentColor = container.HasFocus ? (selected ? container.ColorScheme.Focus : container.ColorScheme.Normal) : container.ColorScheme.Normal;
+            var currentColor = focusedAndSelected ? container.ColorScheme.Focus : container.ColorScheme.Normal;
             var savedColor = currentColor;
 
             var widths = _columnWidths.Count == 0 ? new List<int>(){width} : CalculateWidths(width, _columnWidths);
@@ -60,12 +65,12 @@ namespace myotui.Models
                 var hasValue = _contentList[item].TryGetValue(columnName, out columnValue);
                 columnValue = columnValue ?? "";
                 columnValue = columnValue.ToString().Replace(Environment.NewLine," ");
-                var newColor = (container.HasFocus && selected) ? FocusColors[i % Colors.Count()] : Colors[i % Colors.Count()];
+                var newColor = focusedAndSelected ? FocusColors[i % Colors.Count()] : Colors[i % Colors.Count()];
                 if(currentColor != newColor){
                     driver.SetAttribute(newColor);
                     currentColor = newColor;
                 }
-                RenderUstr(driver, columnValue.ToString(), columnWidth);
+                RenderUstr(driver, columnValue.ToString(), columnWidth, currentColor, focusedAndSelected);
 				driver.AddRune(' ');
             }
             if(savedColor != currentColor)
@@ -89,18 +94,62 @@ namespace myotui.Models
             }
         }
 
-		void RenderUstr (ConsoleDriver driver, ustring ustr, int width)
+		void RenderUstr (ConsoleDriver driver, ustring ustr, int width, Terminal.Gui.Attribute defaultColor, bool focusedAndSelected)
 		{
 			int byteLen = ustr.Length;
+            var highlights = new List<(int start, int end)>();
+            if(!string.IsNullOrEmpty(Highlight))
+            {
+                int pos = 0;
+                while(pos < ustr.Length)
+                {
+                    var highlightStart = ustr.ToString().IndexOf(Highlight,pos, StringComparison.CurrentCultureIgnoreCase);
+                    var highlightEnd = highlightStart == -1 ? -1 : highlightStart + Highlight.Length - 1;
+                    if(highlightStart >= pos)
+                    {
+                        highlights.Add((start: highlightStart, end: highlightEnd));
+                        pos = highlightEnd + 1;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
 			int used = 0;
+            int highlightsIndex = -1;
+            int currentHighlightStart = -1;
+            int currentHighlightEnd = -1;
+            if(highlights.Count > 0)
+            {
+                highlightsIndex++;
+                currentHighlightStart = highlights[highlightsIndex].start;
+                currentHighlightEnd = highlights[highlightsIndex].end;
+            }
 			for (int i = 0; i < byteLen;) {
+                if(used == currentHighlightStart) { driver.SetAttribute(focusedAndSelected ? _highlightFocusColor : _highlightColor); }
 				(var rune, var size) = Utf8.DecodeRune (ustr, i, i - byteLen);
 				var count = Rune.ColumnWidth (rune);
+                if(used+count-1 >= width) { driver.SetAttribute(defaultColor); }
 				if (used+count-1 >= width)
 					break;
 				driver.AddRune (rune);
+                if(used == currentHighlightEnd) { 
+                    highlightsIndex++;
+                    if(highlightsIndex >= highlights.Count){
+                        currentHighlightStart = -1;
+                        currentHighlightEnd = -1;
+                    }
+                    else
+                    {
+                        currentHighlightStart = highlights[highlightsIndex].start;
+                        currentHighlightEnd = highlights[highlightsIndex].end;
+                    }
+                    driver.SetAttribute(defaultColor);
+                }
 				used += count;
 				i += size;
+
 			}
 			for (; used < width; used++) {
 				driver.AddRune (' ');

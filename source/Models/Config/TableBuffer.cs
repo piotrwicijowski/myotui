@@ -11,5 +11,7 @@ namespace myotui.Models.Config
         public IList<ColumnDefinition> Columns {get; set;} = new List<ColumnDefinition>();
         public bool Closable {get; set;} = true;
         public bool Focusable {get; set;} = true;
+        public bool HasHeader {get; set;} = true;
+        public bool HasSearch {get; set;} = false;
     }
 }

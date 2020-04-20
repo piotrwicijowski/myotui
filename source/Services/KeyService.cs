@@ -35,6 +35,11 @@ namespace myotui.Services {
             _keyStack.Push(keyEvent.Key);
             while(checkedNode != null)
             {
+                if(checkedNode.SkipKeyHandling)
+                {
+                    ClearStack();
+                    return false;
+                }
                 var allActionsForPrefix = _keyPrefixDictionary.GetAllActionsByKeyPrefix(_keyStack.Reverse().ToList(),checkedNode.Scope);
                 if(allActionsForPrefix == null || allActionsForPrefix.Count == 0)
                 {
