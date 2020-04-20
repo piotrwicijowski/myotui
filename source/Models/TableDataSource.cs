@@ -97,23 +97,56 @@ namespace myotui.Models
 		void RenderUstr (ConsoleDriver driver, ustring ustr, int width, Terminal.Gui.Attribute defaultColor, bool focusedAndSelected)
 		{
 			int byteLen = ustr.Length;
-            var highlightStart = -1;
-            var highlightEnd = -1;
+            var highlights = new List<(int start, int end)>();
             if(!string.IsNullOrEmpty(Highlight))
             {
-                highlightStart = ustr.ToString().IndexOf(Highlight, StringComparison.CurrentCultureIgnoreCase);
-                highlightEnd = highlightStart == -1 ? -1 : highlightStart + Highlight.Length - 1;
+                int pos = 0;
+                while(pos < ustr.Length)
+                {
+                    var highlightStart = ustr.ToString().IndexOf(Highlight,pos, StringComparison.CurrentCultureIgnoreCase);
+                    var highlightEnd = highlightStart == -1 ? -1 : highlightStart + Highlight.Length - 1;
+                    if(highlightStart >= pos)
+                    {
+                        highlights.Add((start: highlightStart, end: highlightEnd));
+                        pos = highlightEnd + 1;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
             }
 			int used = 0;
+            int highlightsIndex = -1;
+            int currentHighlightStart = -1;
+            int currentHighlightEnd = -1;
+            if(highlights.Count > 0)
+            {
+                highlightsIndex++;
+                currentHighlightStart = highlights[highlightsIndex].start;
+                currentHighlightEnd = highlights[highlightsIndex].end;
+            }
 			for (int i = 0; i < byteLen;) {
-                if(used == highlightStart) { driver.SetAttribute(focusedAndSelected ? _highlightFocusColor : _highlightColor); }
+                if(used == currentHighlightStart) { driver.SetAttribute(focusedAndSelected ? _highlightFocusColor : _highlightColor); }
 				(var rune, var size) = Utf8.DecodeRune (ustr, i, i - byteLen);
 				var count = Rune.ColumnWidth (rune);
                 if(used+count-1 >= width) { driver.SetAttribute(defaultColor); }
 				if (used+count-1 >= width)
 					break;
 				driver.AddRune (rune);
-                if(used == highlightEnd) { driver.SetAttribute(defaultColor); }
+                if(used == currentHighlightEnd) { 
+                    highlightsIndex++;
+                    if(highlightsIndex >= highlights.Count){
+                        currentHighlightStart = -1;
+                        currentHighlightEnd = -1;
+                    }
+                    else
+                    {
+                        currentHighlightStart = highlights[highlightsIndex].start;
+                        currentHighlightEnd = highlights[highlightsIndex].end;
+                    }
+                    driver.SetAttribute(defaultColor);
+                }
 				used += count;
 				i += size;
 
