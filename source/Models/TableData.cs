@@ -52,13 +52,21 @@ namespace myotui.Models
             var result = new List<int>();
             for(int i = 0; i < _bodyDataSource.Count; i++)
             {
-                var rowMatches = _bodyDataSource[i].Values.Any(value => value != null && value.ToString().Contains(phrase));
+                var rowMatches = _bodyDataSource[i].Values.Any(value => value != null && value.ToString().Contains(phrase,StringComparison.CurrentCultureIgnoreCase));
                 if(rowMatches)
                 {
                     result.Add(i);
                 }
             }
             return result;
+        }
+        public void SetHighlight(string highlight)
+        {
+            var tableBodyDataSource = _bodyDataSource as TableDataSource;
+            if(tableBodyDataSource != null)
+            {
+                tableBodyDataSource.Highlight = highlight;
+            }
         }
     }
 }
