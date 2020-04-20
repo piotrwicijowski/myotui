@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NStack;
 using Terminal.Gui;
 
@@ -10,6 +11,9 @@ namespace myotui.Views
         private Label _searchPlaceholder;
         public event EventHandler SearchAborted;
         public event EventHandler SearchAccepted;
+        protected readonly IList<string> _previousSearches = new List<string>();
+        protected int _previousSearchesIndex = -1;
+        public string SearchPhrase {get; protected set;}
 
         public SearchTextField()
         {
@@ -29,6 +33,7 @@ namespace myotui.Views
             {
                 RemoveAll();
                 Add(_searchField);
+                _searchField.Text = "";
                 SetFocus(_searchField);
             };
             OnLeave += (sender, args) =>
@@ -42,20 +47,39 @@ namespace myotui.Views
             };
         }
 
-        public new ustring Text {
-            get => _searchField.Text;
-            set => _searchField.Text = value;
-        }
-
         public override bool ProcessKey(KeyEvent keyEvent)
         {
             switch (keyEvent.Key)
             {
+                case Key.CursorDown:
+                    _previousSearchesIndex = Helpers.Clamp(_previousSearchesIndex - 1, -1, _previousSearches.Count - 1);
+                    if(_previousSearchesIndex >= 0)
+                    {
+                        _searchField.Text = _previousSearches[_previousSearchesIndex];
+                    }
+                    else
+                    {
+                        _searchField.Text = string.Empty;
+                    }
+                    _searchField.CursorPosition = _searchField.Text.Length;
+                    return true;
+                case Key.CursorUp:
+                    _previousSearchesIndex = Helpers.Clamp(_previousSearchesIndex + 1, 0, _previousSearches.Count - 1);
+                    _searchField.Text = _previousSearches[_previousSearchesIndex];
+                    _searchField.CursorPosition = _searchField.Text.Length;
+                    return true;
                 case Key.Esc:
-                    _searchField.Text = "";
+                    // _searchField.Text = "";
+                    _previousSearchesIndex = -1;
                     SearchAborted?.Invoke(this, new EventArgs());
                     return true;
                 case Key.ControlM:
+                    if(!string.IsNullOrEmpty(_searchField.Text.ToString()))
+                    {
+                        SearchPhrase = _searchField.Text.ToString();
+                        _previousSearches.Insert(0,SearchPhrase);
+                        _previousSearchesIndex = -1;
+                    }
                     SearchAccepted?.Invoke(this, new EventArgs());
                     return true;
                 default:

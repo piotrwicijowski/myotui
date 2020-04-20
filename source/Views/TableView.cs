@@ -143,7 +143,7 @@ namespace myotui.Views
 
         private void ApplySearch()
         {
-            SearchPhrase = _searchField.Text.ToString();
+            SearchPhrase = _searchField.SearchPhrase;
             _tableData.SetHighlight(SearchPhrase);
             FocusNextSearch();
         }
