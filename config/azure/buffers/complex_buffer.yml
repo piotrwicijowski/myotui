@@ -151,7 +151,8 @@
   content:
     !cli
     input: {{ cli }}
-    map: json_array_to_table
+    maps:
+    - json_array_to_table
   columns:
 {{#columns}}
   - name : "{{ name }}"

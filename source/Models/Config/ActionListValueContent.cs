@@ -7,7 +7,8 @@ namespace myotui.Models.Config
     {
         public IEnumerable<ActionListElement> Value {get; set;}
         [DefaultValue(ValueMapType.json_array_to_table)]
-        public ValueMapType Map {get; set;} = ValueMapType.json_array_to_table;
+
+        public IList<ValueMapType> Maps {get; set;} = new List<ValueMapType>(){ValueMapType.json_array_to_table};
     }
 
 }

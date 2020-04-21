@@ -17,13 +17,15 @@ namespace myotui.Services
         protected readonly INodeService _nodeService;
         protected readonly IParameterService _parameterService;
         protected readonly IIndex<Type,IBufferRenderer> _bufferRenderers;
-        public BufferService(IConfigurationService configuration, IIndex<Type,IBufferRenderer> bufferRenderers, INodeService nodeService, IParameterService parameterService, IIndex<Type,IRawContentService> rawContentServices)
+        protected readonly IIndex<ValueMapType,IContentMapService> _mapServices;
+        public BufferService(IConfigurationService configuration, IIndex<Type,IBufferRenderer> bufferRenderers, INodeService nodeService, IParameterService parameterService, IIndex<Type,IRawContentService> rawContentServices, IIndex<ValueMapType,IContentMapService> mapServices)
         {
             _configuration = configuration;
             _bufferRenderers = bufferRenderers;
             _nodeService = nodeService;
             _parameterService = parameterService;
             _rawContentServices = rawContentServices;
+            _mapServices = mapServices;
         }
 
         public View RenderNode(ViewNode node)
@@ -31,7 +33,14 @@ namespace myotui.Services
             if(node.Buffer.Content != null)
             {
                 var rawContentService = _rawContentServices[node.Buffer.Content.GetType()];
-                node.Data = rawContentService.GetRawOutput(node.Buffer.Content, node.Parameters);
+                var rawData = rawContentService.GetRawOutput(node.Buffer.Content, node.Parameters);
+                dynamic acc = rawData;
+                foreach(var map in node.Buffer.Content.Maps)
+                {
+                    var mapService = _mapServices[map];
+                    acc = mapService.MapRawData(acc);
+                }
+                node.Data = acc;
             }
             var parentRenderer = _bufferRenderers[node.Buffer.GetType()];
             parentRenderer.Render(node);
@@ -158,7 +167,7 @@ namespace myotui.Services
             node.View.OnEnter += (sender, args) => 
             {
                 node.SkipKeyHandling = false;
-                if(node.LastFocusedNode != null)
+                if(node.LastFocusedNode != null && node.View.Subviews.Contains(node.LastFocusedNode.View))
                 {
                     node.View.SetFocus(node.LastFocusedNode.View);
                 }

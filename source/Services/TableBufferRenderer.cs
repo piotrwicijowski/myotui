@@ -12,10 +12,8 @@ namespace myotui.Services
 {
     public class TableBufferRenderer : ContentBufferRenderer
     {
-        protected readonly IIndex<ValueMapType,IContentMapService> _maps;
-        public TableBufferRenderer(IActionService actionService, IIndex<ValueMapType,IContentMapService> maps, IBufferService bufferService, IKeyService keyService) : base(actionService, keyService, bufferService)
+        public TableBufferRenderer(IActionService actionService, IBufferService bufferService, IKeyService keyService) : base(actionService, keyService, bufferService)
         {
-            _maps = maps;
         }
 
         public override void RegisterActions(ViewNode node)
@@ -46,8 +44,7 @@ namespace myotui.Services
             var buffer = node.Buffer;
             var tablebuffer = buffer as TableBuffer;
             var scope = node.Scope;
-            var map = _maps[buffer.Content.Map];
-            var content = map.MapRawData(node.Data) as List<IDictionary<string,object>>;
+            var content = node.Data as List<IDictionary<string,object>>;
 
             content = content ?? new List<IDictionary<string,object>>();
             var detectectedColumns = content.FirstOrDefault().Select(kv => kv.Key).ToList();
