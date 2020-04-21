@@ -6,9 +6,10 @@ namespace myotui.Services
 {
     public class JsonArrayMapService : IContentMapService
     {
-        public IEnumerable<IDictionary<string,object>> MapRawData(string data)
+        public dynamic MapRawData(dynamic data)
         {
-            var json = JsonConvert.DeserializeObject<IEnumerable<IDictionary<string,object>>>(data);
+            var stringData = data as string;
+            var json = JsonConvert.DeserializeObject<IEnumerable<IDictionary<string,object>>>(stringData);
             return json;
         }
     }

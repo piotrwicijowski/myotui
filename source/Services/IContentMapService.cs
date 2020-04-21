@@ -4,6 +4,6 @@ namespace myotui.Services
 {
     public interface IContentMapService
     {
-        public IEnumerable<IDictionary<string,object>> MapRawData(string data);
+        public dynamic MapRawData(dynamic data);
     }
 }

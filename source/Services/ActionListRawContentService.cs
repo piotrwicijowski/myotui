@@ -16,7 +16,7 @@ namespace myotui.Services
         {
             _parameterService = parameterService;
         }
-        public string GetRawOutput(IValueContent content, IDictionary<string, string> parameters)
+        public dynamic GetRawOutput(IValueContent content, IDictionary<string, string> parameters)
         {
             var listContent = content as ActionListValueContent;
             // var result = _parameterService.SubstituteParameters(string.Join(Environment.NewLine,listContent.Value),parameters);

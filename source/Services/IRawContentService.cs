@@ -5,6 +5,6 @@ namespace myotui.Services
 {
     public interface IRawContentService
     {
-        public string GetRawOutput(IValueContent content, IDictionary<string, string> parameters);
+        public dynamic GetRawOutput(IValueContent content, IDictionary<string, string> parameters);
     }
 }

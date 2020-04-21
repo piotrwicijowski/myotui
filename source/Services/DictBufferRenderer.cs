@@ -31,10 +31,8 @@ namespace myotui.Services
             var buffer = node.Buffer;
             var scope = node.Scope;
             var dictBuffer = buffer as DictBuffer;
-            var rawContentService = _rawContentServices[dictBuffer.Content.GetType()];
-            var rawContent = rawContentService.GetRawOutput(dictBuffer.Content, node.Parameters);
             var map = _maps[dictBuffer.Content.Map];
-            var dictContent = map.MapRawData(rawContent)?.FirstOrDefault();
+            var dictContent = map.MapRawData(node.Data) as Dictionary<string,object>;
             dictContent = dictContent ?? new Dictionary<string,object>();
 
             // var rowMapOrder = dictBuffer.Columns?.Select(col => col.Name).ToList() ?? new List<string>();

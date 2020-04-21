@@ -12,20 +12,27 @@ namespace myotui.Services
     public class BufferService : IBufferService
     {
 
+        protected readonly IIndex<Type,IRawContentService> _rawContentServices;
         protected readonly IConfigurationService _configuration;
         protected readonly INodeService _nodeService;
         protected readonly IParameterService _parameterService;
         protected readonly IIndex<Type,IBufferRenderer> _bufferRenderers;
-        public BufferService(IConfigurationService configuration, IIndex<Type,IBufferRenderer> bufferRenderers, INodeService nodeService, IParameterService parameterService)
+        public BufferService(IConfigurationService configuration, IIndex<Type,IBufferRenderer> bufferRenderers, INodeService nodeService, IParameterService parameterService, IIndex<Type,IRawContentService> rawContentServices)
         {
             _configuration = configuration;
             _bufferRenderers = bufferRenderers;
             _nodeService = nodeService;
             _parameterService = parameterService;
+            _rawContentServices = rawContentServices;
         }
 
         public View RenderNode(ViewNode node)
         {
+            if(node.Buffer.Content != null)
+            {
+                var rawContentService = _rawContentServices[node.Buffer.Content.GetType()];
+                node.Data = rawContentService.GetRawOutput(node.Buffer.Content, node.Parameters);
+            }
             var parentRenderer = _bufferRenderers[node.Buffer.GetType()];
             parentRenderer.Render(node);
             WireUpFocusSaving(node);

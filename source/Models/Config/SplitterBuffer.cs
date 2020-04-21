@@ -9,5 +9,6 @@ namespace myotui.Models.Config
         public IEnumerable<IParameter> Parameters {get; set;}
         public bool Closable {get; set;} = false;
         public bool Focusable {get; set;} = false;
+        public IValueContent Content {get; set;}
     }
 }

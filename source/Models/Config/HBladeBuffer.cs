@@ -11,5 +11,6 @@ namespace myotui.Models.Config
         public bool AutoSplitters {get; set;} = true;
         public bool Closable {get; set;} = false;
         public bool Focusable {get; set;} = true;
+        public IValueContent Content {get; set;}
     }
 }
