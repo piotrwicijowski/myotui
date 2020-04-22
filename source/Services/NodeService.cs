@@ -11,6 +11,7 @@ namespace myotui.Services
     {
         protected readonly IConfigurationService _configuration;
         protected readonly IParameterService _parameterService;
+        public ViewNode RootNode {get; set;}
         public NodeService(IConfigurationService configuration, IParameterService parameterService)
         {
             _configuration = configuration;
@@ -69,6 +70,27 @@ namespace myotui.Services
             }
             return parentNode;
         }
-        
+
+        public ViewNode GetNodeByScope(string scope, ViewNode startNode = null)
+        {
+            var currentNode = startNode ?? RootNode;
+            if(currentNode.Scope == scope)
+            {
+                return currentNode;
+            }
+            if(currentNode.Children != null)
+            { 
+                foreach(var child in currentNode.Children)
+                {
+                    var foundNode = GetNodeByScope(scope, child);
+                    if(foundNode != null)
+                    {
+                        return foundNode;
+                    }
+                }
+            }
+            return null;
+        }
+
     }
 }

@@ -33,7 +33,7 @@ namespace myotui.Services
             if(node.Buffer.Content != null)
             {
                 var rawContentService = _rawContentServices[node.Buffer.Content.GetType()];
-                var rawData = rawContentService.GetRawOutput(node.Buffer.Content, node.Parameters);
+                var rawData = rawContentService.GetRawOutput(node, node.Parameters);
                 dynamic acc = rawData;
                 foreach(var map in node.Buffer.Content.Maps)
                 {
@@ -58,12 +58,12 @@ namespace myotui.Services
             var parameterNames = buffer.Parameters?.Select(parameter => parameter.Name);
             var decodedBufferParams = _parameterService.DecodeParametersString(bufferParams, parameterNames?.ToList());
             var newNode = _nodeService.BuildNodeTree(buffer, SuggestUniqueScope(parentNode, bufferName), parentNode, bufferParams: decodedBufferParams);
-            newNode.View = RenderNode(newNode);
             if(parentNode.Children == null)
             {
                 parentNode.Children = new List<ViewNode>();
             }
             parentNode.Children.Add(newNode);
+            newNode.View = RenderNode(newNode);
             var parentRenderer = _bufferRenderers[parentNode.Buffer.GetType()];
             parentRenderer.Layout(parentNode);
             parentNode.View.LayoutSubviews();

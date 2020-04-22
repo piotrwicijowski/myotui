@@ -5,6 +5,7 @@ using System.Linq;
 using myotui;
 using myotui.Services;
 using myotui.Models.Config;
+using myotui.Models;
 
 namespace myotui.Services
 {
@@ -15,9 +16,9 @@ namespace myotui.Services
         {
             _parameterService = parameterService;
         }
-        public dynamic GetRawOutput(IValueContent content, IDictionary<string, string> parameters)
+        public dynamic GetRawOutput(ViewNode node, IDictionary<string, string> parameters)
         {
-            var listContent = content as ListValueContent;
+            var listContent = node.Buffer.Content as ListValueContent;
             return listContent.Value.Select(val => _parameterService.SubstituteParameters(val, parameters)).ToList();
         }
 
