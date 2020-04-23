@@ -15,18 +15,20 @@ namespace myotui.Services {
         protected readonly IScopeService _scopeService;
         protected readonly INodeService _nodeService;
         protected readonly IParameterService _parameterService;
+        protected readonly IKeyCodeMap _keyCodeMap;
         public const string triggerPattern = "key ";
         protected readonly Stack<Key> _keyStack = new Stack<Key>();
         protected readonly KeyPrefixDictionary _keyPrefixDictionary;
 
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        public KeyService (IActionService actionService, INodeService nodeService, IScopeService scopeService, IParameterService parameterService, KeyPrefixDictionary keyPrefixDictionary)
+        public KeyService(IActionService actionService, INodeService nodeService, IScopeService scopeService, IParameterService parameterService, KeyPrefixDictionary keyPrefixDictionary, IKeyCodeMap keyCodeMap)
         {
             _actionService = actionService;
             _nodeService = nodeService;
             _scopeService = scopeService;
             _parameterService = parameterService;
             _keyPrefixDictionary = keyPrefixDictionary;
+            _keyCodeMap = keyCodeMap;
         }
         public bool ProcessKeyEvent (KeyEvent keyEvent, ViewNode node)
         {
@@ -101,10 +103,13 @@ namespace myotui.Services {
                     {
                         var value = match.Value;
                         var isSpecial = match.Groups[2].Success;
-                        var isSpecialCorrect = Enum.TryParse<Key>(match.Groups[2].Value, out var specialKey);
-                        return (isSpecial && isSpecialCorrect) ? specialKey : (Key)(value[0]);
+                        // var isSpecialCorrect = Enum.TryParse<Key>(match.Groups[2].Value, out var specialKey);
+                        return _keyCodeMap.GetPhysicalKeyCode(isSpecial ? match.Groups[2].Value : value);
+                        // return (isSpecial && isSpecialCorrect) ? specialKey : (Key)(value[0]);
                     }
-                ).ToList();
+                )
+                // .Select(logicalKey => _keyCodeMap.GetPhysicalKeyCode(logicalKey))
+                .ToList();
             return matches;
         }
 

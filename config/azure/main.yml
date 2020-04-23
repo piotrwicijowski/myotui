@@ -43,21 +43,21 @@ buffers:
     description: Focus Right View
     scope: "/**"
     triggers:
-    # - "key <ControlL>"
+    - "key <ControlL>"
     - "key gl"
     actions:
     - "/focusRight"
   - name: focus_left
     description: Focus Right View
     triggers:
-    # - "key <Backspace>"
+    - "key <ControlH>"
     - "key gh"
     actions:
     - "/focusLeft"
   - name: focus_up
     description: Focus Up View
     triggers:
-    # - "key <ControlK>"
+    - "key <ControlK>"
     - "key gk"
     actions:
     - "/focusUp"
@@ -65,7 +65,7 @@ buffers:
     description: Focus Down View
     scope: "/**"
     triggers:
-    # - "key <ControlJ>"
+    - "key <ControlJ>"
     - "key gj"
     actions:
     - "/focusDown"
@@ -140,7 +140,7 @@ buffers:
   - name: run_action
     description: run_selected_action
     triggers:
-    - "key <ControlJ>"
+    - "key <Enter>"
     actions:
     - "%(line.Action)"
 
