@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using myotui;
 using myotui.Models;
 using myotui.Models.Config;
@@ -17,16 +18,24 @@ namespace myotui.Services
         }
         public dynamic GetRawOutput(ViewNode node, IDictionary<string, string> parameters)
         {
+            bool isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
             var cliContent = node.Buffer.Content as CliValueContent;
             var cliSubstituted = _parameterService.SubstituteParameters(string.Join(Environment.NewLine,cliContent.Input),parameters);
-            var commandSplit = StringExtensions.SplitCommandLine(cliSubstituted);
+            var filename = "";
+            var args = "";
+            if(isWindows)
+            {
+                filename = "cmd.exe";
+                args = "/c " + cliSubstituted;
+            }
+            else
+            {
+                var commandSplit = StringExtensions.SplitCommandLine(cliSubstituted);
+                filename = commandSplit.Take(1).FirstOrDefault();
+                args = string.Join(' ', commandSplit.Skip(1));
+            }
             using var pProcess = new Process();
-            var filename = commandSplit.Take(1).FirstOrDefault();
-            // filename = $"\"C:\\Program Files (x86)\\Microsoft SDKs\\Azure\\CLI2\\wbin\\{filename}.cmd\"";
-            // filename = $"{filename}.cmd";
-            var args = string.Join(' ', commandSplit.Skip(1));
-            filename = "cmd.exe";
-            args = "/c " + cliSubstituted;
             pProcess.StartInfo.FileName = filename;
             pProcess.StartInfo.Arguments = args;
             pProcess.StartInfo.UseShellExecute = false;

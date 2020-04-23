@@ -192,7 +192,7 @@ buffers:
     value: subscriptions
 
 {{#complex_buffers}}
-{{> buffers\complex_buffer.yml}}
+{{> buffers/complex_buffer.yml}}
 {{/complex_buffers}}
 
 - !dict
