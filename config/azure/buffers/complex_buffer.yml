@@ -126,7 +126,7 @@
   - name: open_highlighted_resource
     description: Open highlighted resource
     triggers:
-    - "key <ControlM>"
+    - "key <ControlJ>"
     actions:
     - "{{ on_enter }}"
   - name: search
