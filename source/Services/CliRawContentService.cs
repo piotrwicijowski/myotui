@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using myotui;
+using myotui.Models;
 using myotui.Models.Config;
 
 namespace myotui.Services
@@ -14,9 +15,9 @@ namespace myotui.Services
         {
             _parameterService = parameterService;
         }
-        public string GetRawOutput(IValueContent content, IDictionary<string, string> parameters)
+        public dynamic GetRawOutput(ViewNode node, IDictionary<string, string> parameters)
         {
-            var cliContent = content as CliValueContent;
+            var cliContent = node.Buffer.Content as CliValueContent;
             var cliSubstituted = _parameterService.SubstituteParameters(string.Join(Environment.NewLine,cliContent.Input),parameters);
             var commandSplit = StringExtensions.SplitCommandLine(cliSubstituted);
             using var pProcess = new Process();

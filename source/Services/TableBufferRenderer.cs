@@ -12,12 +12,8 @@ namespace myotui.Services
 {
     public class TableBufferRenderer : ContentBufferRenderer
     {
-        protected readonly IIndex<Type,IRawContentService> _rawContentServices;
-        protected readonly IIndex<ValueMapType,IContentMapService> _maps;
-        public TableBufferRenderer(IActionService actionService, IIndex<Type,IRawContentService> rawContentServices, IIndex<ValueMapType,IContentMapService> maps, IBufferService bufferService, IKeyService keyService) : base(actionService, keyService, bufferService)
+        public TableBufferRenderer(IActionService actionService, IBufferService bufferService, IKeyService keyService) : base(actionService, keyService, bufferService)
         {
-            _rawContentServices = rawContentServices;
-            _maps = maps;
         }
 
         public override void RegisterActions(ViewNode node)
@@ -46,12 +42,10 @@ namespace myotui.Services
         public override View Render(ViewNode node)
         {
             var buffer = node.Buffer;
-            var scope = node.Scope;
             var tablebuffer = buffer as TableBuffer;
-            var rawContentService = _rawContentServices[tablebuffer.Content.GetType()];
-            var rawContent = rawContentService.GetRawOutput(tablebuffer.Content, node.Parameters);
-            var map = _maps[tablebuffer.Content.Map];
-            var content = map.MapRawData(rawContent)?.ToList();
+            var scope = node.Scope;
+            var content = node.Data as List<IDictionary<string,object>>;
+
             content = content ?? new List<IDictionary<string,object>>();
             var detectectedColumns = content.FirstOrDefault().Select(kv => kv.Key).ToList();
             var columnMapOrder = tablebuffer.Columns?.Select(col => col.Name).ToList() ?? new List<string>();

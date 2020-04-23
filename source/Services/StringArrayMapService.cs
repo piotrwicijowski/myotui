@@ -7,9 +7,10 @@ namespace myotui.Services
 {
     public class StringArrayMapService : IContentMapService
     {
-        public IEnumerable<IDictionary<string,object>> MapRawData(string data)
+        public dynamic MapRawData(dynamic data)
         {
-            return data.Split(Environment.NewLine).Select(line => new Dictionary<string,object>{{"value", line}});
+            var listData = data as List<string>;
+            return listData.Select(value => new Dictionary<string,object>(){{"value", value}} as IDictionary<string,object>).ToList();
         }
     }
 }

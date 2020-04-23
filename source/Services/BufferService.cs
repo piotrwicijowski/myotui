@@ -12,20 +12,36 @@ namespace myotui.Services
     public class BufferService : IBufferService
     {
 
+        protected readonly IIndex<Type,IRawContentService> _rawContentServices;
         protected readonly IConfigurationService _configuration;
         protected readonly INodeService _nodeService;
         protected readonly IParameterService _parameterService;
         protected readonly IIndex<Type,IBufferRenderer> _bufferRenderers;
-        public BufferService(IConfigurationService configuration, IIndex<Type,IBufferRenderer> bufferRenderers, INodeService nodeService, IParameterService parameterService)
+        protected readonly IIndex<ValueMapType,IContentMapService> _mapServices;
+        public BufferService(IConfigurationService configuration, IIndex<Type,IBufferRenderer> bufferRenderers, INodeService nodeService, IParameterService parameterService, IIndex<Type,IRawContentService> rawContentServices, IIndex<ValueMapType,IContentMapService> mapServices)
         {
             _configuration = configuration;
             _bufferRenderers = bufferRenderers;
             _nodeService = nodeService;
             _parameterService = parameterService;
+            _rawContentServices = rawContentServices;
+            _mapServices = mapServices;
         }
 
         public View RenderNode(ViewNode node)
         {
+            if(node.Buffer.Content != null)
+            {
+                var rawContentService = _rawContentServices[node.Buffer.Content.GetType()];
+                var rawData = rawContentService.GetRawOutput(node, node.Parameters);
+                dynamic acc = rawData;
+                foreach(var map in node.Buffer.Content.Maps)
+                {
+                    var mapService = _mapServices[map];
+                    acc = mapService.MapRawData(acc);
+                }
+                node.Data = acc;
+            }
             var parentRenderer = _bufferRenderers[node.Buffer.GetType()];
             parentRenderer.Render(node);
             WireUpFocusSaving(node);
@@ -42,12 +58,12 @@ namespace myotui.Services
             var parameterNames = buffer.Parameters?.Select(parameter => parameter.Name);
             var decodedBufferParams = _parameterService.DecodeParametersString(bufferParams, parameterNames?.ToList());
             var newNode = _nodeService.BuildNodeTree(buffer, SuggestUniqueScope(parentNode, bufferName), parentNode, bufferParams: decodedBufferParams);
-            newNode.View = RenderNode(newNode);
             if(parentNode.Children == null)
             {
                 parentNode.Children = new List<ViewNode>();
             }
             parentNode.Children.Add(newNode);
+            newNode.View = RenderNode(newNode);
             var parentRenderer = _bufferRenderers[parentNode.Buffer.GetType()];
             parentRenderer.Layout(parentNode);
             parentNode.View.LayoutSubviews();
@@ -151,7 +167,7 @@ namespace myotui.Services
             node.View.OnEnter += (sender, args) => 
             {
                 node.SkipKeyHandling = false;
-                if(node.LastFocusedNode != null)
+                if(node.LastFocusedNode != null && node.View.Subviews.Contains(node.LastFocusedNode.View))
                 {
                     node.View.SetFocus(node.LastFocusedNode.View);
                 }

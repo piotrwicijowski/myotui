@@ -86,10 +86,9 @@ namespace myotui.Services
             var baseScopeDecoded = DecodeScopeString(baseScope);
             var relativeScopeDecoded = DecodeScopeString(relativeScope);
             var resultScopeDecoded = new List<string>();
-            if(relativeScope.StartsWith("./"))
+            if(relativeScope.StartsWith("./") || relativeScope.StartsWith("../"))
             {
                 resultScopeDecoded.AddRange(baseScopeDecoded);
-                relativeScopeDecoded = relativeScopeDecoded.Skip(1).ToList();
             }
             foreach (var relativeScopeItem in relativeScopeDecoded)
             {

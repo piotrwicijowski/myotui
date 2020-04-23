@@ -14,7 +14,6 @@ namespace myotui.Services
         protected readonly IKeyService _keyService;
         protected readonly INodeService _nodeService;
         protected readonly IActionService _actionService;
-        private ViewNode _rootNode;
 
         public TuiService(IConfigurationService configuration, IBufferService bufferService, IKeyService keyService, INodeService nodeService, IActionService actionService)
         {
@@ -28,9 +27,9 @@ namespace myotui.Services
         public void Run()
         {
             var rootBuffer = _configuration.GetBufferByName("root");
-            _rootNode = _nodeService.BuildNodeTree(rootBuffer,"/root");
+            _nodeService.RootNode = _nodeService.BuildNodeTree(rootBuffer,"/root");
             Terminal.Gui.Application.Init();
-            var window = BuildWindow(_rootNode);
+            var window = BuildWindow(_nodeService.RootNode);
             var top = Terminal.Gui.Application.Top;
             RegisterApplicationActions();
             top.Add(window);

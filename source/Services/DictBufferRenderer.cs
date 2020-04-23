@@ -13,11 +13,9 @@ namespace myotui.Services
     public class DictBufferRenderer : ContentBufferRenderer
     {
         protected readonly IIndex<Type,IRawContentService> _rawContentServices;
-        protected readonly IIndex<ValueMapType,IContentMapService> _maps;
-        public DictBufferRenderer(IActionService actionService, IIndex<Type,IRawContentService> rawContentServices, IIndex<ValueMapType,IContentMapService> maps, IBufferService bufferService, IKeyService keyService) : base(actionService, keyService, bufferService)
+        public DictBufferRenderer(IActionService actionService, IIndex<Type,IRawContentService> rawContentServices, IBufferService bufferService, IKeyService keyService) : base(actionService, keyService, bufferService)
         {
             _rawContentServices = rawContentServices;
-            _maps = maps;
         }
 
         public override void RegisterActions(ViewNode node)
@@ -31,10 +29,7 @@ namespace myotui.Services
             var buffer = node.Buffer;
             var scope = node.Scope;
             var dictBuffer = buffer as DictBuffer;
-            var rawContentService = _rawContentServices[dictBuffer.Content.GetType()];
-            var rawContent = rawContentService.GetRawOutput(dictBuffer.Content, node.Parameters);
-            var map = _maps[dictBuffer.Content.Map];
-            var dictContent = map.MapRawData(rawContent)?.FirstOrDefault();
+            var dictContent = node.Data as Dictionary<string,object>;
             dictContent = dictContent ?? new Dictionary<string,object>();
 
             // var rowMapOrder = dictBuffer.Columns?.Select(col => col.Name).ToList() ?? new List<string>();

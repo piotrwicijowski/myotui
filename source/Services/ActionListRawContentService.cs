@@ -6,6 +6,7 @@ using myotui;
 using myotui.Services;
 using myotui.Models.Config;
 using Newtonsoft.Json;
+using myotui.Models;
 
 namespace myotui.Services
 {
@@ -16,9 +17,9 @@ namespace myotui.Services
         {
             _parameterService = parameterService;
         }
-        public string GetRawOutput(IValueContent content, IDictionary<string, string> parameters)
+        public dynamic GetRawOutput(ViewNode node, IDictionary<string, string> parameters)
         {
-            var listContent = content as ActionListValueContent;
+            var listContent = node.Buffer.Content as ActionListValueContent;
             // var result = _parameterService.SubstituteParameters(string.Join(Environment.NewLine,listContent.Value),parameters);
             var result = listContent.Value.Select(element => new ActionListElement(){
                 DisplayName = _parameterService.SubstituteParameters(element.DisplayName, parameters),

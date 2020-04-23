@@ -3,9 +3,9 @@ using System.ComponentModel;
 
 namespace myotui.Models.Config
 {
-    public class CliValueContent : IValueContent
+    public class RefValueContent : IValueContent
     {
-        public string Input {get; set;}
+        public string Buffer {get; set;}
         [DefaultValue(ValueMapType.string_to_string_array)]
         public IList<ValueMapType> Maps {get; set;} = new List<ValueMapType>(){ValueMapType.string_to_string_array};
     }

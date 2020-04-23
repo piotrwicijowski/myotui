@@ -14,6 +14,7 @@ namespace myotui.Models
         // public bool Focusable {get; set;} = true;
         public IList<ViewNode> Children {get; set;}
         public IDictionary<string, string> Parameters {get; set;}
+        public dynamic Data {get; set;}
         public View View {get; set;}
         public SizeHint Width {get; set;} = new SizeHint();
         public SizeHint Height {get; set;} = new SizeHint();
