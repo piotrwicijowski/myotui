@@ -71,7 +71,10 @@ namespace myotui.Models
                     currentColor = newColor;
                 }
                 RenderUstr(driver, columnValue.ToString(), columnWidth, currentColor, focusedAndSelected);
-				driver.AddRune(' ');
+                if(i < columnStarts.Count - 1)
+                {
+                    driver.AddRune(' ');
+                }
             }
             if(savedColor != currentColor)
             {

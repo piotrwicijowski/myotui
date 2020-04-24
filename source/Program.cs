@@ -63,6 +63,7 @@ namespace myotui
             builder.RegisterType<Parameter>().As<IParameter>();
             builder.RegisterType<Binding>().As<IBinding>();
 
+            builder.RegisterType<KeyCodeMap>().As<IKeyCodeMap>().SingleInstance();
             builder.RegisterType<KeyPrefixDictionary>();
             builder.Populate(collection);
             var container = builder.Build();

@@ -50,7 +50,7 @@ buffers:
   - name: focus_left
     description: Focus Right View
     triggers:
-    - "key <Backspace>"
+    - "key <ControlH>"
     - "key gh"
     actions:
     - "/focusLeft"
@@ -140,7 +140,7 @@ buffers:
   - name: run_action
     description: run_selected_action
     triggers:
-    - "key <ControlM>"
+    - "key <Enter>"
     actions:
     - "%(line.Action)"
 

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using HandlebarsDotNet;
+using System.Runtime.InteropServices;
 
 namespace myotui.Services
 {
@@ -73,13 +74,23 @@ namespace myotui.Services
 
         private IDictionary<string,string> GetPartialsFromDirectory(string directoryPath)
         {
-            return Directory.EnumerateFiles(directoryPath,"*", SearchOption.AllDirectories).ToDictionary(filePath => Path.GetRelativePath(directoryPath,filePath), filePath =>
-                File.ReadAllText(filePath));
+            return Directory
+                .EnumerateFiles(directoryPath,"*", SearchOption.AllDirectories)
+                .ToDictionary(
+                    filePath => FixWindowsPathSeparator(Path.GetRelativePath(directoryPath,filePath)),
+                    filePath => File.ReadAllText(filePath)
+                );
         }
 
         public IBuffer GetBufferByName(string name)
         {
             return _app.Buffers.FirstOrDefault(x => x.Name == name);
+        }
+
+        private string FixWindowsPathSeparator(string input)
+        {
+            bool isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+            return isWindows ? input.Replace(@"\","/") : input;
         }
         
     }
