@@ -20,6 +20,5 @@ namespace myotui.Models
         public SizeHint Height {get; set;} = new SizeHint();
         public List<Guid> RegisteredActions = new List<Guid>();
         public ViewNode LastFocusedNode;
-        public bool SkipKeyHandling {get; set;}
     }
 }

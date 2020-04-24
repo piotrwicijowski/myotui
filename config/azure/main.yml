@@ -3,6 +3,7 @@ modes:
 - name: normal
 - name: normal_ro
 - name: nav
+- name: search
 buffers:
 
 - !vbox

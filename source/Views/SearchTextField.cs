@@ -47,46 +47,46 @@ namespace myotui.Views
             };
         }
 
-        public override bool ProcessKey(KeyEvent keyEvent)
+        public bool SearchAbort()
         {
-            switch (keyEvent.Key)
-            {
-                case Key.CursorDown:
-                    _previousSearchesIndex = Helpers.Clamp(_previousSearchesIndex - 1, -1, _previousSearches.Count - 1);
-                    if(_previousSearchesIndex >= 0)
-                    {
-                        _searchField.Text = _previousSearches[_previousSearchesIndex];
-                    }
-                    else
-                    {
-                        _searchField.Text = string.Empty;
-                    }
-                    _searchField.CursorPosition = _searchField.Text.Length;
-                    return true;
-                case Key.CursorUp:
-                    _previousSearchesIndex = Helpers.Clamp(_previousSearchesIndex + 1, 0, _previousSearches.Count - 1);
-                    _searchField.Text = _previousSearches[_previousSearchesIndex];
-                    _searchField.CursorPosition = _searchField.Text.Length;
-                    return true;
-                case Key.Esc:
-                    // _searchField.Text = "";
-                    _previousSearchesIndex = -1;
-                    SearchAborted?.Invoke(this, new EventArgs());
-                    return true;
-                case Key.ControlM:
-                    if(!string.IsNullOrEmpty(_searchField.Text.ToString()))
-                    {
-                        SearchPhrase = _searchField.Text.ToString();
-                        _previousSearches.Insert(0,SearchPhrase);
-                        _previousSearchesIndex = -1;
-                    }
-                    SearchAccepted?.Invoke(this, new EventArgs());
-                    return true;
-                default:
-                    return base.ProcessKey (keyEvent);
-            }
+            _previousSearchesIndex = -1;
+            SearchAborted?.Invoke(this, new EventArgs());
+            return true;
         }
 
-        
+        public bool SearchAccept()
+        {
+            if(!string.IsNullOrEmpty(_searchField.Text.ToString()))
+            {
+                SearchPhrase = _searchField.Text.ToString();
+                _previousSearches.Insert(0,SearchPhrase);
+                _previousSearchesIndex = -1;
+            }
+            SearchAccepted?.Invoke(this, new EventArgs());
+            return true;
+        }
+
+        public bool SearchHistoryPrev()
+        {
+            _previousSearchesIndex = Helpers.Clamp(_previousSearchesIndex + 1, 0, _previousSearches.Count - 1);
+            _searchField.Text = _previousSearches[_previousSearchesIndex];
+            _searchField.CursorPosition = _searchField.Text.Length;
+            return true;
+        }
+
+        public bool SearchHistoryNext()
+        {
+            _previousSearchesIndex = Helpers.Clamp(_previousSearchesIndex - 1, -1, _previousSearches.Count - 1);
+            if(_previousSearchesIndex >= 0)
+            {
+                _searchField.Text = _previousSearches[_previousSearchesIndex];
+            }
+            else
+            {
+                _searchField.Text = string.Empty;
+            }
+            _searchField.CursorPosition = _searchField.Text.Length;
+            return true;
+        }
     }
 }

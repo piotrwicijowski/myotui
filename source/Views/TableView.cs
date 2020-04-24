@@ -15,8 +15,6 @@ namespace myotui.Views
         public string SearchPhrase {get; set;} = "";
         protected IList<int> _searchResultIndexes {get; set;} = new List<int>();
         public Action<IDictionary<string, object>> FocusedItemChanged;
-        public event EventHandler SearchOnEnter;
-        public event EventHandler SearchOnLeave;
         public TableView(ITableData tableData, bool hasHeader, bool hasSearch)
         {
             _tableData = tableData;
@@ -62,17 +60,10 @@ namespace myotui.Views
                 _searchField.Width = Dim.Fill();
                 _searchField.Height = 1;
                 _searchField.CanFocus = true;
-                _searchField.OnLeave += (sender, args) =>
-                {
-                    if(sender == _searchField)
-                    {
-                        SearchOnLeave?.Invoke(this,args);
-                    }
-                };
                 _searchField.SearchAccepted += (sender, args) =>
                 {
                     SetFocus(_tableListView);
-                    ApplySearch();
+                    ApplySearchToTableView();
                 };
                 _searchField.SearchAborted += (sender, args) =>
                 {
@@ -133,7 +124,6 @@ namespace myotui.Views
         {
             if(_searchField != null)
             {
-                SearchOnEnter?.Invoke(this,new EventArgs());
                 SetFocus(_searchField);
                 _searchField.EnsureFocus();
                 return true;
@@ -141,7 +131,12 @@ namespace myotui.Views
             return false;
         }
 
-        private void ApplySearch()
+        public bool SearchAbort() => _searchField.SearchAbort();
+        public bool SearchAccept() => _searchField.SearchAccept();
+        public bool SearchHistoryNext() => _searchField.SearchHistoryNext();
+        public bool SearchHistoryPrev() => _searchField.SearchHistoryPrev();
+
+        private void ApplySearchToTableView()
         {
             SearchPhrase = _searchField.SearchPhrase;
             _tableData.SetHighlight(SearchPhrase);

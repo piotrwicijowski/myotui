@@ -24,17 +24,6 @@ namespace myotui.Services
             if(tablebuffer != null && tablebuffer.HasSearch)
             {
                 var tableView = (node.View as TableView);
-                if(tableView != null)
-                {
-                    tableView.SearchOnEnter += (sender, args) =>
-                    {
-                        node.SkipKeyHandling = true;
-                    };
-                    tableView.SearchOnLeave += (sender, args) =>
-                    {
-                        node.SkipKeyHandling = false;
-                    };
-                }
                 RegisterSearchAction(node);
             }
         }
@@ -93,6 +82,16 @@ namespace myotui.Services
             // node.RegisteredActions.Add(_actionService.RegisterAction($"/search",$"{node.Scope}/**",(_) => {node.SkipKeyHandling = true; return (node.View as TableView).FocusSearch();}));
             node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.search","/**",(_) => (node.View as TableView).FocusSearch()));
             node.RegisteredActions.Add(_actionService.RegisterAction($"/search",$"{node.Scope}/**",(_) => (node.View as TableView).FocusSearch()));
+
+            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.searchAccept","/**",(_) => (node.View as TableView).SearchAccept()));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"/searchAccept",$"{node.Scope}/**",(_) => (node.View as TableView).SearchAccept()));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.searchAbort","/**",(_) => (node.View as TableView).SearchAbort()));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"/searchAbort",$"{node.Scope}/**",(_) => (node.View as TableView).SearchAbort()));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.searchHistoryPrev","/**",(_) => (node.View as TableView).SearchHistoryPrev()));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"/searchHistoryPrev",$"{node.Scope}/**",(_) => (node.View as TableView).SearchHistoryPrev()));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.searchHistoryNext","/**",(_) => (node.View as TableView).SearchHistoryNext()));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"/searchHistoryNext",$"{node.Scope}/**",(_) => (node.View as TableView).SearchHistoryNext()));
+
             node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.focusPrevResult","/**",(_) => (node.View as TableView).FocusPrevSearch()));
             node.RegisteredActions.Add(_actionService.RegisterAction($"/focusPrevResult",$"{node.Scope}/**",(_) => (node.View as TableView).FocusPrevSearch()));
             node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.focusNextResult","/**",(_) => (node.View as TableView).FocusNextSearch()));

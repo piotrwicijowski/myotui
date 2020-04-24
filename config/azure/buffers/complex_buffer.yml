@@ -128,12 +128,43 @@
     - "key <Enter>"
     actions:
     - "{{ on_enter }}"
-  - name: search
+  - name: search_start
     description: Focus search field
     triggers:
     - "key /"
     actions:
+    - "setMode search"
     - "/search"
+  - name: search_accept
+    description: Accept search
+    triggers:
+    - "key <Enter>"
+    actions:
+    - "/searchAccept"
+    - "setMode normal"
+    mode: search
+  - name: search_abort
+    description: Abort search
+    triggers:
+    - "key <Esc>"
+    actions:
+    - "/searchAbort"
+    - "setMode normal"
+    mode: search
+  - name: search_history_prev
+    description: Search history previous
+    triggers:
+    - "key <CursorUp>"
+    actions:
+    - "/searchHistoryPrev"
+    mode: search
+  - name: search_history_next
+    description: Search history next
+    triggers:
+    - "key <CursorDown>"
+    actions:
+    - "/searchHistoryNext"
+    mode: search
   - name: search_next
     description: Focus next search result
     triggers:

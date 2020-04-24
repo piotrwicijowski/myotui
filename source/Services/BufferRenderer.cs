@@ -77,7 +77,7 @@ namespace myotui.Services
             node.RegisteredActions.Add(_actionService.RegisterAction($"/close",$"{node.Scope}/**",(_) => _bufferService.CloseBuffer(node)));
         }
 
-        private void HandleBindings(ViewNode node, Action<string,string,string,string,ViewNode> bindingAction)
+        private void HandleBindings(ViewNode node, Action<string,List<string>,string,string,ViewNode> bindingAction)
         {
             var bindings = node.Buffer.Bindings;
 
@@ -87,16 +87,16 @@ namespace myotui.Services
                 binding => binding
                     .Triggers
                     .Where(trigger => trigger.StartsWith("key "))
-                    .SelectMany(
-                        trigger => binding.Actions,
-                        (trigger, action) => (trigger, action)
-                    )
+                    // .SelectMany(
+                    //     trigger => binding.Actions,
+                    //     (trigger, action) => (trigger, action)
+                    // )
                     .ToList()
                     .ForEach(
-                        pair => {
-                            var (trigger, action) = pair;
+                        trigger => {
+                            // var (trigger, action) = pair;
                             var mode = binding.Mode ?? _modeService.DefaultMode;
-                            bindingAction(trigger, action, binding.Scope, mode, node);
+                            bindingAction(trigger, binding.Actions.ToList(), binding.Scope, mode, node);
                         } 
                     )
                 );

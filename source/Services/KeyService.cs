@@ -37,11 +37,6 @@ namespace myotui.Services {
             _keyStack.Push(keyEvent.Key);
             while(checkedNode != null)
             {
-                if(checkedNode.SkipKeyHandling)
-                {
-                    ClearStack();
-                    return false;
-                }
                 var allActionsForPrefix = _keyPrefixDictionary.GetAllActionsByKeyPrefix(_keyStack.Reverse().ToList(),checkedNode.Scope);
                 if(allActionsForPrefix == null || allActionsForPrefix.Count == 0)
                 {
@@ -50,10 +45,13 @@ namespace myotui.Services {
                 }
                 else if(allActionsForPrefix.Count == 1)
                 {
-                    var action = allActionsForPrefix.FirstOrDefault();
-                    var parametrizedAction = _parameterService.SubstituteParameters(action, focusedNode.Parameters);
-                    parametrizedAction = _parameterService.SubstituteParameters(parametrizedAction, checkedNode.Parameters);
-                    _actionService.DispatchAction(parametrizedAction, checkedNode.Scope);
+                    var actions = allActionsForPrefix.FirstOrDefault();
+                    foreach(var action in actions)
+                    {
+                        var parametrizedAction = _parameterService.SubstituteParameters(action, focusedNode.Parameters);
+                        parametrizedAction = _parameterService.SubstituteParameters(parametrizedAction, checkedNode.Parameters);
+                        _actionService.DispatchAction(parametrizedAction, checkedNode.Scope);
+                    }
                     _keyStack.Clear();
                     return true;
                 }
@@ -76,20 +74,20 @@ namespace myotui.Services {
             return false;
         }
 
-        public void RegisterKeyActionTrigger(string trigger, string action, string bindingScope, string mode, ViewNode node)
+        public void RegisterKeyActionTrigger(string trigger, List<string> actions, string bindingScope, string mode, ViewNode node)
         {
             var keys = DecodeKeySequence(trigger);
-            var resolvedAction = _scopeService.ResolveRelativeAction(node.Scope, action);
+            var resolvedActions = actions.Select(action => _scopeService.ResolveRelativeAction(node.Scope, action)).ToList();
             var resolvedScope = _scopeService.ResolveRelativeScope(node.Scope, bindingScope);
-            _keyPrefixDictionary.AddAction(keys, resolvedAction, resolvedScope, mode);
+            _keyPrefixDictionary.AddAction(keys, resolvedActions, resolvedScope, mode);
         }
 
-        public void RemoveKeyActionTrigger(string trigger, string action, string bindingScope, string mode, ViewNode node)
+        public void RemoveKeyActionTrigger(string trigger, List<string> actions, string bindingScope, string mode, ViewNode node)
         {
             var keys = DecodeKeySequence(trigger);
-            var resolvedAction = _scopeService.ResolveRelativeAction(node.Scope, action);
+            var resolvedActions = actions.Select(action => _scopeService.ResolveRelativeAction(node.Scope, action)).ToList();
             var resolvedScope = _scopeService.ResolveRelativeScope(node.Scope, bindingScope);
-            _keyPrefixDictionary.RemoveAction(keys, resolvedAction, resolvedScope, mode);
+            _keyPrefixDictionary.RemoveAction(keys, resolvedActions, resolvedScope, mode);
         }
 
         private List<Key> DecodeKeySequence(string trigger)
