@@ -9,7 +9,7 @@ namespace myotui.Services
 {
     public abstract class ContentBufferRenderer : BufferRenderer
     {
-        protected ContentBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService) : base(actionService, keyService, bufferService)
+        protected ContentBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService, IModeService modeService) : base(actionService, keyService, bufferService, modeService)
         {
         }
         public override void RegisterActions(ViewNode node)

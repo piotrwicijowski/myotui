@@ -12,5 +12,6 @@ namespace myotui.Models.Config
 
         [DefaultValue("./**")]
         public string Scope {get; set;} = "./**";
+        public string Mode {get; set;}
     }
 }

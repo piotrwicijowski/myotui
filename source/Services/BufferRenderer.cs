@@ -12,11 +12,13 @@ namespace myotui.Services
         protected readonly IActionService _actionService;
         protected readonly IBufferService _bufferService;
         protected readonly IKeyService _keyService;
-        protected BufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService)
+        protected readonly IModeService _modeService;
+        protected BufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService, IModeService modeService)
         {
             _actionService = actionService;
             _keyService = keyService;
             _bufferService = bufferService;
+            _modeService = modeService;
         }
 
         public virtual View Render(ViewNode node)
@@ -75,7 +77,7 @@ namespace myotui.Services
             node.RegisteredActions.Add(_actionService.RegisterAction($"/close",$"{node.Scope}/**",(_) => _bufferService.CloseBuffer(node)));
         }
 
-        private void HandleBindings(ViewNode node, Action<string,string,string,ViewNode> bindingAction)
+        private void HandleBindings(ViewNode node, Action<string,string,string,string,ViewNode> bindingAction)
         {
             var bindings = node.Buffer.Bindings;
 
@@ -93,7 +95,8 @@ namespace myotui.Services
                     .ForEach(
                         pair => {
                             var (trigger, action) = pair;
-                            bindingAction(trigger, action, binding.Scope, node);
+                            var mode = binding.Mode ?? _modeService.DefaultMode;
+                            bindingAction(trigger, action, binding.Scope, mode, node);
                         } 
                     )
                 );

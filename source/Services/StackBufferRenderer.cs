@@ -7,7 +7,7 @@ namespace myotui.Services
 {
     public class StackBufferRenderer : LayoutBufferRenderer
     {
-        public StackBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService) : base(actionService, keyService, bufferService)
+        public StackBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService, IModeService modeService) : base(actionService, keyService, bufferService, modeService)
         {
         }
 

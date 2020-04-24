@@ -7,7 +7,7 @@ namespace myotui.Services
 {
     public class HBoxBufferRenderer : LayoutBufferRenderer
     {
-        public HBoxBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService) : base(actionService, keyService, bufferService)
+        public HBoxBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService, IModeService modeService) : base(actionService, keyService, bufferService, modeService)
         {
         }
 

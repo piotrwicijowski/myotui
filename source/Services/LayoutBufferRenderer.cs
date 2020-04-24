@@ -9,7 +9,7 @@ namespace myotui.Services
 {
     public abstract class LayoutBufferRenderer : BufferRenderer
     {
-        protected LayoutBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService) : base(actionService, keyService, bufferService)
+        protected LayoutBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService, IModeService modeService) : base(actionService, keyService, bufferService, modeService)
         {
         }
 

@@ -12,7 +12,7 @@ namespace myotui.Services
 {
     public class TableBufferRenderer : ContentBufferRenderer
     {
-        public TableBufferRenderer(IActionService actionService, IBufferService bufferService, IKeyService keyService) : base(actionService, keyService, bufferService)
+        public TableBufferRenderer(IActionService actionService, IBufferService bufferService, IKeyService keyService, IModeService modeService) : base(actionService, keyService, bufferService, modeService)
         {
         }
 

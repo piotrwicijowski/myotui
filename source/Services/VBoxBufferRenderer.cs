@@ -8,7 +8,7 @@ namespace myotui.Services
 {
     public class VBoxBufferRenderer : LayoutBufferRenderer
     {
-        public VBoxBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService) : base(actionService, keyService, bufferService)
+        public VBoxBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService, IModeService modeService) : base(actionService, keyService, bufferService, modeService)
         {
         }
         public override View Layout(ViewNode node)
