@@ -33,8 +33,7 @@
   content:
     !cli
     input: {{ cli }}
-    maps:
-    - json_array_to_table
+    map: json_array_to_table
 
 - !hbox
   name: {{ name }}_content
@@ -161,8 +160,7 @@
   content:
     !ref
     buffer: "../../"
-    maps:
-    - nop
+    map: nop
   columns:
 {{#columns}}
   - name : "{{ name }}"
