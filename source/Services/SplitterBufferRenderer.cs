@@ -11,7 +11,7 @@ namespace myotui.Services
 {
     public class SplitterBufferRenderer : ContentBufferRenderer
     {
-        protected SplitterBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService) : base(actionService, keyService, bufferService)
+        protected SplitterBufferRenderer(IActionService actionService, IKeyService keyService, IBufferService bufferService, IModeService modeService) : base(actionService, keyService, bufferService, modeService)
         {
         }
 

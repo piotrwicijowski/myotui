@@ -27,6 +27,7 @@ namespace myotui
             builder.RegisterType<NodeService>().As<INodeService>().SingleInstance();
             builder.RegisterType<BufferService>().As<IBufferService>();
             builder.RegisterType<ScopeService>().As<IScopeService>();
+            builder.RegisterType<ModeService>().As<IModeService>().SingleInstance();
             builder.RegisterType<ParameterService>().As<IParameterService>();
             builder.RegisterType<RefRawContentService>().Keyed<IRawContentService>(typeof(RefValueContent));
             builder.RegisterType<CliRawContentService>().Keyed<IRawContentService>(typeof(CliValueContent));

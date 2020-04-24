@@ -14,19 +14,23 @@ namespace myotui.Services
         protected readonly IKeyService _keyService;
         protected readonly INodeService _nodeService;
         protected readonly IActionService _actionService;
+        protected readonly IModeService _modeService;
 
-        public TuiService(IConfigurationService configuration, IBufferService bufferService, IKeyService keyService, INodeService nodeService, IActionService actionService)
+        public TuiService(IConfigurationService configuration, IBufferService bufferService, IKeyService keyService, INodeService nodeService, IActionService actionService, IModeService modeService)
         {
             _configuration = configuration;
             _bufferSerivce = bufferService;
             _keyService = keyService;
             _nodeService = nodeService;
             _actionService = actionService;
+            _modeService = modeService;
         }
 
         public void Run()
         {
             var rootBuffer = _configuration.GetBufferByName("root");
+            _modeService.DefaultMode = _configuration.AppConfiguration?.Modes?.FirstOrDefault()?.Name ?? "normal";
+            _modeService.CurrentMode = _modeService.DefaultMode;
             _nodeService.RootNode = _nodeService.BuildNodeTree(rootBuffer,"/root");
             Terminal.Gui.Application.Init();
             var window = BuildWindow(_nodeService.RootNode);
@@ -83,7 +87,7 @@ namespace myotui.Services
                 Task.Run(async () => await TextCopy.Clipboard.SetText(text)).Wait();
                 return true;
             });
-
+            _actionService.RegisterAction($"setMode","/**",(mode) => { _modeService.CurrentMode = mode;return true;});
         }
     }
 }

@@ -76,20 +76,20 @@ namespace myotui.Services {
             return false;
         }
 
-        public void RegisterKeyActionTrigger(string trigger, string action, string bindingScope, ViewNode node)
+        public void RegisterKeyActionTrigger(string trigger, string action, string bindingScope, string mode, ViewNode node)
         {
             var keys = DecodeKeySequence(trigger);
             var resolvedAction = _scopeService.ResolveRelativeAction(node.Scope, action);
             var resolvedScope = _scopeService.ResolveRelativeScope(node.Scope, bindingScope);
-            _keyPrefixDictionary.AddAction(keys, resolvedAction, resolvedScope);
+            _keyPrefixDictionary.AddAction(keys, resolvedAction, resolvedScope, mode);
         }
 
-        public void RemoveKeyActionTrigger(string trigger, string action, string bindingScope, ViewNode node)
+        public void RemoveKeyActionTrigger(string trigger, string action, string bindingScope, string mode, ViewNode node)
         {
             var keys = DecodeKeySequence(trigger);
             var resolvedAction = _scopeService.ResolveRelativeAction(node.Scope, action);
             var resolvedScope = _scopeService.ResolveRelativeScope(node.Scope, bindingScope);
-            _keyPrefixDictionary.RemoveAction(keys, resolvedAction, resolvedScope);
+            _keyPrefixDictionary.RemoveAction(keys, resolvedAction, resolvedScope, mode);
         }
 
         private List<Key> DecodeKeySequence(string trigger)

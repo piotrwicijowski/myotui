@@ -13,7 +13,7 @@ namespace myotui.Services
     public class DictBufferRenderer : ContentBufferRenderer
     {
         protected readonly IIndex<Type,IRawContentService> _rawContentServices;
-        public DictBufferRenderer(IActionService actionService, IIndex<Type,IRawContentService> rawContentServices, IBufferService bufferService, IKeyService keyService) : base(actionService, keyService, bufferService)
+        public DictBufferRenderer(IActionService actionService, IIndex<Type,IRawContentService> rawContentServices, IBufferService bufferService, IKeyService keyService, IModeService modeService) : base(actionService, keyService, bufferService, modeService)
         {
             _rawContentServices = rawContentServices;
         }

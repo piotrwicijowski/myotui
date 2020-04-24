@@ -2,6 +2,7 @@ name: Azure
 modes:
 - name: normal
 - name: normal_ro
+- name: nav
 buffers:
 
 - !vbox
@@ -14,6 +15,51 @@ buffers:
   #   - "key <ControlR>"
   #   actions:
   #   - "/root/body/main.open"
+  - name: return_to_normal_mode
+    description: Return to normal mode from nav mode
+    triggers:
+    - "key <Esc>"
+    actions:
+    - "setMode normal"
+    mode: nav
+  - name: nav_mode
+    description: Start nav mode
+    triggers:
+    - "key ("
+    actions:
+    - "setMode nav"
+  - name: focus_right_nav
+    description: Focus Right View in nav mode
+    scope: "/**"
+    triggers:
+    - "key l"
+    actions:
+    - "/focusRight"
+    mode: nav
+  - name: focus_left_nav
+    description: Focus Right View in nav mode
+    triggers:
+    - "key h"
+    actions:
+    - "/focusLeft"
+    mode: nav
+  - name: focus_up_nav
+    description: Focus Up View in nav mode
+    triggers:
+    - "key k"
+    actions:
+    - "/focusUp"
+    mode: nav
+  - name: focus_down_nav
+    description: Focus Down View in nav mode
+    scope: "/**"
+    triggers:
+    - "key j"
+    actions:
+    - "/focusDown"
+    mode: nav
+
+
   - name: replace_with_subscriptions
     description: Replace main with with subscriptions
     triggers:
