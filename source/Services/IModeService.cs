@@ -4,5 +4,6 @@ namespace myotui.Services
     {
         public string DefaultMode {get; set;}
         public string CurrentMode {get; set;}
+        public bool BindingMatchesCurrentMode(string bindingMode);
     }
 }

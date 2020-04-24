@@ -24,11 +24,7 @@ namespace myotui.Models
 
         public IList<string> GetAllActionsByKeyPrefix(IList<Key> keyPrefix, string scope, string mode = null)
         {
-            if(mode == null)
-            {
-                mode = _modeService.CurrentMode;
-            }
-            var actionDictionaryInScope = GetKeyActionDictionaryByScope(scope, mode);
+            var actionDictionaryInScope = GetKeyActionDictionaryByScope(scope);
             if(!_keyPrefixToFullKeyListDictionary.ContainsKey(new KeyList<Key>(keyPrefix)))
             {
                 return null;
@@ -41,12 +37,12 @@ namespace myotui.Models
             return allMatchingPrefixes.Where(matchingPrefix => actionDictionaryInScope.ContainsKey(matchingPrefix)).SelectMany(matchingPrefix => actionDictionaryInScope[matchingPrefix]).Select(item => item.action).ToList();
             
         }
-        private KeyActionDictionary GetKeyActionDictionaryByScope(string curentScope, string mode)
+        private KeyActionDictionary GetKeyActionDictionaryByScope(string curentScope)
         {
             var resultDictionary = _globalKeyPrefixDictionary.ToDictionary(
                 keyValue => keyValue.Key,
                 keyValue => keyValue.Value.Where(item =>
-                    _scopeService.IsInScope(curentScope,item.scope) && mode == item.mode
+                    _scopeService.IsInScope(curentScope,item.scope) && _modeService.BindingMatchesCurrentMode(item.mode)
                 ).ToList()
             );
             var nullValuedKeys = resultDictionary.Where(pair => pair.Value == null || pair.Value.Count == 0).Select(pair => pair.Key);
