@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace myotui.Models.Config
 {
-    public class ActionListValueContent : ValueContent
+    public class ActionsValueContent : ValueContent
     {
         public IEnumerable<ActionListElement> Value {get; set;}
         [DefaultValue(ValueMapType.json_array_to_table)]
