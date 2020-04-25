@@ -170,26 +170,24 @@ buffers:
     value:
     - menu
 
-- !table
+- !vactionlist
   name: sidebar
   description: Sidebar
   closable: false
   content:
-    !actionList
+    !actions
     value:
     - displayName: SB
       action: "/root/body/main.replace subscriptions"
     - displayName: RG
       action: "/root/body/main.replace resources"
-  columns:
-  - name : DisplayName
   bindings:
   - name: run_action
     description: run_selected_action
     triggers:
     - "key <Enter>"
     actions:
-    - "%(line.Action)"
+    - "/runAction"
 
 
 
