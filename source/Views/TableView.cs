@@ -26,10 +26,11 @@ namespace myotui.Views
             _tableListView.X = 0;
             _tableListView.Y = headerDataSource != null ? 2 : 0;
             _tableListView.Width = Dim.Fill();
-            _tableListView.Height = Dim.Fill() - (hasSearch ? 1 : 0);
+            // _tableListView.Height = Dim.Fill() - (hasSearch ? 1 : 0);
+            _tableListView.Height = Dim.Fill();
 
             var headerIsEmpty = headerDataSource == null || headerDataSource.Count == 0;
-            if(!headerIsEmpty && hasSearch)
+            if(!headerIsEmpty && hasHeader)
             {
                 _headerView = new ListView(headerDataSource);
                 _headerView.CanFocus = false;
@@ -69,7 +70,11 @@ namespace myotui.Views
                 {
                     SetFocus(_tableListView);
                 };
-                Add(_searchField);
+                _searchField.OnLeave += (sender, args) =>
+                {
+                    HideSearch();
+                };
+                // Add(_searchField);
             }
         }
 
@@ -124,11 +129,27 @@ namespace myotui.Views
         {
             if(_searchField != null)
             {
+                if(!Subviews.Contains(_searchField))
+                {
+                    Add(_searchField);
+                    _tableListView.Height = Dim.Fill() - 1;
+                }
                 SetFocus(_searchField);
-                _searchField.EnsureFocus();
+                // _searchField.EnsureFocus();
                 return true;
             }
             return false;
+        }
+
+        public bool HideSearch()
+        {
+            if(_searchField != null)
+            {
+                Remove(_searchField);
+                _tableListView.Height = Dim.Fill();
+                SetNeedsDisplay();
+            }
+            return true;
         }
 
         public bool SearchAbort() => _searchField.SearchAbort();
