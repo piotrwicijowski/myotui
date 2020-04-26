@@ -8,6 +8,7 @@ namespace myotui.Views
     {
         public override void Redraw(Rect rect)
         {
+			Driver.SetAttribute (HasFocus ? ColorScheme.Focus : ColorScheme.Normal);
             var plusRune = Driver.GetType() switch
             {
                 {Name : "CursesDriver"} => new Rune(Curses.ACS_PLUS),

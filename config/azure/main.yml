@@ -144,6 +144,35 @@ buffers:
     - "key G"
     actions:
     - "/lineLast"
+
+  - name: column_left
+    description: Focus Previous column
+    scope: "/**"
+    triggers:
+    - "key h"
+    actions:
+    - "/columnLeft"
+  - name: column_right
+    description: Focus Next column
+    scope: "/**"
+    triggers:
+    - "key l"
+    actions:
+    - "/columnRight"
+  - name: column_first
+    description: Focus First column
+    scope: "/**"
+    triggers:
+    - "key _"
+    actions:
+    - "/columnFirst"
+  - name: column_last
+    description: Focus Last column
+    scope: "/**"
+    triggers:
+    - "key $"
+    actions:
+    - "/columnLast"
   windows:
   - !buffer
     name: head
@@ -161,14 +190,25 @@ buffers:
     name: body
     value: body
 
-- !table
+
+- !hactionlist
   name: menu
   description: Application menu
   closable: false
   content:
-    !list
+    !actions
     value:
-    - menu
+    - displayName: SB
+      action: "/root/body/main.replace subscriptions"
+    - displayName: RG
+      action: "/root/body/main.replace resources"
+  bindings:
+  - name: run_action
+    description: run_selected_action
+    triggers:
+    - "key <Enter>"
+    actions:
+    - "/runAction"
 
 - !vactionlist
   name: sidebar

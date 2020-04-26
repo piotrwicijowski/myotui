@@ -58,8 +58,10 @@ namespace myotui.Services
                 {
                     Focus = Attribute.Make(Color.Black, Color.White),
                     Normal = Attribute.Make(Color.White, Color.Black),
-                    HotFocus = Attribute.Make(Color.BrightBlue, Color.Brown),
-                    HotNormal = Attribute.Make(Color.Red, Color.BrightRed),
+                    HotFocus = Attribute.Make(Color.Black, Color.White),
+                    HotNormal = Attribute.Make(Color.White, Color.Black),
+                    // HotFocus = Attribute.Make(Color.BrightBlue, Color.Brown),
+                    // HotNormal = Attribute.Make(Color.Red, Color.BrightRed),
                 },
 
             };
