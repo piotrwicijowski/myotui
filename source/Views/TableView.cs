@@ -10,8 +10,8 @@ namespace myotui.Views
     {
         private ListView _tableListView;
         private ListView _headerView;
-        private SearchTextField _searchField;
-        private FilterTextField _filterField;
+        private SearchFilterTextField _searchField;
+        private SearchFilterTextField _filterField;
         private readonly ITableData _tableData;
         public string SearchPhrase {get; set;} = "";
         public string FilterPhrase {get; set;} = "";
@@ -56,18 +56,21 @@ namespace myotui.Views
             Add(_tableListView);
             if(hasSearch)
             {
-                _searchField = new SearchTextField();
+                _searchField = new SearchFilterTextField();
                 _searchField.X = 0;
                 _searchField.Y = Pos.Bottom(_tableListView);
                 _searchField.Width = Dim.Fill();
                 _searchField.Height = 1;
                 _searchField.CanFocus = true;
-                _searchField.SearchAccepted += (sender, args) =>
+                _searchField.ClearOnEnter = true;
+                _searchField.HideOnLeave = true;
+                _searchField.EmptyPhraseRepeatsLast = true;
+                _searchField.Accepted += (sender, args) =>
                 {
                     SetFocus(_tableListView);
                     ApplySearchToTableView();
                 };
-                _searchField.SearchAborted += (sender, args) =>
+                _searchField.Aborted += (sender, args) =>
                 {
                     SetFocus(_tableListView);
                 };
@@ -79,7 +82,7 @@ namespace myotui.Views
             var hasFilter = hasSearch;
             if(hasFilter)
             {
-                _filterField = new FilterTextField();
+                _filterField = new SearchFilterTextField();
                 _filterField.X = 0;
                 _filterField.Y = Pos.Bottom(_tableListView);
                 _filterField.Width = Dim.Fill();
@@ -241,10 +244,10 @@ namespace myotui.Views
             return true;
         }
 
-        public bool SearchAbort() => _searchField.SearchAbort();
-        public bool SearchAccept() => _searchField.SearchAccept();
-        public bool SearchHistoryNext() => _searchField.SearchHistoryNext();
-        public bool SearchHistoryPrev() => _searchField.SearchHistoryPrev();
+        public bool SearchAbort() => _searchField.Abort();
+        public bool SearchAccept() => _searchField.Accept();
+        public bool SearchHistoryNext() => _searchField.HistoryNext();
+        public bool SearchHistoryPrev() => _searchField.HistoryPrev();
 
         public bool FilterAbort() => _filterField.Abort();
         public bool FilterAccept() => _filterField.Accept();
@@ -259,7 +262,7 @@ namespace myotui.Views
 
         private void ApplySearchToTableView()
         {
-            SearchPhrase = _searchField.SearchPhrase;
+            SearchPhrase = _searchField.Phrase;
             _tableData.SetHighlight(SearchPhrase);
             FocusNextSearch();
         }

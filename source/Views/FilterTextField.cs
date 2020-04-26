@@ -5,7 +5,7 @@ using Terminal.Gui;
 
 namespace myotui.Views
 {
-    public class FilterTextField : View
+    public class SearchFilterTextField : View
     {
         private TextField _textField;
         private Label _placeholder;
@@ -20,7 +20,7 @@ namespace myotui.Views
         public bool HideOnLeave {get; set;}
         public bool EmptyPhraseRepeatsLast {get; set;}
 
-        public FilterTextField()
+        public SearchFilterTextField()
         {
             _placeholder = new Label("");
             _placeholder.X = 0;
@@ -76,12 +76,16 @@ namespace myotui.Views
 
         public bool Accept()
         {
-            if(!string.IsNullOrEmpty(_textField.Text.ToString()) || !EmptyPhraseRepeatsLast)
+            if(EmptyPhraseRepeatsLast && _previousPhrases.Count > 0 && string.IsNullOrEmpty(_textField.Text.ToString()))
+            {
+                Phrase = _previousPhrases[0];
+            }
+            else
             {
                 Phrase = _textField.Text.ToString();
                 _previousPhrases.Insert(0,Phrase);
-                _previousPhrasesIndex = -1;
             }
+            _previousPhrasesIndex = -1;
             Accepted?.Invoke(this, new EventArgs());
             return true;
         }
