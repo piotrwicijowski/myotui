@@ -9,6 +9,7 @@ namespace myotui.Views
     {
         private TextField _textField;
         private Label _placeholder;
+        private Label _prefixLabel;
         public event EventHandler Aborted;
         public event EventHandler Accepted;
 		public event EventHandler<ustring> Changed;
@@ -20,7 +21,7 @@ namespace myotui.Views
         public bool HideOnLeave {get; set;}
         public bool EmptyPhraseRepeatsLast {get; set;}
 
-        public SearchFilterTextField()
+        public SearchFilterTextField(string prefixText = "")
         {
             _placeholder = new Label("");
             _placeholder.X = 0;
@@ -28,8 +29,13 @@ namespace myotui.Views
             _placeholder.Width = Dim.Fill();
             _placeholder.Height = 1;
 
+            _prefixLabel = new Label(prefixText);
+            _prefixLabel.X = 0;
+            _prefixLabel.Y = 0;
+            _prefixLabel.Height = 1;
+
             _textField = new TextField("");
-            _textField.X = 0;
+            _textField.X = Pos.Right(_prefixLabel);
             _textField.Y = 0;
             _textField.Width = Dim.Fill();
             _textField.Height = 1;
@@ -37,6 +43,8 @@ namespace myotui.Views
             OnEnter += (sender, args) =>
             {
                 RemoveAll();
+                _prefixLabel.TextColor = ColorScheme.Focus;
+                Add(_prefixLabel);
                 Add(_textField);
                 if(ClearOnEnter)
                 {

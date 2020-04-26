@@ -56,7 +56,7 @@ namespace myotui.Views
             Add(_tableListView);
             if(hasSearch)
             {
-                _searchField = new SearchFilterTextField();
+                _searchField = new SearchFilterTextField("/ ");
                 _searchField.X = 0;
                 _searchField.Y = Pos.Bottom(_tableListView);
                 _searchField.Width = Dim.Fill();
@@ -82,7 +82,7 @@ namespace myotui.Views
             var hasFilter = hasSearch;
             if(hasFilter)
             {
-                _filterField = new SearchFilterTextField();
+                _filterField = new SearchFilterTextField("Y ");
                 _filterField.X = 0;
                 _filterField.Y = Pos.Bottom(_tableListView);
                 _filterField.Width = Dim.Fill();
