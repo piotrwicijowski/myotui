@@ -32,7 +32,7 @@ namespace myotui
             builder.RegisterType<RefRawContentService>().Keyed<IRawContentService>(typeof(RefValueContent));
             builder.RegisterType<CliRawContentService>().Keyed<IRawContentService>(typeof(CliValueContent));
             builder.RegisterType<ListRawContentService>().Keyed<IRawContentService>(typeof(ListValueContent));
-            builder.RegisterType<ActionListRawContentService>().Keyed<IRawContentService>(typeof(ActionListValueContent));
+            builder.RegisterType<ActionListRawContentService>().Keyed<IRawContentService>(typeof(ActionsValueContent));
             builder.RegisterType<NopMapService>().Keyed<IContentMapService>(ValueMapType.nop);
             builder.RegisterType<JsonArrayMapService>().Keyed<IContentMapService>(ValueMapType.json_array_to_table);
             builder.RegisterType<JsonObjectMapService>().Keyed<IContentMapService>(ValueMapType.json_object_to_dict);
@@ -42,6 +42,8 @@ namespace myotui
             builder.RegisterType<HBoxBufferRenderer>().Keyed<IBufferRenderer>(typeof(HBoxBuffer));
             builder.RegisterType<HBladeBufferRenderer>().Keyed<IBufferRenderer>(typeof(HBladeBuffer));
             builder.RegisterType<StackBufferRenderer>().Keyed<IBufferRenderer>(typeof(StackBuffer));
+            builder.RegisterType<VActionListBufferRenderer>().Keyed<IBufferRenderer>(typeof(VActionListBuffer));
+            builder.RegisterType<HActionListBufferRenderer>().Keyed<IBufferRenderer>(typeof(HActionListBuffer));
             builder.RegisterType<TableBufferRenderer>().Keyed<IBufferRenderer>(typeof(TableBuffer));
             builder.RegisterType<DictBufferRenderer>().Keyed<IBufferRenderer>(typeof(DictBuffer));
             builder.RegisterType<SplitterBufferRenderer>().Keyed<IBufferRenderer>(typeof(SplitterBuffer));
@@ -50,9 +52,11 @@ namespace myotui
             builder.RegisterType<BufferLayoutContent>().As<ILayoutContent>();
             builder.RegisterType<CliValueContent>().As<IValueContent>();
             builder.RegisterType<RefValueContent>().As<IValueContent>();
-            builder.RegisterType<ActionListValueContent>().As<IValueContent>();
+            builder.RegisterType<ActionsValueContent>().As<IValueContent>();
             builder.RegisterType<ListValueContent>().As<IValueContent>();
             builder.RegisterType<TableBuffer>().As<IBuffer>();
+            builder.RegisterType<VActionListBuffer>().As<IBuffer>();
+            builder.RegisterType<HActionListBuffer>().As<IBuffer>();
             builder.RegisterType<DictBuffer>().As<IBuffer>();
             builder.RegisterType<SplitterBuffer>().As<IBuffer>();
             builder.RegisterType<HBoxBuffer>().As<IBuffer>();

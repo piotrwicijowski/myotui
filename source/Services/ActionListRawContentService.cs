@@ -19,7 +19,7 @@ namespace myotui.Services
         }
         public dynamic GetRawOutput(ViewNode node, IDictionary<string, string> parameters)
         {
-            var listContent = node.Buffer.Content as ActionListValueContent;
+            var listContent = node.Buffer.Content as ActionsValueContent;
             // var result = _parameterService.SubstituteParameters(string.Join(Environment.NewLine,listContent.Value),parameters);
             var result = listContent.Value.Select(element => new ActionListElement(){
                 DisplayName = _parameterService.SubstituteParameters(element.DisplayName, parameters),
