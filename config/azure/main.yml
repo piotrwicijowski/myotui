@@ -228,6 +228,7 @@ buffers:
     - "key <Enter>"
     actions:
     - "/runAction"
+{{> bindings/search.yml}}
 
 
 
