@@ -63,6 +63,15 @@ namespace myotui.Models
             }
             return result;
         }
+        public void SetFilter(string filter)
+        {
+            var tableBodyDataSource = _bodyDataSource as TableDataSource;
+            if(tableBodyDataSource != null)
+            {
+                tableBodyDataSource.Filter = filter;
+            }
+        }
+
         public void SetHighlight(string highlight)
         {
             var tableBodyDataSource = _bodyDataSource as TableDataSource;

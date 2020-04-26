@@ -129,6 +129,7 @@
     actions:
     - "{{ on_enter }}"
 {{> bindings/search.yml}}
+{{> bindings/filter.yml}}
   parameters:
 {{#parameters}}
   - name: {{ this }}

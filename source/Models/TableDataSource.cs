@@ -11,11 +11,25 @@ namespace myotui.Models
     public class TableDataSource : IListDataSource
     {
         private IList<IDictionary<string, object>> _contentList;
+        private IList<IDictionary<string, object>> _filteredContentList;
         private IList<string> _columnMapOrder;
         private IList<SizeHint> _columnWidths;
         private IList<int> _maxColumnWidths = new List<int>();
-        public int Count => _contentList.Count();
+        public int Count => _filteredContentList.Count();
+        private string _filter;
+        public string Filter {
+            get => _filter;
+            set 
+            {
+                _filter = value;
+                _filteredContentList = _contentList.Where(dict => 
+                {
+                    return _columnMapOrder.Select(columnName => dict[columnName]).Any(value => value.ToString().Contains(_filter,StringComparison.CurrentCultureIgnoreCase));
+                }).ToList();
+            }
+        }
         public string Highlight {get; set;}
+
         private static readonly List<Terminal.Gui.Attribute> Colors = new List<Terminal.Gui.Attribute>()
         {
             Terminal.Gui.Attribute.Make(Color.White,   Color.Black),
@@ -36,6 +50,7 @@ namespace myotui.Models
         public TableDataSource(IList<IDictionary<string, object>> contentList, IList<string> columnMapOrder, IList<SizeHint> columnWidths)
         {
             _contentList = contentList;
+            _filteredContentList = _contentList;
             _columnMapOrder = columnMapOrder;
             _columnWidths = columnWidths;
         }
@@ -62,7 +77,7 @@ namespace myotui.Models
                 var columnName = _columnMapOrder.Count > 0 ? _columnMapOrder[i] : "value";
                 // var columnValue = _contentList[item][columnName] ?? "";
                 object columnValue;
-                var hasValue = _contentList[item].TryGetValue(columnName, out columnValue);
+                var hasValue = _filteredContentList[item].TryGetValue(columnName, out columnValue);
                 columnValue = columnValue ?? "";
                 columnValue = columnValue.ToString().Replace(Environment.NewLine," ");
                 var newColor = focusedAndSelected ? FocusColors[i % Colors.Count()] : Colors[i % Colors.Count()];
@@ -86,9 +101,9 @@ namespace myotui.Models
         {
             get
             {
-                if(_contentList != null && key < _contentList.Count() && key >=0)
+                if(_filteredContentList != null && key < _filteredContentList.Count() && key >=0)
                 {
-                    return _contentList[key];
+                    return _filteredContentList[key];
                 }
                 else
                 {

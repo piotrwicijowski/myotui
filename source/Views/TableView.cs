@@ -11,8 +11,10 @@ namespace myotui.Views
         private ListView _tableListView;
         private ListView _headerView;
         private SearchTextField _searchField;
+        private FilterTextField _filterField;
         private readonly ITableData _tableData;
         public string SearchPhrase {get; set;} = "";
+        public string FilterPhrase {get; set;} = "";
         protected IList<int> _searchResultIndexes {get; set;} = new List<int>();
         public Action<IDictionary<string, object>> FocusedItemChanged;
         public TableView(ITableData tableData, bool hasHeader, bool hasSearch)
@@ -74,6 +76,45 @@ namespace myotui.Views
                     HideSearch();
                 };
             }
+            var hasFilter = hasSearch;
+            if(hasFilter)
+            {
+                _filterField = new FilterTextField();
+                _filterField.X = 0;
+                _filterField.Y = Pos.Bottom(_tableListView);
+                _filterField.Width = Dim.Fill();
+                _filterField.Height = 1;
+                _filterField.CanFocus = true;
+                _filterField.ClearOnEnter = false;
+                _filterField.HideOnLeave = false;
+                _filterField.EmptyPhraseRepeatsLast = false;
+                _filterField.Changed += (sender, args) =>
+                {
+                    ApplyFilterToTableView();
+                };
+                _filterField.Accepted += (sender, args) =>
+                {
+                    ApplyFilterToTableView();
+                    if(_tableListView.SelectedItem >= _tableListView.Source.Count)
+                    {
+                        _tableListView.SelectedItem = 0;
+                    }
+                    SetFocus(_tableListView);
+
+                };
+                _filterField.Aborted += (sender, args) =>
+                {
+                    SetFocus(_tableListView);
+                };
+                _filterField.OnLeave += (sender, args) =>
+                {
+                    if(_filterField.HideOnLeave || string.IsNullOrEmpty(FilterPhrase))
+                    {
+                        HideFilter();
+                    }
+                };
+            }
+
         }
 
         public bool FocusNextLine()
@@ -98,23 +139,30 @@ namespace myotui.Views
         public bool FocusFirstLine()
         {
             var previousSelected = _tableListView.SelectedItem;
-            _tableListView.SelectedItem = 0;
-            if(previousSelected != _tableListView.SelectedItem)
+            if(_tableListView.Source.Count > 0)
             {
-                TriggerFocusedLineEvent();
+                _tableListView.SelectedItem = 0;
+                if(previousSelected != _tableListView.SelectedItem)
+                {
+                    TriggerFocusedLineEvent();
+                }
+                _tableListView.SetNeedsDisplay();
+
             }
-            _tableListView.SetNeedsDisplay();
             return true;
         }
         public bool FocusLastLine()
         {
             var previousSelected = _tableListView.SelectedItem;
-            _tableListView.SelectedItem = _tableListView.Source.Count - 1;
-            if(previousSelected != _tableListView.SelectedItem)
+            if(_tableListView.Source.Count > 0)
             {
-                TriggerFocusedLineEvent();
+                _tableListView.SelectedItem = _tableListView.Source.Count - 1;
+                if(previousSelected != _tableListView.SelectedItem)
+                {
+                    TriggerFocusedLineEvent();
+                }
+                _tableListView.SetNeedsDisplay();
             }
-            _tableListView.SetNeedsDisplay();
             return true;
         }
 
@@ -130,12 +178,30 @@ namespace myotui.Views
                 if(!Subviews.Contains(_searchField))
                 {
                     Add(_searchField);
-                    _tableListView.Height = Dim.Fill() - 1;
                 }
                 SetFocus(_searchField);
+                Layout();
                 return true;
             }
             return false;
+        }
+
+        protected void Layout()
+        {
+            var bottomPadding = 0;
+            var hasFilter = false;
+            if(_filterField != null && Subviews.Contains(_filterField))
+            {
+                bottomPadding += 1;
+                _filterField.Y = Pos.Bottom(_tableListView);
+                hasFilter = true;
+            }
+            if(_searchField != null && Subviews.Contains(_searchField))
+            {
+                bottomPadding += 1;
+                _searchField.Y = Pos.Bottom(hasFilter ? (View)_filterField : (View)_tableListView);
+            }
+            _tableListView.Height = Dim.Fill() - bottomPadding;
         }
 
         public bool HideSearch()
@@ -143,8 +209,34 @@ namespace myotui.Views
             if(_searchField != null)
             {
                 Remove(_searchField);
-                _tableListView.Height = Dim.Fill();
-                SetNeedsDisplay();
+                Layout();
+                // SetNeedsDisplay();
+            }
+            return true;
+        }
+
+        public bool FocusFilter()
+        {
+            if(_searchField != null)
+            {
+                if(!Subviews.Contains(_filterField))
+                {
+                    Add(_filterField);
+                }
+                Layout();
+                SetFocus(_filterField);
+                return true;
+            }
+            return false;
+        }
+
+        public bool HideFilter()
+        {
+            if(_filterField != null)
+            {
+                Remove(_filterField);
+                Layout();
+                // SetNeedsDisplay();
             }
             return true;
         }
@@ -153,6 +245,17 @@ namespace myotui.Views
         public bool SearchAccept() => _searchField.SearchAccept();
         public bool SearchHistoryNext() => _searchField.SearchHistoryNext();
         public bool SearchHistoryPrev() => _searchField.SearchHistoryPrev();
+
+        public bool FilterAbort() => _filterField.Abort();
+        public bool FilterAccept() => _filterField.Accept();
+        public bool FilterHistoryNext() => _filterField.HistoryNext();
+        public bool FilterHistoryPrev() => _filterField.HistoryPrev();
+
+        private void ApplyFilterToTableView()
+        {
+            FilterPhrase = _filterField.Phrase;
+            _tableData.SetFilter(FilterPhrase);
+        }
 
         private void ApplySearchToTableView()
         {
