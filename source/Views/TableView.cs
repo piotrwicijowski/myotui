@@ -26,7 +26,6 @@ namespace myotui.Views
             _tableListView.X = 0;
             _tableListView.Y = headerDataSource != null ? 2 : 0;
             _tableListView.Width = Dim.Fill();
-            // _tableListView.Height = Dim.Fill() - (hasSearch ? 1 : 0);
             _tableListView.Height = Dim.Fill();
 
             var headerIsEmpty = headerDataSource == null || headerDataSource.Count == 0;
@@ -74,7 +73,6 @@ namespace myotui.Views
                 {
                     HideSearch();
                 };
-                // Add(_searchField);
             }
         }
 
@@ -135,7 +133,6 @@ namespace myotui.Views
                     _tableListView.Height = Dim.Fill() - 1;
                 }
                 SetFocus(_searchField);
-                // _searchField.EnsureFocus();
                 return true;
             }
             return false;
