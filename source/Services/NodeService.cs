@@ -41,9 +41,9 @@ namespace myotui.Services
                 Height = height ?? new SizeHint(),
                 Parameters = parameters
             };
-            if(buffer is ILayoutBuffer)
+            if(buffer is LayoutBuffer)
             {
-                var layoutBuffer = buffer as ILayoutBuffer;
+                var layoutBuffer = buffer as LayoutBuffer;
                 currentNode.Children = layoutBuffer
                     .Windows
                     .Select(window => 

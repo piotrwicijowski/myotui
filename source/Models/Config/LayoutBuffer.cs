@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 namespace myotui.Models.Config
 {
-    public interface ILayoutBuffer : IBuffer
+    public class LayoutBuffer : Buffer
     {
         public IEnumerable<ILayoutContent> Windows {get; set;}
-        public bool AutoSplitters {get; set;}
+        public virtual bool AutoSplitters {get; set;} = true;
     }
 }
