@@ -18,161 +18,122 @@ buffers:
   #   - "/root/body/main.open"
   - name: return_to_normal_mode
     description: Return to normal mode from nav mode
-    triggers:
-    - "key <Esc>"
-    actions:
-    - "setMode normal"
+    trigger: "key <Esc>"
+    action: "setMode normal"
     mode: nav
   - name: nav_mode
     description: Start nav mode
-    triggers:
-    - "key ("
-    actions:
-    - "setMode nav"
+    trigger: "key ("
+    action: "setMode nav"
   - name: focus_right_nav
     description: Focus Right View in nav mode
     scope: "/**"
-    triggers:
-    - "key l"
-    actions:
-    - "/focusRight"
+    trigger: "key l"
+    action: "/focusRight"
     mode: nav
   - name: focus_left_nav
     description: Focus Right View in nav mode
-    triggers:
-    - "key h"
-    actions:
-    - "/focusLeft"
+    trigger: "key h"
+    action: "/focusLeft"
     mode: nav
   - name: focus_up_nav
     description: Focus Up View in nav mode
-    triggers:
-    - "key k"
-    actions:
-    - "/focusUp"
+    trigger: "key k"
+    action: "/focusUp"
     mode: nav
   - name: focus_down_nav
     description: Focus Down View in nav mode
     scope: "/**"
-    triggers:
-    - "key j"
-    actions:
-    - "/focusDown"
+    trigger: "key j"
+    action: "/focusDown"
     mode: nav
 
 
   - name: replace_with_subscriptions
     description: Replace main with with subscriptions
-    triggers:
-    - "key rsub"
-    actions:
-    - "/root/body/main.replace subscriptions"
+    trigger: "key rsub"
+    action: "/root/body/main.replace subscriptions"
   - name: clear_key_stack
     description: Clear key chord stack
-    triggers:
-    - "key <Esc>"
-    actions:
-    - "clearKeyStack"
+    trigger: "key <Esc>"
+    action: "clearKeyStack"
   - name: close_current_buffer
     description: Open Resources for Logic Apps
-    triggers:
-    - "key q"
-    actions:
-    - "/close"
+    trigger: "key q"
+    action: "/close"
   - name: close_view
     description: Close current view
     triggers:
     - "key Q"
     - "key <ControlC>"
-    actions:
-    - "quit"
+    action: "quit"
   - name: focus_right
     description: Focus Right View
     scope: "/**"
     triggers:
     - "key <ControlL>"
     - "key gl"
-    actions:
-    - "/focusRight"
+    action: "/focusRight"
   - name: focus_left
     description: Focus Right View
     triggers:
     - "key <ControlH>"
     - "key gh"
-    actions:
-    - "/focusLeft"
+    action: "/focusLeft"
   - name: focus_up
     description: Focus Up View
     triggers:
     - "key <ControlK>"
     - "key gk"
-    actions:
-    - "/focusUp"
+    action: "/focusUp"
   - name: focus_down
     description: Focus Down View
     scope: "/**"
     triggers:
     - "key <ControlJ>"
     - "key gj"
-    actions:
-    - "/focusDown"
+    action: "/focusDown"
   - name: line_up
     description: Focus Previous Line
     scope: "/**"
-    triggers:
-    - "key k"
-    actions:
-    - "/lineUp"
+    trigger: "key k"
+    action: "/lineUp"
   - name: line_down
     description: Focus Next Line
     scope: "/**"
-    triggers:
-    - "key j"
-    actions:
-    - "/lineDown"
+    trigger: "key j"
+    action: "/lineDown"
   - name: line_first
     description: Focus First Line
     scope: "/**"
-    triggers:
-    - "key gg"
-    actions:
-    - "/lineFirst"
+    trigger: "key gg"
+    action: "/lineFirst"
   - name: line_last
     description: Focus Last Line
     scope: "/**"
-    triggers:
-    - "key G"
-    actions:
-    - "/lineLast"
+    trigger: "key G"
+    action: "/lineLast"
 
   - name: column_left
     description: Focus Previous column
     scope: "/**"
-    triggers:
-    - "key h"
-    actions:
-    - "/columnLeft"
+    trigger: "key h"
+    action: "/columnLeft"
   - name: column_right
     description: Focus Next column
     scope: "/**"
-    triggers:
-    - "key l"
-    actions:
-    - "/columnRight"
+    trigger: "key l"
+    action: "/columnRight"
   - name: column_first
     description: Focus First column
     scope: "/**"
-    triggers:
-    - "key _"
-    actions:
-    - "/columnFirst"
+    trigger: "key _"
+    action: "/columnFirst"
   - name: column_last
     description: Focus Last column
     scope: "/**"
-    triggers:
-    - "key $"
-    actions:
-    - "/columnLast"
+    trigger: "key $"
+    action: "/columnLast"
   windows:
   - !buffer
     name: head
@@ -205,10 +166,8 @@ buffers:
   bindings:
   - name: run_action
     description: run_selected_action
-    triggers:
-    - "key <Enter>"
-    actions:
-    - "/runAction"
+    trigger: "key <Enter>"
+    action: "/runAction"
 
 - !vactionlist
   name: sidebar
@@ -224,10 +183,8 @@ buffers:
   bindings:
   - name: run_action
     description: run_selected_action
-    triggers:
-    - "key <Enter>"
-    actions:
-    - "/runAction"
+    trigger: "key <Enter>"
+    action: "/runAction"
 {{> bindings/search.yml}}
 
 
@@ -261,17 +218,13 @@ buffers:
   - name: focus_right
     description: Focus Right View
     # scope: "/*"
-    triggers:
-    - "key <ControlY>"
-    actions:
-    - "./focusRight"
+    trigger: "key <ControlY>"
+    action: "./focusRight"
   - name: focus_left
     description: Focus Right View
     scope: "./**"
-    triggers:
-    - "key <ControlT>"
-    actions:
-    - "./focusLeft"
+    trigger: "key <ControlT>"
+    action: "./focusLeft"
   windows:
   - !buffer
     name: subscriptions

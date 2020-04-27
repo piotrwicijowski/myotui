@@ -107,28 +107,20 @@
   bindings:
   - name: yank_id
     description: Yank id
-    triggers:
-    - "key yi"
-    actions:
-    - "yank %(line.id)"
+    trigger: "key yi"
+    action: "yank %(line.id)"
   - name: yank_name
     description: Yank name
-    triggers:
-    - "key yn"
-    actions:
-    - "yank %(line.name)"
+    trigger: "key yn"
+    action: "yank %(line.name)"
   - name: replace_with_highlighted_resource
     description: Replace view with highlighted resource
-    triggers:
-    - "key gr"
-    actions:
-    - "{{ on_replace }}"
+    trigger: "key gr"
+    action: "{{ on_replace }}"
   - name: open_highlighted_resource
     description: Open highlighted resource
-    triggers:
-    - "key <Enter>"
-    actions:
-    - "{{ on_enter }}"
+    trigger: "key <Enter>"
+    action: "{{ on_enter }}"
 {{> bindings/search.yml}}
 {{> bindings/filter.yml}}
   parameters:

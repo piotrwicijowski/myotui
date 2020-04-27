@@ -1,37 +1,30 @@
   - name: filter_start
     description: Focus filter field
-    triggers:
-    - "key <ControlI>"
+    trigger: "key <ControlI>"
     actions:
     - "setMode filter"
     - "/filter"
   - name: filter_accept
     description: Accept filter
-    triggers:
-    - "key <Enter>"
+    trigger: "key <Enter>"
     actions:
     - "/filterAccept"
     - "setMode normal"
     mode: filter
   - name: filter_abort
     description: Abort filter
-    triggers:
-    - "key <Esc>"
+    trigger: "key <Esc>"
     actions:
     - "/filterAbort"
     - "setMode normal"
     mode: filter
   - name: filter_history_prev
     description: filter history previous
-    triggers:
-    - "key <CursorUp>"
-    actions:
-    - "/filterHistoryPrev"
+    trigger: "key <CursorUp>"
+    action: "/filterHistoryPrev"
     mode: filter
   - name: filter_history_next
     description: filter history next
-    triggers:
-    - "key <CursorDown>"
-    actions:
-    - "/filterHistoryNext"
+    trigger: "key <CursorDown>"
+    action: "/filterHistoryNext"
     mode: filter
