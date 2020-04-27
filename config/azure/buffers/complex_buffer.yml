@@ -121,6 +121,13 @@
     description: Open highlighted resource
     trigger: "key <Enter>"
     action: "{{ on_enter }}"
+  - name: open_highlight_in_browser
+    description: Open hightlighted element in browser
+    trigger: "key go"
+    action: "openUrlInBrowser \"{{highlight_url}}\""
+  - name: open_current_view_in_browser
+    trigger: "key gO"
+    action: "openUrlInBrowser \"{{current_url}}\""
 {{> bindings/search.yml}}
 {{> bindings/filter.yml}}
   parameters:

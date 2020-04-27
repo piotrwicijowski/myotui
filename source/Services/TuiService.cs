@@ -4,6 +4,8 @@ using myotui.Models.Config;
 using myotui.Views;
 using myotui.Models;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace myotui.Services
 {
@@ -91,6 +93,33 @@ namespace myotui.Services
             });
             _actionService.RegisterAction($"setMode","/**",(mode) => { _modeService.CurrentMode = mode;return true;});
             _actionService.RegisterAction($"nop","/**",(_) => { return true;});
+            _actionService.RegisterAction($"openUrlInBrowser","/**",(url) => { return OpenUrl(url);});
+        }
+
+        private bool OpenUrl(string url)
+        {
+            try
+            {
+                // hack because of this: https://github.com/dotnet/corefx/issues/10361
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    url = url.Replace("&", "^&");
+                    Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    Process.Start("xdg-open", url);
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    Process.Start("open", url);
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

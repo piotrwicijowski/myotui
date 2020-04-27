@@ -4,7 +4,10 @@ complex_buffers:
   description: List of resource groups for selected subscription
   parameters:
   - subscription
+  - tenantId
   cli: "az group list ?(subscription:--subscription) %(subscription)"
+  highlight_url: "https://portal.azure.com/#@%(tenantId)/resource%(line.id)"
+  current_url: "https://portal.azure.com/#@%(tenantId)/resource/subscriptions/%(subscription)/resourceGroups"
   on_enter: "/root/body/main.replace_subsequent resources %(line.name)"
   on_replace: "/root/body/main.replace resources %(line.name)"
   header_value: "%(subscription)"
@@ -40,8 +43,10 @@ complex_buffers:
   short_description: Subscriptions
   description: List of subscriptions
   cli: "az account list --all"
-  on_enter: "/root/body/main.replace_subsequent resource_groups %(line.id)"
-  on_replace: "/root/body/main.replace resource_groups %(line.id)"
+  highlight_url: "https://portal.azure.com/#@%(line.tenantId)/resource/subscriptions/%(line.id)/overview"
+  current_url: "https://portal.azure.com/#blade/Microsoft_Azure_Billing/SubscriptionsBlade"
+  on_enter: "/root/body/main.replace_subsequent resource_groups %(line.id) %(line.tenantId)"
+  on_replace: "/root/body/main.replace resource_groups %(line.id) %(line.tenantId)"
   header_value: "Subscriptions"
   columns:
   - name : name
