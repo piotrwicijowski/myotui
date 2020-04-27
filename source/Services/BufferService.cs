@@ -44,8 +44,8 @@ namespace myotui.Services
             }
             var parentRenderer = _bufferRenderers[node.Buffer.GetType()];
             parentRenderer.Render(node);
-            WireUpFocusSaving(node);
             node.Children?.ToList().ForEach(childNode => RenderNode(childNode));
+            WireUpFocusSaving(node);
             parentRenderer.RegisterActions(node);
             parentRenderer.RegisterBindings(node);
             return parentRenderer.Layout(node);
@@ -171,6 +171,10 @@ namespace myotui.Services
                     node.View.SetFocus(node.LastFocusedNode.View);
                 }
             };
+            if(node.LastFocusedNode == null && node.Children != null && node.Children.Count > 0)
+            {
+                node.LastFocusedNode = node.Children.FirstOrDefault(child => child.Buffer.DefaultFocus) ?? node.Children.FirstOrDefault(child => child.LastFocusedNode != null);
+            }
             return true;
         }
         public bool FocusNextChild(ViewNode node)

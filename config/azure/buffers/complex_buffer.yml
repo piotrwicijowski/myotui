@@ -103,6 +103,7 @@
   description: Table with list of {{ short_description }}
   closable: false
   hasSearch: true
+  defaultFocus: true
   bindings:
   - name: yank_id
     description: Yank id

@@ -10,7 +10,7 @@ namespace myotui
         public static IEnumerable<ViewNode> ChildrenWithSplitters(this ViewNode parentNode)
         {
             var first = true;
-            var autoSplitters = (parentNode.Buffer as ILayoutBuffer)?.AutoSplitters ?? false;
+            var autoSplitters = (parentNode.Buffer as LayoutBuffer)?.AutoSplitters ?? false;
             foreach (var child in parentNode.Children)
             {
                 if(first || !autoSplitters)

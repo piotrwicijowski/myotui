@@ -3,15 +3,15 @@ using Terminal.Gui;
 
 namespace myotui.Models.Config
 {
-    public interface IBuffer
+    public class Buffer : IBuffer
     {
         public string Name {get; set;}
         public string Description {get; set;}
         public IEnumerable<IBinding> Bindings {get; set;}
         public IEnumerable<IParameter> Parameters {get; set;}
-        public bool Closable {get; set;}
-        public bool Focusable {get; set;}
+        public virtual bool Closable {get; set;}
+        public virtual bool Focusable {get; set;}
         public IValueContent Content {get; set;}
-        public bool DefaultFocus {get; set;}
+        public virtual bool DefaultFocus {get; set;} = false;
     }
 }
