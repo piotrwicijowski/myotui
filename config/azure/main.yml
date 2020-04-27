@@ -16,6 +16,14 @@ buffers:
   #   - "key <ControlR>"
   #   actions:
   #   - "/root/body/main.open"
+  - name: nop
+    description: Override default action
+    triggers:
+    - "key <CursorLeft>"
+    - "key <CursorRight>"
+    - "key <Tab>"
+    - "key <BackTab>"
+    action: "nop"
   - name: return_to_normal_mode
     description: Return to normal mode from nav mode
     trigger: "key <Esc>"

@@ -90,6 +90,7 @@ namespace myotui.Services
                 return true;
             });
             _actionService.RegisterAction($"setMode","/**",(mode) => { _modeService.CurrentMode = mode;return true;});
+            _actionService.RegisterAction($"nop","/**",(_) => { return true;});
         }
     }
 }

@@ -9,6 +9,7 @@ namespace myotui.Services
     {
         protected readonly IDictionary<string,Key> _linuxLogicalToPhysicalMaps = new Dictionary<string,Key>()
         {
+            {"Tab", Key.ControlI},
             {"Enter", Key.ControlM},
             {"ControlH", Key.Backspace},
         };

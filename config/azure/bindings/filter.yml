@@ -1,6 +1,6 @@
   - name: filter_start
     description: Focus filter field
-    trigger: "key <ControlI>"
+    trigger: "key <Y>"
     actions:
     - "setMode filter"
     - "/filter"
