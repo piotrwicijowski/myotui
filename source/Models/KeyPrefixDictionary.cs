@@ -5,11 +5,11 @@ using Terminal.Gui;
 
 namespace myotui.Models
 {
-    using  KeyActionDictionary =  Dictionary<KeyList<Key>, List<(List<string> actions, string scope, string mode)>>;
+    using  KeyActionDictionary =  Dictionary<KeyList<Key>, List<(KeyList<string> actions, string scope, string mode)>>;
     using  KeyPrefixToFullKeyListDictionary = Dictionary<KeyList<Key>,List<KeyList<Key>>>;
     public class KeyPrefixDictionary
     {
-        private readonly ISet<(KeyList<Key> keyList,List<string> actions,string scope, string mode)> _allMappingsSet = new HashSet<(KeyList<Key> keyList,List<string> actions,string scope, string mode)>();
+        private readonly ISet<(KeyList<Key> keyList,KeyList<string> actions,string scope, string mode)> _allMappingsSet = new HashSet<(KeyList<Key> keyList,KeyList<string> actions,string scope, string mode)>();
         private readonly KeyActionDictionary _globalKeyPrefixDictionary = new KeyActionDictionary();
         private readonly KeyPrefixToFullKeyListDictionary _keyPrefixToFullKeyListDictionary = new KeyPrefixToFullKeyListDictionary();
         protected readonly IModeService _modeService;
@@ -34,7 +34,7 @@ namespace myotui.Models
             {
                 return null;
             }
-            return allMatchingPrefixes.Where(matchingPrefix => actionDictionaryInScope.ContainsKey(matchingPrefix)).SelectMany(matchingPrefix => actionDictionaryInScope[matchingPrefix]).Select(item => item.actions).ToList();
+            return allMatchingPrefixes.Where(matchingPrefix => actionDictionaryInScope.ContainsKey(matchingPrefix)).SelectMany(matchingPrefix => actionDictionaryInScope[matchingPrefix]).Select(item => item.actions.ToList()).ToList();
             
         }
         private KeyActionDictionary GetKeyActionDictionaryByScope(string curentScope)
@@ -56,14 +56,15 @@ namespace myotui.Models
         public void AddAction(IList<Key> keys, List<string> actions, string scope, string mode)
         {
             var fullKeyList = new KeyList<Key>(keys);
-            _allMappingsSet.Add((fullKeyList,actions,scope, mode));
-            RecalculateAction(fullKeyList, actions, scope, mode);
+            var actionsKeyList = new KeyList<string>(actions);
+            _allMappingsSet.Add((fullKeyList,actionsKeyList,scope, mode));
+            RecalculateAction(fullKeyList, actionsKeyList, scope, mode);
         }
-        public void RecalculateAction(KeyList<Key> keys, List<string> actions, string scope, string mode)
+        public void RecalculateAction(KeyList<Key> keys, KeyList<string> actions, string scope, string mode)
         {
             if(!_globalKeyPrefixDictionary.ContainsKey(keys))
             {
-                _globalKeyPrefixDictionary.Add(keys,new List<(List<string> actions, string scope, string mode)>());
+                _globalKeyPrefixDictionary.Add(keys,new List<(KeyList<string> actions, string scope, string mode)>());
             }
             _globalKeyPrefixDictionary[keys].Add((actions,scope,mode));
 
@@ -84,7 +85,7 @@ namespace myotui.Models
         public void RemoveAction(IList<Key> keys, List<string> actions, string scope, string mode)
         {
             var fullKeyList = new KeyList<Key>(keys);
-            _allMappingsSet.Remove((fullKeyList,actions,scope,mode));
+            _allMappingsSet.Remove((fullKeyList,new KeyList<string>(actions),scope,mode));
             _globalKeyPrefixDictionary.Clear();
             _keyPrefixToFullKeyListDictionary.Clear();
             foreach(var item in _allMappingsSet)
