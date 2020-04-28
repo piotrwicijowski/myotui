@@ -18,6 +18,9 @@ namespace myotui.Services
         public bool CloseBuffers(IList<ViewNode> buffers);
 
         public bool FocusNextChild(ViewNode node);
+
         public bool FocusPreviousChild(ViewNode node);
+
+        public bool ReloadNode(ViewNode node);
     }
 }

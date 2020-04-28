@@ -12,28 +12,50 @@ namespace myotui.Views
         private ListView _headerView;
         private SearchFilterTextField _searchField;
         private SearchFilterTextField _filterField;
-        private readonly ITableData _tableData;
+        private ITableData _tableData;
         public string SearchPhrase {get; set;} = "";
         public string FilterPhrase {get; set;} = "";
         protected IList<int> _searchResultIndexes {get; set;} = new List<int>();
         public Action<IDictionary<string, object>> FocusedItemChanged;
+        protected bool _hasSearch;
+        protected bool _hasHeader;
         public TableView(ITableData tableData, bool hasHeader, bool hasSearch)
         {
             _tableData = tableData;
+            _hasHeader = hasHeader;
+            _hasSearch = hasSearch;
+            CreateLayout();
+            SetData(tableData);
+        }
 
+        public void SetData(ITableData tableData)
+        {
+            _tableData = tableData;
+            _tableListView.Source = _tableData.GetBodyDataSource();
+            if(_headerView != null)
+            {
+                _headerView.Source = _tableData.GetHeaderDataSource();
+            }
+        }
+
+        public void CreateLayout()
+        {
             var headerDataSource = _tableData.GetHeaderDataSource();
             var splitter = new Splitter();
 
-            _tableListView = new ListView(_tableData.GetBodyDataSource());
+            // _tableListView = new ListView(_tableData.GetBodyDataSource());
+            _tableListView = new ListView();
+            _tableListView.CanFocus = true;
             _tableListView.X = 0;
             _tableListView.Y = headerDataSource != null ? 2 : 0;
             _tableListView.Width = Dim.Fill();
             _tableListView.Height = Dim.Fill();
 
             var headerIsEmpty = headerDataSource == null || headerDataSource.Count == 0;
-            if(!headerIsEmpty && hasHeader)
+            if(!headerIsEmpty && _hasHeader)
             {
-                _headerView = new ListView(headerDataSource);
+                // _headerView = new ListView(headerDataSource);
+                _headerView = new ListView();
                 _headerView.CanFocus = false;
                 _headerView.X = 0;
                 _headerView.Y = 0;
@@ -54,7 +76,7 @@ namespace myotui.Views
                 TriggerFocusedLineEvent();
             };
             Add(_tableListView);
-            if(hasSearch)
+            if(_hasSearch)
             {
                 _searchField = new SearchFilterTextField("/ ");
                 _searchField.X = 0;
@@ -79,7 +101,7 @@ namespace myotui.Views
                     HideSearch();
                 };
             }
-            var hasFilter = hasSearch;
+            var hasFilter = _hasSearch;
             if(hasFilter)
             {
                 _filterField = new SearchFilterTextField("Y ");

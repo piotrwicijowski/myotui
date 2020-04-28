@@ -30,6 +30,22 @@ namespace myotui.Services
 
         public View RenderNode(ViewNode node)
         {
+            ReloadNode(node);
+            RegisterAll(node);
+            return node.View;
+        }
+
+        protected void RegisterAll(ViewNode node)
+        {
+            var renderer = _bufferRenderers[node.Buffer.GetType()];
+            node.Children?.ToList().ForEach(childNode => RegisterAll(childNode));
+            WireUpFocusSaving(node);
+            renderer.RegisterActions(node);
+            renderer.RegisterBindings(node);
+        }
+
+        public bool ReloadNode(ViewNode node)
+        {
             if(node.Buffer.Content != null)
             {
                 var rawContentService = _rawContentServices[node.Buffer.Content.GetType()];
@@ -42,13 +58,11 @@ namespace myotui.Services
                 }
                 node.Data = acc;
             }
+            node.Children?.ToList().ForEach(childNode => ReloadNode(childNode));
             var parentRenderer = _bufferRenderers[node.Buffer.GetType()];
             parentRenderer.Render(node);
-            node.Children?.ToList().ForEach(childNode => RenderNode(childNode));
-            WireUpFocusSaving(node);
-            parentRenderer.RegisterActions(node);
-            parentRenderer.RegisterBindings(node);
-            return parentRenderer.Layout(node);
+            parentRenderer.Layout(node);
+            return true;
         }
 
         public ViewNode OpenNewBuffer(ViewNode parentNode, string bufferName, string bufferParams)

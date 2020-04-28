@@ -2,6 +2,11 @@
   name: {{ name }}
   description: {{ description }}
   closable: true
+  bindings:
+  - name: reload
+    description: Reload current buffer
+    trigger: "key R"
+    action: "./reload"
   parameters:
 {{#parameters}}
   - name: {{ this }}

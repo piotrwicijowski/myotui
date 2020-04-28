@@ -23,15 +23,18 @@ namespace myotui.Services
 
         public virtual View Render(ViewNode node)
         {
-            var view = new View();
-            node.View = view;
-            view.CanFocus = node.Buffer.Focusable;
-            return view;
+            if(node.View == null)
+            {
+                node.View = new View();
+            }
+            node.View.CanFocus = node.Buffer.Focusable;
+            return node.View;
         }
 
         public virtual void RegisterActions(ViewNode node)
         {
             RegisterCloseAction(node);
+            RegisterReloadAction(node);
         }
 
         public virtual void RemoveActions(ViewNode node)
@@ -71,6 +74,11 @@ namespace myotui.Services
             return dims;
         }
 
+        protected virtual void RegisterReloadAction(ViewNode node)
+        {
+            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.reload","/**",(_) => _bufferService.ReloadNode(node)));
+            node.RegisteredActions.Add(_actionService.RegisterAction($"/reload",$"{node.Scope}/**",(_) => _bufferService.ReloadNode(node)));
+        }
         protected virtual void RegisterCloseAction(ViewNode node)
         {
             node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.close","/**",(_) => _bufferService.CloseBuffer(node)));
