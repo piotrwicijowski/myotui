@@ -142,6 +142,7 @@ buffers:
     scope: "/**"
     trigger: "key $"
     action: "/columnLast"
+
   windows:
   - !buffer
     name: head

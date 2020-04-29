@@ -2,6 +2,11 @@
   name: {{ name }}
   description: {{ description }}
   closable: true
+  bindings:
+  - name: reload
+    description: Reload current buffer
+    trigger: "key R"
+    action: "./reload"
   parameters:
 {{#parameters}}
   - name: {{ this }}
@@ -69,9 +74,34 @@
       defaultValue: "%({{ this }})"
 {{/parameters}}
 
-- !table
+- !hbox
   name: {{ name }}_header
   description: {{ short_description }} header
+  closable: false
+  focusable: true
+  parameters:
+{{#parameters}}
+  - name: {{ this }}
+    type: string
+    defaultValue: ""
+{{/parameters}}
+  windows:
+  - !buffer
+    name: {{ name }}_header_title
+    value: {{ name }}_header_title
+    parameters:
+{{#parameters}}
+    - name: {{ this }}
+      type: string
+      defaultValue: "%({{ this }})"
+{{/parameters}}
+  - !buffer
+    name: {{ name }}_header_actions
+    value: {{ name }}_header_actions
+
+- !table
+  name: {{ name }}_header_title
+  description: {{ short_description }} header title
   closable: false
   focusable: false
   parameters:
@@ -84,6 +114,21 @@
     !list
     value:
     - "{{ header_value }}"
+
+- !hactionlist
+  name: {{ name }}_header_actions
+  description: {{ short_description }} actions
+  closable: false
+  content:
+    !actions
+    value:
+    - displayName: Reload
+      action: "../../reload"
+  bindings:
+  - name: run_action
+    description: run_selected_action
+    trigger: "key <Enter>"
+    action: "/runAction"
 
 {{#if sidebar}}
 - !table

@@ -51,16 +51,25 @@ namespace myotui.Services
                 : null;
             var columnWidths = tablebuffer.Columns.Select(column => column.Width).ToList();
             var tableData = new TableData(content,headerContent,columnMapOrder, columnWidths);
-            var view = new TableView(tableData, tablebuffer.HasHeader, tablebuffer.HasSearch);
-            view.FocusedItemChanged = (line) =>
+            TableView view;
+            if(node.View == null)
             {
-                line?.Keys?.ToList().ForEach(key =>
+                view = new TableView(tableData, tablebuffer.HasHeader, tablebuffer.HasSearch);
+                view.FocusedItemChanged = (line) =>
                 {
-                    node.Parameters[$"line.{key}"] = line[key]?.ToString() ?? "";
-                });
-            };
+                    line?.Keys?.ToList().ForEach(key =>
+                    {
+                        node.Parameters[$"line.{key}"] = line[key]?.ToString() ?? "";
+                    });
+                };
+                node.View = view;
+            }
+            else
+            {
+                view = node.View as TableView;
+                view.SetData(tableData);
+            }
             view.TriggerFocusedLineEvent();
-            node.View = view;
             view.CanFocus = node.Buffer.Focusable;
             return view;
         }

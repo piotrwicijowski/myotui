@@ -37,9 +37,10 @@ namespace myotui.Services
         {
             var actionSplit = actionExpression.Split(" ");
             var actionName = actionSplit.FirstOrDefault();
+            var absoluteActionName = _scopeService.ResolveRelativeAction(currentScope,actionName);
             var actionParameters = actionSplit.Length <= 1 ? "" : string.Join(' ',actionSplit.Skip(1));
             _registeredActions
-                .Where(reg => IsPatternMatching(actionName,reg.Pattern))
+                .Where(reg => IsPatternMatching(absoluteActionName,reg.Pattern))
                 .Where(reg => _scopeService.IsInScope(currentScope,reg.ActionScope))
                 .OrderBy(reg => _scopeService.ScopeDepth(reg.ActionScope))
                 .Reverse()
