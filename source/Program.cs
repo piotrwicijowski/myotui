@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Autofac;
 using Terminal.Gui;
 using myotui.Models;
+using Autofac.Features.AttributeFilters;
 
 namespace myotui
 {
@@ -30,7 +31,7 @@ namespace myotui
             builder.RegisterType<ModeService>().As<IModeService>().SingleInstance();
             builder.RegisterType<ParameterService>().As<IParameterService>();
             builder.RegisterType<RefRawContentService>().Keyed<IRawContentService>(typeof(RefValueContent));
-            builder.RegisterType<CliRawContentService>().Keyed<IRawContentService>(typeof(CliValueContent));
+            builder.RegisterType<CliRawContentService>().Keyed<IRawContentService>(typeof(CliValueContent)).WithAttributeFiltering();
             builder.RegisterType<ListRawContentService>().Keyed<IRawContentService>(typeof(ListValueContent));
             builder.RegisterType<ActionListRawContentService>().Keyed<IRawContentService>(typeof(ActionsValueContent));
             builder.RegisterType<NopMapService>().Keyed<IContentMapService>(ValueMapType.nop);
