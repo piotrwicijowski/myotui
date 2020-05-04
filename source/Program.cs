@@ -38,6 +38,8 @@ namespace myotui
             builder.RegisterType<JsonObjectMapService>().Keyed<IContentMapService>(ValueMapType.json_object_to_dict);
             builder.RegisterType<StringArrayMapService>().Keyed<IContentMapService>(ValueMapType.string_to_string_array);
 
+            builder.RegisterType<CliIOService>().Keyed<IIOService>(IOServiceType.Cli);
+
             builder.RegisterType<VBoxBufferRenderer>().Keyed<IBufferRenderer>(typeof(VBoxBuffer));
             builder.RegisterType<HBoxBufferRenderer>().Keyed<IBufferRenderer>(typeof(HBoxBuffer));
             builder.RegisterType<HBladeBufferRenderer>().Keyed<IBufferRenderer>(typeof(HBladeBuffer));

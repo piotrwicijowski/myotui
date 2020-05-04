@@ -39,8 +39,13 @@ namespace myotui.Services
             });
             runtime.RegisterHelper("json", ( writer, context, arguments ) =>
             {
-                var whatever = JsonConvert.SerializeObject(context[arguments[0]]) as string;
-                writer.WriteSafeString(whatever);
+                var jsonString = JsonConvert.SerializeObject(context[arguments[0]]) as string;
+                writer.WriteSafeString(jsonString);
+            });
+            runtime.RegisterHelper("yaml", ( writer, context, arguments ) =>
+            {
+                var serializer = new YamlDotNet.Serialization.Serializer();
+                serializer.Serialize(writer,context[arguments[0]]);
             });
 
             var partials = GetPartialsFromDirectory(configDirectory);

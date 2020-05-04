@@ -6,6 +6,7 @@ using myotui.Models;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Autofac.Features.Indexed;
 
 namespace myotui.Services
 {
@@ -17,8 +18,9 @@ namespace myotui.Services
         protected readonly INodeService _nodeService;
         protected readonly IActionService _actionService;
         protected readonly IModeService _modeService;
+        protected readonly IIndex<IOServiceType,IIOService> _ioSerivces;
 
-        public TuiService(IConfigurationService configuration, IBufferService bufferService, IKeyService keyService, INodeService nodeService, IActionService actionService, IModeService modeService)
+        public TuiService(IConfigurationService configuration, IBufferService bufferService, IKeyService keyService, INodeService nodeService, IActionService actionService, IModeService modeService, IIndex<IOServiceType, IIOService> ioSerivces)
         {
             _configuration = configuration;
             _bufferSerivce = bufferService;
@@ -26,6 +28,7 @@ namespace myotui.Services
             _nodeService = nodeService;
             _actionService = actionService;
             _modeService = modeService;
+            _ioSerivces = ioSerivces;
         }
 
         public void Run()
@@ -94,6 +97,7 @@ namespace myotui.Services
             _actionService.RegisterAction($"setMode","/**",(mode) => { _modeService.CurrentMode = mode;return true;});
             _actionService.RegisterAction($"nop","/**",(_) => { return true;});
             _actionService.RegisterAction($"openUrlInBrowser","/**",(url) => { return OpenUrl(url);});
+            _actionService.RegisterAction($"cli","/**",(commandline) => { _ioSerivces[IOServiceType.Cli].Run(commandline); return true;});
         }
 
         private bool OpenUrl(string url)
