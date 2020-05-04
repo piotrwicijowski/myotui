@@ -15,6 +15,13 @@ namespace myotui.Services
             _scopeService = scopeService;
         }
 
+        public IList<Guid> RegisterActionPair(string actionName, string nodeScope, Func<string,bool> action)
+        {
+            var result = new List<Guid>();
+            result.Add(RegisterAction($"{nodeScope}.{actionName}","/**",action));
+            result.Add(RegisterAction($"/{actionName}",$"{nodeScope}/**",action));
+            return result;
+        }
         public Guid RegisterAction(string pattern, string scope, Func<string,bool> action)
         {
             var registrationId = Guid.NewGuid();

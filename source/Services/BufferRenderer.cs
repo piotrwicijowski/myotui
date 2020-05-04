@@ -76,13 +76,11 @@ namespace myotui.Services
 
         protected virtual void RegisterReloadAction(ViewNode node)
         {
-            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.reload","/**",(_) => _bufferService.ReloadNode(node)));
-            node.RegisteredActions.Add(_actionService.RegisterAction($"/reload",$"{node.Scope}/**",(_) => _bufferService.ReloadNode(node)));
+            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("reload", node.Scope, (_) => _bufferService.ReloadNode(node)));
         }
         protected virtual void RegisterCloseAction(ViewNode node)
         {
-            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.close","/**",(_) => _bufferService.CloseBuffer(node)));
-            node.RegisteredActions.Add(_actionService.RegisterAction($"/close",$"{node.Scope}/**",(_) => _bufferService.CloseBuffer(node)));
+            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("close", node.Scope, (_) => _bufferService.CloseBuffer(node)));
         }
 
         private void HandleBindings(ViewNode node, Action<string,List<string>,string,string,ViewNode> bindingAction)

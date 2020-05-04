@@ -56,20 +56,16 @@ namespace myotui.Services
 
         protected virtual void RegisterNavigationAction(ViewNode node)
         {
-            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.columnLeft","/**",(_) => (node.View as HorizontalListView).FocusPrevColumn()));
-            node.RegisteredActions.Add(_actionService.RegisterAction($"/columnLeft",$"{node.Scope}/**",(_) => (node.View as HorizontalListView).FocusPrevColumn()));
-            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.columnRight","/**",(_) => (node.View as HorizontalListView).FocusNextColumn()));
-            node.RegisteredActions.Add(_actionService.RegisterAction($"/columnRight",$"{node.Scope}/**",(_) => (node.View as HorizontalListView).FocusNextColumn()));
-            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.columnLast","/**",(_) => (node.View as HorizontalListView).FocusLastColumn()));
-            node.RegisteredActions.Add(_actionService.RegisterAction($"/columnLast",$"{node.Scope}/**",(_) => (node.View as HorizontalListView).FocusLastColumn()));
-            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.columnFirst","/**",(_) => (node.View as HorizontalListView).FocusFirstColumn()));
-            node.RegisteredActions.Add(_actionService.RegisterAction($"/columnFirst",$"{node.Scope}/**",(_) => (node.View as HorizontalListView).FocusFirstColumn()));
+
+            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("columnLeft", node.Scope, (_) => (node.View as HorizontalListView).FocusPrevColumn()));
+            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("columnRight", node.Scope, (_) => (node.View as HorizontalListView).FocusNextColumn()));
+            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("columnLast", node.Scope, (_) => (node.View as HorizontalListView).FocusLastColumn()));
+            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("columnFirst", node.Scope, (_) => (node.View as HorizontalListView).FocusFirstColumn()));
         }
 
         protected virtual void RegisterRunActionAction(ViewNode node)
         {
-            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.runAction","/**",(_) => DispatchCurrentAction(node)));
-            node.RegisteredActions.Add(_actionService.RegisterAction($"/runAction",$"{node.Scope}/**",(_) => DispatchCurrentAction(node)));
+            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("runAction", node.Scope, (_) => DispatchCurrentAction(node)));
         }
 
         protected bool DispatchCurrentAction(ViewNode node)
