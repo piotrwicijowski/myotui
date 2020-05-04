@@ -166,6 +166,20 @@
     description: Open highlighted resource
     trigger: "key <Enter>"
     action: "{{ on_enter }}"
+{{#extra_bindings}}
+
+  - name: {{ this.name }}
+    description: {{ this.description }}
+    trigger: {{ this.trigger }}
+{{#exists 'action'}}
+    action: {{ this.action }}
+{{/exists}}
+{{#exists 'actions'}}
+    actions: {{ json 'actions' }}
+{{/exists}}
+
+{{/extra_bindings}}
+
 {{#if highlight_url}}
   - name: open_highlight_in_browser
     description: Open hightlighted element in browser

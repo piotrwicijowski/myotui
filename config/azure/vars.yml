@@ -61,6 +61,15 @@ complex_buffers:
     width:
       mode: auto
       fillRatio: 0
+  extra_bindings:
+  - name: set_default_sub
+    description: Set current as default subscription
+    trigger: "key S"
+    actions:
+    - "cli az account set -s %(line.id)"
+    - "../../reload"
+
+  
 
 bindings:
 - keys: "j"
