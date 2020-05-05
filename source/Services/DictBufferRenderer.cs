@@ -75,8 +75,19 @@ namespace myotui.Services
         protected virtual void RegisterNavigationAction(ViewNode node)
         {
 
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("lineUp", node.Scope, (_) => (node.View as TableView).FocusPrevLine()));
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("lineDown", node.Scope, (_) => (node.View as TableView).FocusNextLine()));
+            node.RegisteredActions.AddRange((new List<ActionRegistration>(){
+                }.Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "lineUp",
+                        nodeScope : node.Scope,
+                        action : (_) => (node.View as TableView).FocusPrevLine())
+                ).Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "focusDown",
+                        nodeScope : node.Scope,
+                        action : (_) => (node.View as TableView).FocusNextLine())
+                )
+            ).Select(reg => _actionService.RegisterAction(reg)));
         }
     }
 }

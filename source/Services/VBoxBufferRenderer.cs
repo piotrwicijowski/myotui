@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using myotui.Models;
@@ -38,11 +39,23 @@ namespace myotui.Services
 
         protected override void RegisterFocusAction(ViewNode node)
         {
-            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.focus","/**",(_) => {node.Parent?.View.SetFocus(node.View);return true;}));
-            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.focusDown","/**",(_) => _bufferService.FocusNextChild(node)));
-            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.focusUp","/**",(_) => _bufferService.FocusPreviousChild(node)));
-            node.RegisteredActions.Add(_actionService.RegisterAction($"/focusDown",$"{node.Scope}/**",(_) => _bufferService.FocusNextChild(node)));
-            node.RegisteredActions.Add(_actionService.RegisterAction($"/focusUp",$"{node.Scope}/**",(_) => _bufferService.FocusPreviousChild(node)));
+            node.RegisteredActions.AddRange((new List<ActionRegistration>(){
+                new ActionRegistration(){
+                    Pattern = $"{node.Scope}.focus",
+                    ActionScope = "/**",
+                    Action = (_) => {node.Parent?.View.SetFocus(node.View);return true;}},
+                }.Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "focusDown",
+                        nodeScope : node.Scope,
+                        action : (_) => _bufferService.FocusNextChild(node))
+                ).Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "focusUp",
+                        nodeScope : node.Scope,
+                        action : (_) => _bufferService.FocusPreviousChild(node))
+                )
+            ).Select(reg => _actionService.RegisterAction(reg)));
         }
     }
 }

@@ -56,11 +56,35 @@ namespace myotui.Services
 
         protected virtual void RegisterNavigationAction(ViewNode node)
         {
+            var hListView = node.View as HorizontalListView;
 
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("columnLeft", node.Scope, (_) => (node.View as HorizontalListView).FocusPrevColumn()));
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("columnRight", node.Scope, (_) => (node.View as HorizontalListView).FocusNextColumn()));
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("columnLast", node.Scope, (_) => (node.View as HorizontalListView).FocusLastColumn()));
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("columnFirst", node.Scope, (_) => (node.View as HorizontalListView).FocusFirstColumn()));
+            node.RegisteredActions.AddRange((new List<ActionRegistration>(){
+                }.Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "columnLeft",
+                        nodeScope : node.Scope,
+                        action : (_) => hListView.FocusPrevColumn()
+                    )
+                ).Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "columnRight",
+                        nodeScope : node.Scope,
+                        action : (_) => hListView.FocusNextColumn()
+                    )
+                ).Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "columnFirst",
+                        nodeScope : node.Scope,
+                        action : (_) => hListView.FocusFirstColumn()
+                    )
+                ).Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "columnLast",
+                        nodeScope : node.Scope,
+                        action : (_) => hListView.FocusLastColumn()
+                    )
+                )
+            ).Select(reg => _actionService.RegisterAction(reg)));
         }
 
         protected virtual void RegisterRunActionAction(ViewNode node)

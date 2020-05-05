@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using myotui.Models;
 
 namespace myotui.Services
 {
@@ -22,17 +23,26 @@ namespace myotui.Services
             result.Add(RegisterAction($"/{actionName}",$"{nodeScope}/**",action));
             return result;
         }
+        public Guid RegisterAction(ActionRegistration registration)
+        {
+            _registeredActions.Add(registration);
+            return registration.Id;
+        }
+        public IList<Guid> RegisterActions(IList<ActionRegistration> registrations)
+        {
+            _registeredActions.AddRange(registrations);
+            return registrations.Select(reg => reg.Id).ToList();
+        }
         public Guid RegisterAction(string pattern, string scope, Func<string,bool> action)
         {
-            var registrationId = Guid.NewGuid();
-            _registeredActions.Add(new ActionRegistration
+            var registration = new ActionRegistration
             {
                 Action = action,
                 ActionScope = scope,
-                Pattern = pattern,
-                Id = registrationId
-            });
-            return registrationId;
+                Pattern = pattern
+            };
+            _registeredActions.Add(registration);
+            return registration.Id;
         }
 
         public void RemoveAction(Guid id)
@@ -59,14 +69,6 @@ namespace myotui.Services
         {
             var endToEndPattern = $"^{pattern}$";
             return Regex.IsMatch(actionExpression,endToEndPattern);
-        }
-
-        protected class ActionRegistration
-        {
-            public Guid Id {get; set;}
-            public Func<string,bool> Action {get; set;}
-            public string Pattern {get; set;}
-            public string ActionScope {get; set;}
         }
     }
 

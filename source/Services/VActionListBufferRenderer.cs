@@ -65,10 +65,35 @@ namespace myotui.Services
 
         protected virtual void RegisterNavigationAction(ViewNode node)
         {
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("lineUp", node.Scope, (_) => (node.View as TableView).FocusPrevLine()));
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("lineDown", node.Scope, (_) => (node.View as TableView).FocusNextLine()));
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("lineLast", node.Scope, (_) => (node.View as TableView).FocusLastLine()));
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("lineFirst", node.Scope, (_) => (node.View as TableView).FocusFirstLine()));
+            var tableView = node.View as TableView;
+
+            node.RegisteredActions.AddRange((new List<ActionRegistration>(){
+                }.Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "lineUp",
+                        nodeScope : node.Scope,
+                        action : (_) => tableView.FocusPrevLine()
+                    )
+                ).Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "lineDown",
+                        nodeScope : node.Scope,
+                        action : (_) => tableView.FocusNextLine()
+                    )
+                ).Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "lineFirst",
+                        nodeScope : node.Scope,
+                        action : (_) => tableView.FocusFirstLine()
+                    )
+                ).Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "lineLast",
+                        nodeScope : node.Scope,
+                        action : (_) => tableView.FocusLastLine()
+                    )
+                )
+            ).Select(reg => _actionService.RegisterAction(reg)));
         }
 
         protected virtual void RegisterRunActionAction(ViewNode node)
@@ -90,15 +115,53 @@ namespace myotui.Services
 
         protected virtual void RegisterSearchAction(ViewNode node)
         {
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("search", node.Scope, (_) => (node.View as TableView).FocusSearch()));
+            var tableView = node.View as TableView;
 
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("searchAccept", node.Scope, (_) => (node.View as TableView).SearchAccept()));
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("searchAbort", node.Scope, (_) => (node.View as TableView).SearchAbort()));
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("searchHistoryPrev", node.Scope, (_) => (node.View as TableView).SearchHistoryPrev()));
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("searchHistoryNext", node.Scope, (_) => (node.View as TableView).SearchHistoryNext()));
-
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("focusPrevResult", node.Scope, (_) => (node.View as TableView).FocusPrevSearch()));
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("focusNextResult", node.Scope, (_) => (node.View as TableView).FocusNextSearch()));
+            node.RegisteredActions.AddRange((new List<ActionRegistration>(){
+                }.Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "search",
+                        nodeScope : node.Scope,
+                        action : (_) => tableView.FocusSearch()
+                    )
+                ).Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "searchAccept",
+                        nodeScope : node.Scope,
+                        action : (_) => tableView.SearchAccept()
+                    )
+                ).Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "searchAbort",
+                        nodeScope : node.Scope,
+                        action : (_) => tableView.SearchAbort()
+                    )
+                ).Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "searchHistoryPrev",
+                        nodeScope : node.Scope,
+                        action : (_) => tableView.SearchHistoryPrev()
+                    )
+                ).Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "searchHistoryNext",
+                        nodeScope : node.Scope,
+                        action : (_) => tableView.SearchHistoryNext()
+                    )
+                ).Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "focusPrevResult",
+                        nodeScope : node.Scope,
+                        action : (_) => tableView.FocusPrevSearch()
+                    )
+                ).Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "focusNextResult",
+                        nodeScope : node.Scope,
+                        action : (_) => tableView.FocusNextSearch()
+                    )
+                )
+            ).Select(reg => _actionService.RegisterAction(reg)));
         }
     }
 }

@@ -22,9 +22,23 @@ namespace myotui.Services
 
         protected virtual void RegisterFocusAction(ViewNode node)
         {
-            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.focus","/**",(_) => {node.Parent?.View.SetFocus(node.View);return true;}));
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("focusPrev", node.Scope, (_) => _bufferService.FocusPreviousChild(node)));
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("focusNext", node.Scope, (_) => _bufferService.FocusNextChild(node)));
+            node.RegisteredActions.AddRange((new List<ActionRegistration>(){
+                new ActionRegistration(){
+                    Pattern = $"{node.Scope}.focus",
+                    ActionScope = "/**",
+                    Action = (_) => {node.Parent?.View.SetFocus(node.View);return true;}},
+                }.Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "focusNext",
+                        nodeScope : node.Scope,
+                        action : (_) => _bufferService.FocusNextChild(node))
+                ).Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "focusPrev",
+                        nodeScope : node.Scope,
+                        action : (_) => _bufferService.FocusPreviousChild(node))
+                )
+            ).Select(reg => _actionService.RegisterAction(reg)));
         }
 
         protected virtual void RegisterOpenAction(ViewNode node)

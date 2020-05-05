@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using myotui.Models;
 using myotui.Models.Config;
@@ -38,9 +39,23 @@ namespace myotui.Services
 
         protected override void RegisterFocusAction(ViewNode node)
         {
-            node.RegisteredActions.Add(_actionService.RegisterAction($"{node.Scope}.focus","/**",(_) => {node.Parent?.View.SetFocus(node.View);return true;}));
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("focusRight", node.Scope, (_) => _bufferService.FocusNextChild(node)));
-            node.RegisteredActions.AddRange(_actionService.RegisterActionPair("focusLeft", node.Scope, (_) => _bufferService.FocusPreviousChild(node)));
+            node.RegisteredActions.AddRange((new List<ActionRegistration>(){
+                new ActionRegistration(){
+                    Pattern = $"{node.Scope}.focus",
+                    ActionScope = "/**",
+                    Action = (_) => {node.Parent?.View.SetFocus(node.View);return true;}},
+                }.Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "focusRight",
+                        nodeScope : node.Scope,
+                        action : (_) => _bufferService.FocusNextChild(node))
+                ).Concat(
+                    ActionRegistration.RegistrationPair(
+                        actionName : "focusLeft",
+                        nodeScope : node.Scope,
+                        action : (_) => _bufferService.FocusPreviousChild(node))
+                )
+            ).Select(reg => _actionService.RegisterAction(reg)));
         }
     }
 }
