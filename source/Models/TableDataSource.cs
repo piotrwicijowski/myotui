@@ -24,7 +24,11 @@ namespace myotui.Models
                 _filter = value;
                 _filteredContentList = _contentList.Where(dict => 
                 {
-                    return _columnMapOrder.Select(columnName => dict[columnName]).Any(value => value.ToString().Contains(_filter,StringComparison.CurrentCultureIgnoreCase));
+                    return _columnMapOrder
+                        .Select(columnName => dict[columnName])
+                        .Any(value => value != null && value.ToString()
+                            .Contains(_filter,StringComparison.CurrentCultureIgnoreCase)
+                        );
                 }).ToList();
             }
         }
